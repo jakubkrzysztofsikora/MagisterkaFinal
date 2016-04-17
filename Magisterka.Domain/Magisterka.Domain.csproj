@@ -46,6 +46,8 @@
     <Compile Include="Graph\MovementSpace\MapSpecification.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Node.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Position.cs" />
+    <Compile Include="Graph\Pathfinding\Exceptions\NegativeWeightCycleException.cs" />
+    <Compile Include="Graph\Pathfinding\PathfindingStrategies\BellmanFordStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\DijkstraStrategy.cs" />
     <Compile Include="Graph\Pathfinding\ePathfindingAlgorithms.cs" />
     <Compile Include="Graph\Pathfinding\Pathfinder.cs" />

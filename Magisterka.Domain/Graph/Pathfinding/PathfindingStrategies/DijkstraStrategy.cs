@@ -7,7 +7,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public class DijkstraStrategy : IPathfindingStrategy
     {
-        public List<Node> CalculatedPath { get; private set; }
+        public IEnumerable<Node> CalculatedPath { get; private set; }
 
         private readonly Dictionary<Node, int> _nodeToCost = new Dictionary<Node, int>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();

@@ -69,7 +69,8 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
                 node.Neighbors = newNeighbors.ToDictionary(x => x, x => new EdgeCost
                 {
-                    Value = _randomizer.Next(MinEdgeCost, MaxEdgeCost)
+                    Value = _randomizer.Next(MinEdgeCost, MaxEdgeCost),
+                    NodesConnected = new KeyValuePair<Node, Node>(node, x)
                 });
 
                 foreach (var neighbor in node.Neighbors.Where(neighbor => !neighbor.Key.IsNeighborWith(node)))

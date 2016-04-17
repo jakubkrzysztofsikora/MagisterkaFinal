@@ -22,7 +22,7 @@ namespace Magisterka.Domain.Graph.Pathfinding
             return _strategy.CalculatedPath.Select(node => node.Coordinates).Last();
         }
 
-        public List<Node> GetOptimalPath(Map activeMap, Position currentPosition)
+        public IEnumerable<Node> GetOptimalPath(Map activeMap, Position currentPosition)
         {
             _strategy.Calculate(activeMap, currentPosition);
 

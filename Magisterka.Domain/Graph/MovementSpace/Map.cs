@@ -32,6 +32,11 @@ namespace Magisterka.Domain.Graph.MovementSpace
             return _nodes.FirstOrDefault(node => node.Coordinates == position);
         }
 
+        public IEnumerable<EdgeCost> GetAllEdgeCosts()
+        {
+            return from node in _nodes from neighbor in node.Neighbors select neighbor.Value;
+        }
+
         public IEnumerator<Node> GetEnumerator()
         {
             return _nodes.GetEnumerator();
