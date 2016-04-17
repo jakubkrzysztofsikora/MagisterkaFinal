@@ -15,8 +15,8 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public static Map WithTargetPosition(this Map map, Position endingPosition)
         {
-            var startingNode = map.GetNodeByPosition(endingPosition);
-            startingNode.IsTargetNode = true;
+            var endingNode = map.GetNodeByPosition(endingPosition);
+            endingNode.IsTargetNode = true;
 
             return map;
         }

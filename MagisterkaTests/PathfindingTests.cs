@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
@@ -43,7 +44,7 @@ namespace MagisterkaTests
 
             while (currentPosition != _endingPosition)
             {
-                currentPosition = pathfinder.GetNextStep(_map, _startingPosition, _endingPosition);
+                currentPosition = pathfinder.GetNextStep(_map, currentPosition);
             }
 
             //Then
@@ -51,11 +52,79 @@ namespace MagisterkaTests
             Assert.AreEqual(targetNode, result);
         }
 
-        private IEnumerable<Position> GenerateListOfCoordinates()
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        public void ShouldNotChooseBlockedNodeForTheNExtStep(ePathfindingAlgorithms algorithm)
         {
+            //Given
+            Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            Position currentPosition = _startingPosition;
+
+            while (currentPosition != _endingPosition)
+            {
+                currentPosition = pathfinder.GetNextStep(_map, currentPosition);
+
+                //Then
+                Node result = _map.GetNodeByPosition(currentPosition);
+                Assert.False(result.IsBlocked);
+            }
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        public void ShouldFindOPTIMALathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            Position positionOfTheMoreOptimalNode = new Position(Guid.NewGuid());
+            Map map = CreateTestMap(positionOfTheMoreOptimalNode);
+
+            //When
+            Position currentPosition = _startingPosition;
+
+            List<Node> result = pathfinder.GetOptimalPath(map, currentPosition);
+
+            //Then
+            Assert.True(result.Any(node => node.Coordinates == positionOfTheMoreOptimalNode));
+        }
+
+        private Map CreateTestMap(Position positionToInjectInTheMiddle)
+        {
+            Node nodeA = new Node();
+            Node nodeB = new Node();
+            Node nodeC = new Node();
+            Node nodeD = new Node();
+
+            nodeA.IsStartingNode = true;
+            nodeD.IsTargetNode = true;
+
+            nodeA.Coordinates = _startingPosition;
+            nodeD.Coordinates = _endingPosition;
+            nodeB.Coordinates = new Position(Guid.NewGuid());
+            nodeC.Coordinates = positionToInjectInTheMiddle;
+
+            nodeA.Neighbors.Add(nodeB, new EdgeCost { Value = 1 });
+            nodeA.Neighbors.Add(nodeC, new EdgeCost { Value = 2 });
+
+            nodeB.Neighbors.Add(nodeA, new EdgeCost { Value = 1 });
+            nodeB.Neighbors.Add(nodeD, new EdgeCost { Value = 10 });
+
+            nodeC.Neighbors.Add(nodeA, new EdgeCost { Value = 2 });
+            nodeC.Neighbors.Add(nodeD, new EdgeCost { Value = 5 });
+
+            nodeD.Neighbors.Add(nodeB, new EdgeCost { Value = 10 });
+            nodeD.Neighbors.Add(nodeC, new EdgeCost { Value = 5 });
+
+            return new Map(new List<Node> {nodeA, nodeB, nodeC, nodeD});
+        }
+
+        private IEnumerable<Position> GenerateListOfCoordinates(int? numberOfNodes = null)
+        {
+            numberOfNodes = numberOfNodes ?? 20;
+
             yield return _startingPosition;
 
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < numberOfNodes.Value - 2; i++)
             {
                 yield return new Position(Guid.NewGuid());
             }

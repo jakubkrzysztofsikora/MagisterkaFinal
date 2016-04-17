@@ -10,6 +10,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public interface IPathfindingStrategy
     {
-        Position Calculate(Map map);
+        List<Node> CalculatedPath { get; }
+        void Calculate(Map map, Position currentPosition);
     }
 }

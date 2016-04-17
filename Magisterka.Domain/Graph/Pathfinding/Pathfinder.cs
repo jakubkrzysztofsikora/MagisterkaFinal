@@ -1,4 +1,6 @@
-﻿using Magisterka.Domain.Graph.MovementSpace;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies;
 
@@ -13,9 +15,18 @@ namespace Magisterka.Domain.Graph.Pathfinding
             _strategy = strategy;
         }
 
-        public Position GetNextStep(Map activeMap, Position currentPosition, Position targetPosition)
+        public Position GetNextStep(Map activeMap, Position currentPosition)
         {
-            return _strategy.Calculate(activeMap);
+            _strategy.Calculate(activeMap, currentPosition);
+
+            return _strategy.CalculatedPath.Select(node => node.Coordinates).Last();
         }
+
+        public List<Node> GetOptimalPath(Map activeMap, Position currentPosition)
+        {
+            _strategy.Calculate(activeMap, currentPosition);
+
+            return _strategy.CalculatedPath;
+        } 
     }
 }
