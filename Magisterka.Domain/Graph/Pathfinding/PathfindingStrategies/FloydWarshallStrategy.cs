@@ -25,21 +25,35 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                 foreach (Node firstNode in map.Where(firstNode => middleNode != firstNode))
                 {
                     foreach (Node finalNode in map.Where(finalNode => finalNode != middleNode && finalNode != firstNode &&
-                                                                      _distancesBetweenNodes[new KeyValuePair<Node, Node>(firstNode, middleNode)] +
-                                                                      _distancesBetweenNodes[new KeyValuePair<Node, Node>(middleNode, finalNode)] <
-                                                                      _distancesBetweenNodes[new KeyValuePair<Node, Node>(firstNode, finalNode)]))
+                                                                      IsPathThroughOtherNodeShorter(firstNode, finalNode, middleNode)))
                     {
-                        _distancesBetweenNodes[new KeyValuePair<Node, Node>(firstNode, finalNode)] =
-                            _distancesBetweenNodes[new KeyValuePair<Node, Node>(firstNode, middleNode)] +
-                            _distancesBetweenNodes[new KeyValuePair<Node, Node>(middleNode, finalNode)];
-
-                        _nextNodes[new KeyValuePair<Node, Node>(firstNode, finalNode)] =
-                            _nextNodes[new KeyValuePair<Node, Node>(firstNode, middleNode)];
+                        SetNewDistanceBetweenNodes(firstNode, middleNode, finalNode);
+                        AddNewMiddleNodeBetweenFirstAndFinalToOptimalPath(firstNode, middleNode, finalNode);
                     }
                 }
             }
 
             CalculatedPath = ContructPath(map, currentPosition);
+        }
+
+        private bool IsPathThroughOtherNodeShorter(Node startNode, Node targetNode, Node otherNode)
+        {
+            return _distancesBetweenNodes[new KeyValuePair<Node, Node>(startNode, otherNode)] +
+                   _distancesBetweenNodes[new KeyValuePair<Node, Node>(otherNode, targetNode)] <
+                   _distancesBetweenNodes[new KeyValuePair<Node, Node>(startNode, targetNode)];
+        }
+
+        private void AddNewMiddleNodeBetweenFirstAndFinalToOptimalPath(Node firstNode, Node middleNode, Node finalNode)
+        {
+            _nextNodes[new KeyValuePair<Node, Node>(firstNode, finalNode)] =
+                            _nextNodes[new KeyValuePair<Node, Node>(firstNode, middleNode)];
+        }
+
+        private void SetNewDistanceBetweenNodes(Node firstNode, Node middleNode, Node finalNode)
+        {
+            _distancesBetweenNodes[new KeyValuePair<Node, Node>(firstNode, finalNode)] =
+                            _distancesBetweenNodes[new KeyValuePair<Node, Node>(firstNode, middleNode)] +
+                            _distancesBetweenNodes[new KeyValuePair<Node, Node>(middleNode, finalNode)];
         }
 
         private IEnumerable<Node> ContructPath(Map map, Position startingPosition)
