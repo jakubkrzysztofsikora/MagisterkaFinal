@@ -86,5 +86,48 @@ namespace MagisterkaTests
             //Then
             Assert.True(!map.Any(node => node.IsStartingNode || node.IsTargetNode));
         }
+
+        [Test]
+        public void ShouldCalculateHeurisitcScoreAsNumberOfNodesBetween()
+        {
+            //Given
+            MapFactory factory = new MapFactory(new Random());
+            Map map = factory.GenerateDefaultMap();
+            int heuristicScore = 2;
+            Node firstNode = map.First();
+            Node targetNode = map.GetNodeByPosition(1, 1);
+
+            //When
+            long result = map.GetHeuristicScoreBetweenNodes(firstNode, targetNode);
+
+            //Then
+            Assert.AreEqual(heuristicScore, result);
+        }
+
+        [Test]
+        public void ShouldGiveUniquePositionsToEachNode()
+        {
+            //Given
+            MapFactory factory = new MapFactory(new Random());
+            
+            //When
+            Map defaultMap = factory.GenerateDefaultMap();
+
+            //Then
+            Assert.True(defaultMap.All(node => node.IsOnTheGrid()));
+            Assert.False(defaultMap.GroupBy(node => new { node.Coordinates.X, node.Coordinates.Y }).Any(group => group.Count() > 1));
+        }
+
+        private Node GetNodeXNodesAway(Node node, int x)
+        {
+            Node result = node;
+
+            for (int i = 0; i < x; i++)
+            {
+                result = result?.Neighbors.Select(nodeToCost => nodeToCost.Key).FirstOrDefault();
+            }
+
+            return result;
+        }
     }
 }

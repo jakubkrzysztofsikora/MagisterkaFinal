@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {
@@ -27,6 +28,11 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
         public bool IsNeighborWith(Node nodeToCheck)
         {
             return Neighbors.ContainsKey(nodeToCheck);
+        }
+
+        public bool IsOnTheGrid()
+        {
+            return Coordinates.X.HasValue && Coordinates.Y.HasValue;
         }
 
         public override bool Equals(object anotherNode)

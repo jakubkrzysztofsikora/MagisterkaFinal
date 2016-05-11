@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
@@ -32,6 +33,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
             }
 
             GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
+            PutMapOnGrid(ref newMap);
 
             return newMap;
         }
@@ -51,6 +53,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
             }
 
             GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
+            PutMapOnGrid(ref newMap);
 
             return newMap;
         }
@@ -77,6 +80,32 @@ namespace Magisterka.Domain.Graph.MovementSpace
                 {
                     neighbor.Key.Neighbors.Add(node, neighbor.Value);
                 }
+            }
+        }
+
+        private void PutMapOnGrid(ref Map map)
+        {
+            Node firstNode = map.First();
+            firstNode.Coordinates.X = 0;
+            firstNode.Coordinates.Y = 0;
+            GenerateNodesCoordinates(firstNode);
+        }
+
+        private void GenerateNodesCoordinates(Node node, int xPosition = 0)
+        {
+            List<Node> neighbors = node.Neighbors.Keys.Where(x => !x.IsOnTheGrid()).ToList();
+            foreach (Node neighbor in neighbors)
+            {
+                neighbor.Coordinates.Y = node.Coordinates.Y + 1;
+                neighbor.Coordinates.X = xPosition;
+                ++xPosition;
+            }
+
+            xPosition = 0;
+            foreach (var neighbor in neighbors)
+            {
+                GenerateNodesCoordinates(neighbor, xPosition);
+                xPosition += neighbor.Neighbors.Count;
             }
         }
 

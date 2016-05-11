@@ -22,8 +22,16 @@ namespace MagisterkaTests
         {
             _pathfinderFactory = new PathfinderFactory();
             _mapFactory = new MapFactory(new Random());
-            _startingPosition = new Position(Guid.NewGuid());
-            _endingPosition = new Position(Guid.NewGuid());
+            _startingPosition = new Position(Guid.NewGuid())
+            {
+                X = 0,
+                Y = 0
+            };
+            _endingPosition = new Position(Guid.NewGuid())
+            {
+                X = 0,
+                Y = 2
+            };
 
             var listOfCoordinates = GenerateListOfCoordinates();
             _map =
@@ -34,6 +42,7 @@ namespace MagisterkaTests
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
         public void ShouldFindPathBasedOnCurrentSituation(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -55,6 +64,7 @@ namespace MagisterkaTests
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
         public void ShouldNotChooseBlockedNodeForTheNExtStep(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -75,11 +85,16 @@ namespace MagisterkaTests
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
         public void ShouldFindOPTIMALathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
         {
             //Given
             Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
-            Position positionOfTheMoreOptimalNode = new Position(Guid.NewGuid());
+            Position positionOfTheMoreOptimalNode = new Position(Guid.NewGuid())
+            {
+                X = 1,
+                Y = 1
+            };
             Map map = CreateTestMap(positionOfTheMoreOptimalNode);
 
             //When
@@ -103,7 +118,11 @@ namespace MagisterkaTests
 
             nodeA.Coordinates = _startingPosition;
             nodeD.Coordinates = _endingPosition;
-            nodeB.Coordinates = new Position(Guid.NewGuid());
+            nodeB.Coordinates = new Position(Guid.NewGuid())
+            {
+                X = 0,
+                Y = 1
+            };
             nodeC.Coordinates = positionToInjectInTheMiddle;
 
             nodeA.Neighbors.Add(nodeB, new EdgeCost { Value = 1, NodesConnected = new KeyValuePair<Node, Node>(nodeA, nodeB)});

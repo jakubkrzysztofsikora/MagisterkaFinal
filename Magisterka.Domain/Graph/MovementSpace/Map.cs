@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Magisterka.Domain.Graph.MovementSpace.Exceptions;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
@@ -27,9 +28,34 @@ namespace Magisterka.Domain.Graph.MovementSpace
             MaximumNumberOfNodes = nodeList.Count;
         }
 
+        public Node GetTargetNode()
+        {
+            return _nodes.SingleOrDefault(node => node.IsTargetNode);
+        }
+
+        public long GetHeuristicScoreBetweenNodes(Node start, Node end)
+        {
+            return start.Coordinates.ManhattanDistanceTo(end.Coordinates);
+        }
+
         public Node GetNodeByPosition(Position position)
         {
             return _nodes.FirstOrDefault(node => node.Coordinates == position);
+        }
+
+        public Node GetNodeByPosition(int x, int y)
+        {
+            return _nodes.FirstOrDefault(node => node.Coordinates.X == x && node.Coordinates.Y == y);
+        }
+
+        public IEnumerable<Node> GetNodesByYLevel(int level)
+        {
+            return _nodes.Where(node => node.Coordinates.Y == level);
+        }
+
+        public IEnumerable<Node> GetNodesByXLevel(int level)
+        {
+            return _nodes.Where(node => node.Coordinates.X == level);
         }
 
         public IEnumerable<EdgeCost> GetAllEdgeCosts()
@@ -95,5 +121,10 @@ namespace Magisterka.Domain.Graph.MovementSpace
         public int Count => _nodes.Count();
 
         public bool IsReadOnly => true;
+
+        private bool IsNodeOnTheGrid(Node node)
+        {
+            return node.Coordinates.X.HasValue && node.Coordinates.Y.HasValue;
+        }
     }
 }

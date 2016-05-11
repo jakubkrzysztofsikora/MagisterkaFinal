@@ -1,9 +1,13 @@
 ﻿using System;
+using Magisterka.Domain.Graph.MovementSpace.Exceptions;
 
 namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {
     public class Position : IComparable
     {
+        public int? X { get; set; }
+        public int? Y { get; set; }
+
         private readonly Guid _nodeId;
 
         public Position(Guid nodeId)
@@ -36,6 +40,14 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
         public static bool operator !=(Position a, Position b)
         {
             return !a.Equals(b);
+        }
+
+        public int ManhattanDistanceTo(Position anotherPosition)
+        {
+            if (!X.HasValue || !Y.HasValue || !anotherPosition.X.HasValue || !anotherPosition.Y.HasValue)
+                throw new NodeNotOnTheGridException();
+
+            return Math.Abs(X.Value - anotherPosition.X.Value) + Math.Abs(Y.Value - anotherPosition.Y.Value);
         }
     }
 }
