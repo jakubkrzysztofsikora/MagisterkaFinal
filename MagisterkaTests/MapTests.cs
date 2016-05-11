@@ -78,7 +78,9 @@ namespace MagisterkaTests
             Map map = factory.GenerateDefaultMap();
             Node startingNode = map.First();
             Node targetNode = map.ElementAt(new Random().Next(0, map.Count - 1));
-            map = map.WithStartingPosition(startingNode.Coordinates).WithTargetPosition(targetNode.Coordinates);
+            map = map
+                .WithStartingPosition(startingNode.Coordinates)
+                .WithTargetPosition(targetNode.Coordinates);
 
             //When
             map = map.WithNoDefinedPositions();
@@ -92,7 +94,7 @@ namespace MagisterkaTests
         {
             //Given
             MapFactory factory = new MapFactory(new Random());
-            Map map = factory.GenerateDefaultMap();
+            Map map = factory.GenerateDefaultMap().WithGridPositions();
             int heuristicScore = 2;
             Node firstNode = map.First();
             Node targetNode = map.GetNodeByPosition(1, 1);
@@ -111,23 +113,11 @@ namespace MagisterkaTests
             MapFactory factory = new MapFactory(new Random());
             
             //When
-            Map defaultMap = factory.GenerateDefaultMap();
+            Map defaultMap = factory.GenerateDefaultMap().WithGridPositions();
 
             //Then
             Assert.True(defaultMap.All(node => node.IsOnTheGrid()));
             Assert.False(defaultMap.GroupBy(node => new { node.Coordinates.X, node.Coordinates.Y }).Any(group => group.Count() > 1));
-        }
-
-        private Node GetNodeXNodesAway(Node node, int x)
-        {
-            Node result = node;
-
-            for (int i = 0; i < x; i++)
-            {
-                result = result?.Neighbors.Select(nodeToCost => nodeToCost.Key).FirstOrDefault();
-            }
-
-            return result;
         }
     }
 }

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graph\MovementSpace\Exceptions\DuplicatedPositionOnGridException.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\NodeNotOnTheGridException.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\EdgeCost.cs" />
     <Compile Include="Graph\MovementSpace\Map.cs" />
@@ -47,6 +48,7 @@
     <Compile Include="Graph\MovementSpace\MapSpecification.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Node.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Position.cs" />
+    <Compile Include="Graph\MovementSpace\MapValidator.cs" />
     <Compile Include="Graph\Pathfinding\Exceptions\NegativeWeightCycleException.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\AStarStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\BellmanFordStrategy.cs" />

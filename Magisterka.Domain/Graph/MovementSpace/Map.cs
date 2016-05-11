@@ -121,10 +121,5 @@ namespace Magisterka.Domain.Graph.MovementSpace
         public int Count => _nodes.Count();
 
         public bool IsReadOnly => true;
-
-        private bool IsNodeOnTheGrid(Node node)
-        {
-            return node.Coordinates.X.HasValue && node.Coordinates.Y.HasValue;
-        }
     }
 }
