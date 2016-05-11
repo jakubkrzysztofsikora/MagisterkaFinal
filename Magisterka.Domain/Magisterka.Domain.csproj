@@ -56,6 +56,7 @@
     <Compile Include="Graph\Pathfinding\ePathfindingAlgorithms.cs" />
     <Compile Include="Graph\Pathfinding\Pathfinder.cs" />
     <Compile Include="Graph\Pathfinding\PathfinderFactory.cs" />
+    <Compile Include="Graph\Pathfinding\PathfindingStrategies\FloydWarshallStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\IPathfindingStrategy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

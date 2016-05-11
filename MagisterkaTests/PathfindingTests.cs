@@ -37,6 +37,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         public void ShouldFindPathBasedOnCurrentSituation(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -59,6 +60,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         public void ShouldNotChooseBlockedNodeForTheNExtStep(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -80,6 +82,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         public void ShouldFindOPTIMALPathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
         {
             //Given

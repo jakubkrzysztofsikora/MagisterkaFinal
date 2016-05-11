@@ -7,12 +7,13 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public class AStarStrategy : IPathfindingStrategy
     {
+        public IEnumerable<Node> CalculatedPath { get; private set; }
+
         private const long Infinity = int.MaxValue;
         private readonly List<Node> _closedSet = new List<Node>();
         private readonly List<Node> _openSet = new List<Node>();
 
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
-        public IEnumerable<Node> CalculatedPath { get; private set; }
 
         public void Calculate(Map map, Position currentPosition)
         {

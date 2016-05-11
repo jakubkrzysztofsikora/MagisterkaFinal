@@ -90,7 +90,7 @@ namespace MagisterkaTests
         }
 
         [Test]
-        public void ShouldCalculateHeurisitcScoreAsNumberOfNodesBetween()
+        public void ShouldCalculateHeurisitcScoreBetweenNodes()
         {
             //Given
             MapFactory factory = new MapFactory(new Random());

@@ -20,7 +20,7 @@ namespace Magisterka.Domain.Graph.Pathfinding
                 case ePathfindingAlgorithms.AStar:
                     return new Pathfinder(new AStarStrategy());
                 case ePathfindingAlgorithms.FloydWarshall:
-                    throw new NotImplementedException();
+                    return new Pathfinder(new FloydWarshallStrategy());
                 case ePathfindingAlgorithms.Johnson:
                     throw new NotImplementedException();
                 default:
