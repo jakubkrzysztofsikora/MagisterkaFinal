@@ -69,9 +69,9 @@ namespace Magisterka.Domain.Graph.MovementSpace
                             otherNode.Neighbors.Count < maxNumberOfNeighbors)
                         .Take(numberOfNeighbors - node.Neighbors.Count).Concat(node.Neighbors.Keys).Distinct();
 
-                node.Neighbors = newNeighbors.ToDictionary(x => x, x => new EdgeCost
+                node.Neighbors = newNeighbors.ToDictionary(x => x, x => new Edge
                 {
-                    Value = _randomizer.Next(MinEdgeCost, MaxEdgeCost),
+                    Cost = _randomizer.Next(MinEdgeCost, MaxEdgeCost),
                     NodesConnected = new KeyValuePair<Node, Node>(node, x)
                 });
 

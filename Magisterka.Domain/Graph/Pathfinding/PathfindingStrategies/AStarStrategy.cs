@@ -47,7 +47,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                     var neighbor = nodeToCost.Key;
                     var neighborDistance = nodeToCost.Value;
                     var tentativeCostFromStartToNode = weightedCostFromStartToNodeMap[processedNode] +
-                                                       neighborDistance.Value;
+                                                       neighborDistance.Cost;
 
                     bool addedNodeToOpenSet = DiscoverNewNodeToEvaluate(neighbor);
                     if (!addedNodeToOpenSet && tentativeCostFromStartToNode >= weightedCostFromStartToNodeMap[neighbor])

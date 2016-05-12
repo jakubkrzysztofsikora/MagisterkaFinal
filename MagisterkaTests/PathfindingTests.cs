@@ -38,6 +38,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson)]
         public void ShouldFindPathBasedOnCurrentSituation(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -61,6 +62,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson)]
         public void ShouldNotChooseBlockedNodeForTheNExtStep(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -83,6 +85,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson)]
         public void ShouldFindOPTIMALPathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -126,17 +129,17 @@ namespace MagisterkaTests
             };
             nodeC.Coordinates = positionToInjectInTheMiddle;
 
-            nodeA.Neighbors.Add(nodeB, new EdgeCost { Value = 1, NodesConnected = new KeyValuePair<Node, Node>(nodeA, nodeB)});
-            nodeA.Neighbors.Add(nodeC, new EdgeCost { Value = 2, NodesConnected = new KeyValuePair<Node, Node>(nodeA, nodeC) });
+            nodeA.Neighbors.Add(nodeB, new Edge { Cost = 1, NodesConnected = new KeyValuePair<Node, Node>(nodeA, nodeB)});
+            nodeA.Neighbors.Add(nodeC, new Edge { Cost = 2, NodesConnected = new KeyValuePair<Node, Node>(nodeA, nodeC) });
 
-            nodeB.Neighbors.Add(nodeA, new EdgeCost { Value = 1, NodesConnected = new KeyValuePair<Node, Node>(nodeB, nodeA) });
-            nodeB.Neighbors.Add(nodeD, new EdgeCost { Value = 10, NodesConnected = new KeyValuePair<Node, Node>(nodeB, nodeD) });
+            nodeB.Neighbors.Add(nodeA, new Edge { Cost = 1, NodesConnected = new KeyValuePair<Node, Node>(nodeB, nodeA) });
+            nodeB.Neighbors.Add(nodeD, new Edge { Cost = 10, NodesConnected = new KeyValuePair<Node, Node>(nodeB, nodeD) });
 
-            nodeC.Neighbors.Add(nodeA, new EdgeCost { Value = 2, NodesConnected = new KeyValuePair<Node, Node>(nodeC, nodeA) });
-            nodeC.Neighbors.Add(nodeD, new EdgeCost { Value = 5, NodesConnected = new KeyValuePair<Node, Node>(nodeC, nodeD) });
+            nodeC.Neighbors.Add(nodeA, new Edge { Cost = 2, NodesConnected = new KeyValuePair<Node, Node>(nodeC, nodeA) });
+            nodeC.Neighbors.Add(nodeD, new Edge { Cost = 5, NodesConnected = new KeyValuePair<Node, Node>(nodeC, nodeD) });
 
-            nodeD.Neighbors.Add(nodeB, new EdgeCost { Value = 10, NodesConnected = new KeyValuePair<Node, Node>(nodeD, nodeB) });
-            nodeD.Neighbors.Add(nodeC, new EdgeCost { Value = 5, NodesConnected = new KeyValuePair<Node, Node>(nodeD, nodeC) });
+            nodeD.Neighbors.Add(nodeB, new Edge { Cost = 10, NodesConnected = new KeyValuePair<Node, Node>(nodeD, nodeB) });
+            nodeD.Neighbors.Add(nodeC, new Edge { Cost = 5, NodesConnected = new KeyValuePair<Node, Node>(nodeD, nodeC) });
 
             return new Map(new List<Node> {nodeA, nodeB, nodeC, nodeD});
         }

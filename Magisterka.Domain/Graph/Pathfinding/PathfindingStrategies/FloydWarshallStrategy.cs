@@ -86,7 +86,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
             foreach (var nodeToNode in map.SelectMany(node => node.Neighbors.Keys.Select(anotherNode => new KeyValuePair<Node, Node>(node, anotherNode))))
             {
-                _distancesBetweenNodes[nodeToNode] = nodeToNode.Key.Neighbors[nodeToNode.Value].Value;
+                _distancesBetweenNodes[nodeToNode] = nodeToNode.Key.Neighbors[nodeToNode.Value].Cost;
                 _nextNodes[nodeToNode] = nodeToNode.Value;
             }
         }

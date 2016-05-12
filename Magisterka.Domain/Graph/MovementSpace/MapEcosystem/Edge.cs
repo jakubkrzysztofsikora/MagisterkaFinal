@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using GraphX.PCL.Common.Models;
 
 namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {
-    public class EdgeCost
+    public class Edge
     {
-        public int Value { get; set; }
+        public int Cost { get; set; }
         public KeyValuePair<Node, Node> NodesConnected { get; set; }
     }
 }

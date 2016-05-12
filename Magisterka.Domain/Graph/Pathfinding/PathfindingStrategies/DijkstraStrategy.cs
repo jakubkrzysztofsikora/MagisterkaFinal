@@ -41,7 +41,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             {
                 var neighbor = neighborToCost.Key;
                 var neighborEdgeCost = neighborToCost.Value;
-                var updatedDistanceToNode = _nodeToCost[nearestNode] + neighborEdgeCost.Value;
+                var updatedDistanceToNode = _nodeToCost[nearestNode] + neighborEdgeCost.Cost;
 
                 if (neighbor.IsBlocked || !_nodeToCost.ContainsKey(neighbor) ||
                     updatedDistanceToNode >= _nodeToCost[neighbor])

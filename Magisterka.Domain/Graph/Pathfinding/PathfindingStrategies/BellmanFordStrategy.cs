@@ -22,7 +22,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             Node currentNode = map.GetNodeByPosition(currentPosition);
             Node targetNode = map.SingleOrDefault(node => node.IsTargetNode);
 
-            List<EdgeCost> edges = map.GetAllEdgeCosts().ToList();
+            List<Edge> edges = map.GetAllEdgeCosts().ToList();
 
             InitilizeDataStructures(map, currentNode);
 
@@ -33,7 +33,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             CalculatedPath = CreateOptimalPath(currentNode, targetNode);
         }
 
-        private void CheckForNegativeWeights(List<EdgeCost> edges)
+        private void CheckForNegativeWeights(List<Edge> edges)
         {
             IterateEdgesAndPerformAction(edges, (edge, node1, node2) =>
             {
@@ -41,26 +41,26 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             });
         }
 
-        private void RelaxMapEdges(Map nodes, List<EdgeCost> edges)
+        private void RelaxMapEdges(Map nodes, List<Edge> edges)
         {
             for (int i = 1; i < nodes.Count - 1; ++i)
             {
                 IterateEdgesAndPerformAction(edges, (edge, node1, node2) =>
                 {
-                    _nodesToCosts[node2] = _nodesToCosts[node1] + edge.Value;
+                    _nodesToCosts[node2] = _nodesToCosts[node1] + edge.Cost;
                     _previousNodes[node2] = node1;
                 });
             }
         }
 
-        private void IterateEdgesAndPerformAction(List<EdgeCost> edges, Action<EdgeCost, Node, Node> action)
+        private void IterateEdgesAndPerformAction(List<Edge> edges, Action<Edge, Node, Node> action)
         {
             foreach (var edge in edges)
             {
                 var node1 = edge.NodesConnected.Value;
                 var node2 = edge.NodesConnected.Key;
 
-                if (_nodesToCosts[node2] > _nodesToCosts[node1] + edge.Value && !node2.IsBlocked)
+                if (_nodesToCosts[node2] > _nodesToCosts[node1] + edge.Cost && !node2.IsBlocked)
                 {
                     action.Invoke(edge, node1, node2);
                 }
