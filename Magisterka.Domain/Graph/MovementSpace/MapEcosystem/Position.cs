@@ -44,9 +44,6 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 
         public int ManhattanDistanceTo(Position anotherPosition)
         {
-            if (!X.HasValue || !Y.HasValue || !anotherPosition.X.HasValue || !anotherPosition.Y.HasValue)
-                throw new NodeNotOnTheGridException();
-
             return Math.Abs(X.Value - anotherPosition.X.Value) + Math.Abs(Y.Value - anotherPosition.Y.Value);
         }
     }

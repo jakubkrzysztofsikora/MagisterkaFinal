@@ -22,27 +22,22 @@ namespace MagisterkaTests
         {
             _pathfinderFactory = new PathfinderFactory();
             _mapFactory = new MapFactory(new Random());
-            _startingPosition = new Position(Guid.NewGuid())
-            {
-                X = 0,
-                Y = 0
-            };
-            _endingPosition = new Position(Guid.NewGuid())
-            {
-                X = 0,
-                Y = 2
-            };
+            _startingPosition = new Position(Guid.NewGuid());
+            _endingPosition = new Position(Guid.NewGuid());
 
             var listOfCoordinates = GenerateListOfCoordinates();
             _map =
                 _mapFactory.GenerateMapWithProvidedCoordinates(listOfCoordinates)
                     .WithStartingPosition(_startingPosition)
-                    .WithTargetPosition(_endingPosition);
+                    .WithTargetPosition(_endingPosition)
+                    .WithGridPositions()
+                    .Validated();
         }
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         public void ShouldFindPathBasedOnCurrentSituation(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -65,6 +60,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         public void ShouldNotChooseBlockedNodeForTheNExtStep(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -86,7 +82,8 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.Djikstra)]
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
-        public void ShouldFindOPTIMALathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        public void ShouldFindOPTIMALPathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
         {
             //Given
             Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
@@ -117,7 +114,11 @@ namespace MagisterkaTests
             nodeD.IsTargetNode = true;
 
             nodeA.Coordinates = _startingPosition;
+            nodeA.Coordinates.X = 0;
+            nodeA.Coordinates.Y = 0;
             nodeD.Coordinates = _endingPosition;
+            nodeA.Coordinates.X = 0;
+            nodeA.Coordinates.Y = 2;
             nodeB.Coordinates = new Position(Guid.NewGuid())
             {
                 X = 0,

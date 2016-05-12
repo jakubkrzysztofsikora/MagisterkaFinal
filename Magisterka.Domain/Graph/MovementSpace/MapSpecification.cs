@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
@@ -30,6 +31,43 @@ namespace Magisterka.Domain.Graph.MovementSpace
             }
 
             return map;
+        }
+
+        public static Map WithGridPositions(this Map map)
+        {
+            Node firstNode = map.First();
+            firstNode.Coordinates.X = 0;
+            firstNode.Coordinates.Y = 0;
+            GenerateNodesCoordinates(map, firstNode);
+
+            return map;
+        }
+
+        public static Map Validated(this Map map)
+        {
+            MapValidator validator = new MapValidator(map);
+            validator.ValidateNodes();
+            return map;
+        }
+
+        private static void GenerateNodesCoordinates(Map map, Node node, int xPosition = 0)
+        {
+            List<Node> neighbors = node.Neighbors.Keys.Where(x => !x.IsOnTheGrid()).ToList();
+            int yPosition = node.Coordinates.Y.Value + 1;
+
+            foreach (Node neighbor in neighbors)
+            {
+                neighbor.Coordinates.Y = yPosition;
+                neighbor.Coordinates.X = xPosition;
+                ++xPosition;
+            }
+
+            xPosition = 0;
+            foreach (var neighbor in neighbors)
+            {
+                GenerateNodesCoordinates(map, neighbor, xPosition);
+                xPosition += neighbor.Neighbors.Count;
+            }
         }
     }
 }
