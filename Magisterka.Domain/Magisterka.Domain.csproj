@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\MapAdapter.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\DuplicatedPositionOnGridException.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\NodeNotOnTheGridException.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Edge.cs" />
