@@ -42,12 +42,12 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
                 foreach (
                     var nodeToCost in
-                        processedNode.Neighbors.Where(x => !_closedSet.Contains(x.Key) && !x.Key.IsBlocked))
+                        processedNode.Neighbors.Where(x => !_closedSet.Contains(x.Key)))
                 {
                     var neighbor = nodeToCost.Key;
                     var neighborDistance = nodeToCost.Value;
                     var tentativeCostFromStartToNode = weightedCostFromStartToNodeMap[processedNode] +
-                                                       neighborDistance.Cost;
+                                                       (neighbor.IsBlocked ? Infinity : neighborDistance.Cost);
 
                     bool addedNodeToOpenSet = DiscoverNewNodeToEvaluate(neighbor);
                     if (!addedNodeToOpenSet && tentativeCostFromStartToNode >= weightedCostFromStartToNodeMap[neighbor])
@@ -66,7 +66,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
         private bool DiscoverNewNodeToEvaluate(Node nodeToEvaluate)
         {
-            if (_openSet.Contains(nodeToEvaluate)) return false;
+            if (_openSet.Contains(nodeToEvaluate) || nodeToEvaluate.IsBlocked) return false;
             _openSet.Add(nodeToEvaluate);
             return true;
         }

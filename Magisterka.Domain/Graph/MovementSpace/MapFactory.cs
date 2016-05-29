@@ -27,10 +27,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
             while (newMap.Count < newMap.MaximumNumberOfNodes)
             {
-                newMap.AddIfNotExists(new Node
-                {
-                    IsBlocked = RandomizeBlockedStatus()
-                });
+                newMap.AddIfNotExists(new Node());
             }
 
             GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
@@ -47,7 +44,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
             {
                 newMap.AddIfNotExists(new Node
                 {
-                    IsBlocked = RandomizeBlockedStatus(),
                     Coordinates = coordinate
                 });
             }
@@ -80,11 +76,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
                     neighbor.Key.Neighbors.Add(node, neighbor.Value);
                 }
             }
-        }
-
-        private bool RandomizeBlockedStatus()
-        {
-            return _randomizer.Next(0, 1) != 0;
         }
     }
 }

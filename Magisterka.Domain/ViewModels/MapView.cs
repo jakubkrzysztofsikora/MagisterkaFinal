@@ -16,5 +16,13 @@ namespace Magisterka.Domain.ViewModels
         {
             return Vertices.SingleOrDefault(nodeView => nodeView.LogicNode == logicNode);
         }
+
+        public long GetNodeIdByPositionGuid(Position position)
+        {
+            return
+                Vertices.Where(nodeView => nodeView.LogicNode.Coordinates == position)
+                    .Select(nodeView => nodeView.ID)
+                    .SingleOrDefault();
+        }
     }
 }

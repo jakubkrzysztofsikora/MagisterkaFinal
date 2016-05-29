@@ -38,7 +38,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
-        [TestCase(ePathfindingAlgorithms.Johnson)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
         public void ShouldFindPathBasedOnCurrentSituation(ePathfindingAlgorithms algorithm)
         {
             //Given
@@ -62,21 +62,22 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
-        [TestCase(ePathfindingAlgorithms.Johnson)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
         public void ShouldNotChooseBlockedNodeForTheNExtStep(ePathfindingAlgorithms algorithm)
         {
             //Given
             Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            Map map = _map.WithRandomBlockedNodes(new Random());
 
             //When
             Position currentPosition = _startingPosition;
 
             while (currentPosition != _endingPosition)
             {
-                currentPosition = pathfinder.GetNextStep(_map, currentPosition);
+                currentPosition = pathfinder.GetNextStep(map, currentPosition);
 
                 //Then
-                Node result = _map.GetNodeByPosition(currentPosition);
+                Node result = map.GetNodeByPosition(currentPosition);
                 Assert.False(result.IsBlocked);
             }
         }
@@ -85,7 +86,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.BellmanFord)]
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
-        [TestCase(ePathfindingAlgorithms.Johnson)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
         public void ShouldFindOPTIMALPathNotJustPathFromAToB(ePathfindingAlgorithms algorithm)
         {
             //Given

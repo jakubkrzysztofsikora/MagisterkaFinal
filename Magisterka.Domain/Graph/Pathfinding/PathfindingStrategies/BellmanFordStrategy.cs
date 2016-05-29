@@ -55,7 +55,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
         private void IterateEdgesAndPerformAction(List<Edge> edges, Action<Edge, Node, Node> action)
         {
-            foreach (var edge in edges)
+            foreach (var edge in edges.Where(edge => !edge.NodesConnected.Key.IsBlocked && !edge.NodesConnected.Value.IsBlocked))
             {
                 var node1 = edge.NodesConnected.Value;
                 var node2 = edge.NodesConnected.Key;

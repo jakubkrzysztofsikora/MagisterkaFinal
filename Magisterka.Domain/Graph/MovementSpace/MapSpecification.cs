@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
@@ -10,6 +12,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             var startingNode = map.GetNodeByPosition(startingPosition);
             startingNode.IsStartingNode = true;
+            startingNode.IsBlocked = false;
 
             return map;
         }
@@ -18,6 +21,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             var endingNode = map.GetNodeByPosition(endingPosition);
             endingNode.IsTargetNode = true;
+            endingNode.IsBlocked = false;
 
             return map;
         }
@@ -38,7 +42,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
             Node firstNode = map.First();
             firstNode.Coordinates.X = 0;
             firstNode.Coordinates.Y = 0;
-            GenerateNodesCoordinates(map, firstNode);
+            GenerateNodesCoordinates(firstNode);
 
             return map;
         }
@@ -50,7 +54,17 @@ namespace Magisterka.Domain.Graph.MovementSpace
             return map;
         }
 
-        private static void GenerateNodesCoordinates(Map map, Node node, int xPosition = 0)
+        public static Map WithRandomBlockedNodes(this Map map, Random randomizer)
+        {
+            foreach (var node in map.Where(node => !node.IsStartingNode && !node.IsTargetNode))
+            {
+                node.IsBlocked = RandomizeBlockedStatus(randomizer);
+            }
+
+            return map;
+        }
+
+        private static void GenerateNodesCoordinates(Node node, int xPosition = 0)
         {
             List<Node> neighbors = node.Neighbors.Keys.Where(x => !x.IsOnTheGrid()).ToList();
             int yPosition = node.Coordinates.Y.Value + 1;
@@ -65,9 +79,14 @@ namespace Magisterka.Domain.Graph.MovementSpace
             xPosition = 0;
             foreach (var neighbor in neighbors)
             {
-                GenerateNodesCoordinates(map, neighbor, xPosition);
+                GenerateNodesCoordinates(neighbor, xPosition);
                 xPosition += neighbor.Neighbors.Count;
             }
+        }
+
+        private static bool RandomizeBlockedStatus(Random randomizer)
+        {
+            return randomizer.Next(0, 5) == 0;
         }
     }
 }
