@@ -62,7 +62,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             foreach (var node in map.Where(node => !node.IsStartingNode && !node.IsTargetNode))
             {
-                node.IsBlocked = RandomizeBlockedStatus(randomizer);
+                node.IsBlocked = ShouldNodeBeBlocked(node) && RandomizeBlockedStatus(randomizer);
             }
 
             return map;
@@ -84,6 +84,10 @@ namespace Magisterka.Domain.Graph.MovementSpace
                 targetNode.IsTargetNode = false;
         }
 
+        private static bool ShouldNodeBeBlocked(Node node)
+        {
+            return node.Neighbors.All(neighbor => !neighbor.Key.IsBlocked);
+        }
         private static void GenerateNodesCoordinates(Node node, int xPosition = 0)
         {
             List<Node> neighbors = node.Neighbors.Keys.Where(x => !x.IsOnTheGrid()).ToList();
@@ -104,9 +108,9 @@ namespace Magisterka.Domain.Graph.MovementSpace
             }
         }
 
-        private static bool RandomizeBlockedStatus(Random randomizer)
+        private static bool RandomizeBlockedStatus(Random randomizer, int maxOfBlocked = 3)
         {
-            return randomizer.Next(0, 5) == 0;
+            return randomizer.Next(0, maxOfBlocked) == 0;
         }
     }
 }
