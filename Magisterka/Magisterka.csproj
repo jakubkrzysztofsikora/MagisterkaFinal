@@ -93,6 +93,9 @@
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
     <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
+    <Compile Include="VisualEcosystem\Validators\ConfigurationValidator.cs" />
+    <Compile Include="VisualEcosystem\Validators\eValidationErrorTypes.cs" />
+    <Compile Include="VisualEcosystem\Validators\ValidationErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
     <Page Include="FrontStringResource.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -6,5 +6,9 @@
   <!-- String resource that can be localized -->
   <system:String x:Key="StartPathfinding">_Start Pathinding</system:String>
   <system:String x:Key="UnknownPathfindingError">Unknown Pathinding Error</system:String>
+  <system:String x:Key="PathConfError">Path Configuration Error</system:String>
+  <system:String x:Key="GraphConfError">Graph Configuration Error</system:String>
+  <system:String x:Key="GeneralError">General Application Error</system:String>
+  <system:String x:Key="CannotBeDefinedPosition">This particular node cannot be defined position.</system:String>
 
 </ResourceDictionary>

@@ -16,6 +16,7 @@ using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
+using Magisterka.VisualEcosystem.Validators;
 using QuickGraph;
 
 namespace Magisterka
@@ -26,11 +27,15 @@ namespace Magisterka
     public partial class MainWindow : Window
     {
         private MapAdapter _mapAdapter;
+        private ConfigurationValidator _validator;
+        private ValidationErrorDisplayer _errorDisplayer;
 
         public MainWindow()
         {
             InitializeComponent();
             CreateAllLayersOfGraph();
+            _errorDisplayer = new ValidationErrorDisplayer();
+            _validator = new ConfigurationValidator(_errorDisplayer);
 
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
 
@@ -68,19 +73,29 @@ namespace Magisterka
 
         private void SetStartingPoint(object sender, RoutedEventArgs e)
         {
-            NodeView node = ((ItemsControl) sender).GetNodeViewFromUiElement();
-            _mapAdapter.SetAsStartingPoint(node);
-            VisualMap.RemoveStartLabel();
-            VisualMap.CreateLabelForNode(node);
-            VisualMap.SetCurrentNode(((ItemsControl)sender).GetVertexControl());
+            VertexControl vertex = ((ItemsControl) sender).GetVertexControl();
+            NodeView node = vertex.GetNodeView();
+
+            if (_validator.ValidateCanBeDefinedPosition(vertex))
+            {
+                _mapAdapter.SetAsStartingPoint(node);
+                VisualMap.RemoveStartLabel();
+                VisualMap.CreateLabelForNode(node);
+                VisualMap.SetCurrentNode(((ItemsControl)sender).GetVertexControl());
+            }
         }
 
         private void SetTargetPoint(object sender, RoutedEventArgs e)
         {
-            NodeView node = ((ItemsControl)sender).GetNodeViewFromUiElement();
-            _mapAdapter.SetAsTargetPoint(node);
-            VisualMap.RemoveTargetLabel();
-            VisualMap.CreateLabelForNode(node);
+            VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
+            NodeView node = vertex.GetNodeView();
+
+            if (_validator.ValidateCanBeDefinedPosition(vertex))
+            {
+                _mapAdapter.SetAsTargetPoint(node);
+                VisualMap.RemoveTargetLabel();
+                VisualMap.CreateLabelForNode(node);
+            }
         }
 
         private void StartPathfinding(object sender, RoutedEventArgs e)
@@ -89,7 +104,7 @@ namespace Magisterka
 
             try
             {
-                NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.BellmanFord);
+                NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.FloydWarshall);
                 VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
                 VisualMap.SetCurrentNode(nextVertexControl);
             }
