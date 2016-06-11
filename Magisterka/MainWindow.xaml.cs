@@ -86,9 +86,17 @@ namespace Magisterka
         private void StartPathfinding(object sender, RoutedEventArgs e)
         {
             VertexControl currentVertex = VisualMap.GetCurrentVertex();
-            NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.Djikstra);
-            VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
-            VisualMap.SetCurrentNode(nextVertexControl);
+
+            try
+            {
+                NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.BellmanFord);
+                VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
+                VisualMap.SetCurrentNode(nextVertexControl);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, Application.Current.Resources["UnknownPathfindingError"].ToString());
+            }
         }
     }
 }

@@ -59,7 +59,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
             return _nodes.Where(node => node.Coordinates.X == level);
         }
 
-        public IEnumerable<Edge> GetAllEdgeCosts()
+        public IEnumerable<Edge> GetAllEdges()
         {
             return from node in _nodes from neighbor in node.Neighbors select neighbor.Value;
         }

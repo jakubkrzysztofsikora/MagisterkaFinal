@@ -80,6 +80,7 @@
     <Compile Include="Graph\MovementSpace\MapEcosystem\Position.cs" />
     <Compile Include="Graph\MovementSpace\MapValidator.cs" />
     <Compile Include="Graph\Pathfinding\Exceptions\NegativeWeightCycleException.cs" />
+    <Compile Include="Graph\Pathfinding\Exceptions\PathToTargetDoesntExistException.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\AStarStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\BellmanFordStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\DijkstraStrategy.cs" />

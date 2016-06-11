@@ -22,48 +22,38 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             Node currentNode = map.GetNodeByPosition(currentPosition);
             Node targetNode = map.SingleOrDefault(node => node.IsTargetNode);
 
-            List<Edge> edges = map.GetAllEdgeCosts().ToList();
+            List<Edge> edges = map.GetAllEdges().ToList();
 
             InitilizeDataStructures(map, currentNode);
 
             RelaxMapEdges(map, edges);
-
-            CheckForNegativeWeights(edges);
             
             CalculatedPath = CreateOptimalPath(currentNode, targetNode);
-        }
-
-        private void CheckForNegativeWeights(List<Edge> edges)
-        {
-            IterateEdgesAndPerformAction(edges, (edge, node1, node2) =>
-            {
-                throw new NegativeWeightCycleException();
-            });
         }
 
         private void RelaxMapEdges(Map nodes, List<Edge> edges)
         {
             for (int i = 1; i < nodes.Count - 1; ++i)
             {
-                IterateEdgesAndPerformAction(edges, (edge, node1, node2) =>
+                foreach (
+                    var edge in
+                        edges.Where(edge => !edge.NodesConnected.Key.IsBlocked && !edge.NodesConnected.Value.IsBlocked))
                 {
-                    _nodesToCosts[node2] = _nodesToCosts[node1] + edge.Cost;
-                    _previousNodes[node2] = node1;
-                });
+                    var node1 = edge.NodesConnected.Key;
+                    var node2 = edge.NodesConnected.Value;
+
+                    RelaxEdge(node1, node2, edge.Cost);
+                    RelaxEdge(node2, node1, edge.Cost);
+                }
             }
         }
 
-        private void IterateEdgesAndPerformAction(List<Edge> edges, Action<Edge, Node, Node> action)
+        private void RelaxEdge(Node incomingNode, Node outcomingNode, int cost)
         {
-            foreach (var edge in edges.Where(edge => !edge.NodesConnected.Key.IsBlocked && !edge.NodesConnected.Value.IsBlocked))
+            if (_nodesToCosts[outcomingNode] > _nodesToCosts[incomingNode] + cost)
             {
-                var node1 = edge.NodesConnected.Value;
-                var node2 = edge.NodesConnected.Key;
-
-                if (_nodesToCosts[node2] > _nodesToCosts[node1] + edge.Cost && !node2.IsBlocked)
-                {
-                    action.Invoke(edge, node1, node2);
-                }
+                _nodesToCosts[outcomingNode] = _nodesToCosts[incomingNode] + cost;
+                _previousNodes[outcomingNode] = incomingNode;
             }
         }
 
@@ -81,10 +71,13 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             _nodesToCosts[currentNode] = 0;
         }
 
-        private IEnumerable<Node> CreateOptimalPath(Node currentNode, Node targetNode)
+        private IEnumerable<Node> CreateOptimalPath(Node startNode, Node targetNode)
         {
-            while (targetNode != currentNode)
+            while (targetNode != startNode)
             {
+                if (targetNode == null)
+                    throw new PathToTargetDoesntExistException();
+
                 yield return targetNode;
                 targetNode = _previousNodes[targetNode];
             }
