@@ -64,7 +64,6 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             if (_nextNodes[new KeyValuePair<Node, Node>(startNode, targetNode)] != null)
             {
                 Node current = startNode;
-                yield return current;
 
                 while (!current.IsTargetNode)
                 {

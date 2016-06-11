@@ -19,7 +19,12 @@ namespace Magisterka.Domain.Graph.Pathfinding
         {
             _strategy.Calculate(activeMap, currentPosition);
 
-            return _strategy.CalculatedPath.Select(node => node.Coordinates).Last();
+            var path = _strategy.CalculatedPath.ToList();
+            bool isPathStartingWithTargetNode = path.Count > 1 && path.First().IsTargetNode;
+
+            return isPathStartingWithTargetNode 
+                ? path.Select(node => node.Coordinates).First() 
+                : path.Select(node => node.Coordinates).Last();
         }
 
         public IEnumerable<Node> GetOptimalPath(Map activeMap, Position currentPosition)
