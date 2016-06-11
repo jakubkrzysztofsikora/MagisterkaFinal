@@ -8,11 +8,13 @@ using GraphX.Controls.Models;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Models;
+using Magisterka.Domain;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.EventHandlers;
+using Magisterka.VisualEcosystem.Extensions;
 using QuickGraph;
 
 namespace Magisterka
@@ -43,6 +45,11 @@ namespace Magisterka
             ZoomControl.ZoomToFill();
         }
 
+        public void Dispose()
+        {
+            VisualMap.Dispose();
+        }
+
         private void CreateAllLayersOfGraph()
         {
             var mapFactory = new MapFactory(new Random());
@@ -58,9 +65,20 @@ namespace Magisterka
             ZoomControl.ZoomToFill();
         }
 
-        public void Dispose()
+        private void SetStartingPoint(object sender, RoutedEventArgs e)
         {
-            VisualMap.Dispose();
+            NodeView node = ((ItemsControl) sender).GetNodeViewFromUiElement();
+            _mapAdapter.SetAsStartingPoint(node);
+            VisualMap.RemoveStartLabel();
+            VisualMap.CreateLabelForNode(node);
+        }
+
+        private void SetTargetPoint(object sender, RoutedEventArgs e)
+        {
+            NodeView node = ((ItemsControl)sender).GetNodeViewFromUiElement();
+            _mapAdapter.SetAsTargetPoint(node);
+            VisualMap.RemoveTargetLabel();
+            VisualMap.CreateLabelForNode(node);
         }
     }
 }

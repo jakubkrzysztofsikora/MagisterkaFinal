@@ -73,6 +73,7 @@
     <Compile Include="Graph\MovementSpace\Exceptions\NodeNotOnTheGridException.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Edge.cs" />
     <Compile Include="Graph\MovementSpace\Map.cs" />
+    <Compile Include="Graph\MovementSpace\MapEcosystem\eEdgeDirection.cs" />
     <Compile Include="Graph\MovementSpace\MapFactory.cs" />
     <Compile Include="Graph\MovementSpace\MapSpecification.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Node.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="ViewModels\EdgeView.cs" />
     <Compile Include="ViewModels\MapView.cs" />
     <Compile Include="ViewModels\NodeView.cs" />
+    <Compile Include="DomainConstants.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

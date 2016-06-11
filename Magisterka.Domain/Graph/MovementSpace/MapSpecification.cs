@@ -10,6 +10,8 @@ namespace Magisterka.Domain.Graph.MovementSpace
     {
         public static Map WithStartingPosition(this Map map, Position startingPosition)
         {
+            map.ClearStartingPosition();
+
             var startingNode = map.GetNodeByPosition(startingPosition);
             startingNode.IsStartingNode = true;
             startingNode.IsBlocked = false;
@@ -19,6 +21,8 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public static Map WithTargetPosition(this Map map, Position endingPosition)
         {
+            map.ClearTargetPosition();
+
             var endingNode = map.GetNodeByPosition(endingPosition);
             endingNode.IsTargetNode = true;
             endingNode.IsBlocked = false;
@@ -62,6 +66,22 @@ namespace Magisterka.Domain.Graph.MovementSpace
             }
 
             return map;
+        }
+
+        public static void ClearStartingPosition(this Map map)
+        {
+            Node startingNode = map.SingleOrDefault(node => node.IsStartingNode);
+
+            if (startingNode != null)
+                startingNode.IsStartingNode = false;
+        }
+
+        public static void ClearTargetPosition(this Map map)
+        {
+            Node targetNode = map.SingleOrDefault(node => node.IsTargetNode);
+
+            if (targetNode != null)
+                targetNode.IsTargetNode = false;
         }
 
         private static void GenerateNodesCoordinates(Node node, int xPosition = 0)

@@ -9,8 +9,8 @@
         Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized">
     <Window.Resources>
         <ContextMenu x:Key="NodeContextMenu">
-            <MenuItem Header="Set as starting point" />
-            <MenuItem Header="Set as target" />
+            <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
+            <MenuItem Header="Set as target" Click="SetTargetPoint" Tag="" />
         </ContextMenu>
     </Window.Resources>
     <Grid>

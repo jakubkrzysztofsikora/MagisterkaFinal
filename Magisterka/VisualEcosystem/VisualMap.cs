@@ -10,6 +10,7 @@ using GraphX.Controls.Models;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Models;
+using Magisterka.Domain;
 using Magisterka.Domain.ViewModels;
 using QuickGraph;
 
@@ -25,6 +26,7 @@ namespace Magisterka.VisualEcosystem
             SetEdgesDashStyle(EdgeDashStyle.Solid);
             SetVerticesMathShape(VertexShape.Circle);
             SetVerticesDrag(true, true);
+            ShowAllVerticesLabels(true);
             ShowAllEdgesLabels(false);
             ShowAllEdgesArrows(false);
             AddRightClickEventHandlerToVerticles();
@@ -52,6 +54,36 @@ namespace Magisterka.VisualEcosystem
             logicCore.AsyncAlgorithmCompute = false;
 
             LogicCore = logicCore;
+        }
+
+        public VertexControl GetVertexControlOfNode(NodeView node)
+        {
+            return Children.OfType<VertexControl>()
+                .SingleOrDefault(vertex => ((NodeView) vertex.Vertex).LogicNode == node.LogicNode);
+        }
+
+        public void CreateLabelForNode(NodeView node)
+        {
+            DefaultVertexlabelFactory factory = new DefaultVertexlabelFactory();
+            VertexLabelControl label = factory.CreateLabel(GetVertexControlOfNode(node));
+            label.Name = node.Caption;
+            label.Name = node.Caption;
+            label.Content = node.Caption;
+            label.IsEnabled = true;
+            label.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            AddCustomChildControl(label);
+        }
+
+        public void RemoveStartLabel()
+        {
+            var labelToDelete = Children.OfType<VertexLabelControl>().SingleOrDefault(label => label.Name == DomainConstants.StartingNodeCaption);
+            RemoveCustomChildControl(labelToDelete);
+        }
+
+        public void RemoveTargetLabel()
+        {
+            var labelToDelete = Children.OfType<VertexLabelControl>().SingleOrDefault(label => label.Name == DomainConstants.TargetNodeCaption);
+            RemoveCustomChildControl(labelToDelete);
         }
 
         private void AddRightClickEventHandlerToVerticles()

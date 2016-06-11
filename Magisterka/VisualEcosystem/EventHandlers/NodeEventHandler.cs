@@ -24,9 +24,13 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
         public static void OnNodeRightClick(object sender, VertexSelectedEventArgs e)
         {
-            ContextMenu cm = Application.Current.MainWindow.FindResource("NodeContextMenu") as ContextMenu;
-            cm.PlacementTarget = sender as Button;
-            cm.IsOpen = true;
+            ContextMenu contextMenu = Application.Current.MainWindow.FindResource("NodeContextMenu") as ContextMenu;
+            contextMenu.PlacementTarget = sender as Button;
+            contextMenu.IsOpen = true;
+            foreach (ItemsControl menuPosition in contextMenu.Items)
+            {
+                menuPosition.Tag = e.VertexControl;
+            }
         }
     }
 }

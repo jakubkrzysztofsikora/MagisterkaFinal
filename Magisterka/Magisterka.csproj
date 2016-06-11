@@ -92,6 +92,7 @@
     </ApplicationDefinition>
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
+    <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
