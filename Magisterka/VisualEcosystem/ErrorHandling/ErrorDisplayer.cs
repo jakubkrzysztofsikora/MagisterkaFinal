@@ -1,29 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
+using Magisterka.VisualEcosystem.Validators;
 
-namespace Magisterka.VisualEcosystem.Validators
+namespace Magisterka.VisualEcosystem.ErrorHandling
 {
-    public class ValidationErrorDisplayer
+    public class ErrorDisplayer
     {
-        public void DisplayError(eValidationErrorTypes errorType, string message)
+        public void DisplayError(eErrorTypes errorType, string message)
         {
             string title = GetErrorTitle(errorType);
             MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Error);
         }
 
-        private string GetErrorTitle(eValidationErrorTypes errorType)
+        private string GetErrorTitle(eErrorTypes errorType)
         {
             switch (errorType)
             {
-                case eValidationErrorTypes.PathConfiguration:
+                case eErrorTypes.PathConfiguration:
                     return Application.Current.Resources["PathConfError"].ToString();
-                case eValidationErrorTypes.GraphConfiguration:
+                case eErrorTypes.GraphConfiguration:
                     return Application.Current.Resources["GraphConfError"].ToString();
-                case eValidationErrorTypes.General:
+                case eErrorTypes.General:
                     return Application.Current.Resources["GeneralError"].ToString();
                 default:
                     return Application.Current.Resources["UnknownPathfindingError"].ToString();

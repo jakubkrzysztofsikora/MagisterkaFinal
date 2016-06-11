@@ -20,12 +20,13 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             InitilizeStructures(map);
 
-            foreach (Node middleNode in map)
+            foreach (Node middleNode in map.Where(node => !node.IsBlocked))
             {
-                foreach (Node firstNode in map.Where(firstNode => middleNode != firstNode))
+                foreach (Node firstNode in map.Where(firstNode => middleNode != firstNode && !firstNode.IsBlocked))
                 {
                     foreach (Node finalNode in map.Where(finalNode => finalNode != middleNode && finalNode != firstNode &&
-                                                                      IsPathThroughOtherNodeShorter(firstNode, finalNode, middleNode)))
+                                                                      IsPathThroughOtherNodeShorter(firstNode, finalNode, middleNode) &&
+                                                                      !finalNode.IsBlocked))
                     {
                         SetNewDistanceBetweenNodes(firstNode, middleNode, finalNode);
                         AddNewMiddleNodeBetweenFirstAndFinalToOptimalPath(firstNode, middleNode, finalNode);

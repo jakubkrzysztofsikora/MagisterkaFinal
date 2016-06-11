@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 using System.Windows;
 using GraphX.Controls;
 using Magisterka.Domain.ViewModels;
+using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.Validators
 {
     public class ConfigurationValidator
     {
-        private ValidationErrorDisplayer _errorDisplayer;
+        private ErrorDisplayer _errorDisplayer;
 
-        public ConfigurationValidator(ValidationErrorDisplayer errorDisplayer)
+        public ConfigurationValidator(ErrorDisplayer errorDisplayer)
         {
             _errorDisplayer = errorDisplayer;
         }
@@ -25,7 +26,7 @@ namespace Magisterka.VisualEcosystem.Validators
 
             if (node.LogicNode.IsBlocked || node.LogicNode.IsStartingNode || node.LogicNode.IsTargetNode)
             {
-                _errorDisplayer.DisplayError(eValidationErrorTypes.PathConfiguration,
+                _errorDisplayer.DisplayError(eErrorTypes.PathConfiguration,
                     Application.Current.Resources["CannotBeDefinedPosition"].ToString());
                 return false;
             }

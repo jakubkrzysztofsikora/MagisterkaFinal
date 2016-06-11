@@ -14,6 +14,7 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem;
+using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.Validators;
@@ -28,13 +29,13 @@ namespace Magisterka
     {
         private MapAdapter _mapAdapter;
         private ConfigurationValidator _validator;
-        private ValidationErrorDisplayer _errorDisplayer;
+        private ErrorDisplayer _errorDisplayer;
 
         public MainWindow()
         {
             InitializeComponent();
             CreateAllLayersOfGraph();
-            _errorDisplayer = new ValidationErrorDisplayer();
+            _errorDisplayer = new ErrorDisplayer();
             _validator = new ConfigurationValidator(_errorDisplayer);
 
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
@@ -110,7 +111,7 @@ namespace Magisterka
             }
             catch (Exception exception)
             {
-                MessageBox.Show(exception.Message, Application.Current.Resources["UnknownPathfindingError"].ToString());
+                _errorDisplayer.DisplayError(eErrorTypes.PathfindingError, exception.Message);
             }
         }
     }

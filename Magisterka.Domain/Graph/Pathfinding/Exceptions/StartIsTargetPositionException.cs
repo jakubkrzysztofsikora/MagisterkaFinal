@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Magisterka.Domain.Graph.Pathfinding.Exceptions
 {
-    public class NegativeWeightCycleException : Exception
+    public class StartIsTargetPositionException : Exception
     {
-        public NegativeWeightCycleException() : base("Graph contains a negative-weight cycle.")
+        public StartIsTargetPositionException() : base("Starting node is also a target.")
         {
             
         }
