@@ -11,6 +11,7 @@ using GraphX.PCL.Logic.Models;
 using Magisterka.Domain;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
+using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.EventHandlers;
@@ -71,6 +72,7 @@ namespace Magisterka
             _mapAdapter.SetAsStartingPoint(node);
             VisualMap.RemoveStartLabel();
             VisualMap.CreateLabelForNode(node);
+            VisualMap.SetCurrentNode(((ItemsControl)sender).GetVertexControl());
         }
 
         private void SetTargetPoint(object sender, RoutedEventArgs e)
@@ -79,6 +81,14 @@ namespace Magisterka
             _mapAdapter.SetAsTargetPoint(node);
             VisualMap.RemoveTargetLabel();
             VisualMap.CreateLabelForNode(node);
+        }
+
+        private void StartPathfinding(object sender, RoutedEventArgs e)
+        {
+            VertexControl currentVertex = VisualMap.GetCurrentVertex();
+            NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.Djikstra);
+            VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
+            VisualMap.SetCurrentNode(nextVertexControl);
         }
     }
 }

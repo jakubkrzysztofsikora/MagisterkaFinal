@@ -12,7 +12,9 @@ using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Models;
 using Magisterka.Domain;
 using Magisterka.Domain.ViewModels;
+using Magisterka.VisualEcosystem.Extensions;
 using QuickGraph;
+using eVertexState = Magisterka.Domain.ViewModels.eVertexState;
 
 namespace Magisterka.VisualEcosystem
 {
@@ -56,10 +58,31 @@ namespace Magisterka.VisualEcosystem
             LogicCore = logicCore;
         }
 
+        public void SetCurrentNode(VertexControl vertex)
+        {
+            var oldVertex = Children.OfType<VertexControl>()
+                .SingleOrDefault(vertexControl => vertexControl.GetState() == eVertexState.Current);
+
+            if (oldVertex != null)
+            {
+                oldVertex.Background = new SolidColorBrush(Color.FromArgb(255, 227, 227, 227));
+                oldVertex.SetState(eVertexState.Other);
+            }
+
+            vertex.Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18));
+            vertex.SetState(eVertexState.Current);
+        }
+
         public VertexControl GetVertexControlOfNode(NodeView node)
         {
             return Children.OfType<VertexControl>()
                 .SingleOrDefault(vertex => ((NodeView) vertex.Vertex).LogicNode == node.LogicNode);
+        }
+
+        public VertexControl GetCurrentVertex()
+        {
+            return Children.OfType<VertexControl>()
+                .SingleOrDefault(vertex => vertex.GetState() == eVertexState.Current);
         }
 
         public void CreateLabelForNode(NodeView node)

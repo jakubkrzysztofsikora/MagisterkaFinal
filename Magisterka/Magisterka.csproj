@@ -94,6 +94,9 @@
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
     <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
+    <Page Include="FrontStringResource.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

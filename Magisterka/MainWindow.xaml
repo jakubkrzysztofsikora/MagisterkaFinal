@@ -8,10 +8,10 @@
         mc:Ignorable="d"
         Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized">
     <Window.Resources>
-        <ContextMenu x:Key="NodeContextMenu">
-            <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
-            <MenuItem Header="Set as target" Click="SetTargetPoint" Tag="" />
-        </ContextMenu>
+      <ContextMenu x:Key="NodeContextMenu">
+          <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
+          <MenuItem Header="Set as target" Click="SetTargetPoint" Tag="" />
+      </ContextMenu>
     </Window.Resources>
     <Grid>
         <graphx:ZoomControl x:Name="ZoomControl">
@@ -19,6 +19,7 @@
         </graphx:ZoomControl>
         <Menu x:Name="menu" HorizontalAlignment="Left" Height="17" VerticalAlignment="Top" Width="519">
             <MenuItem Header="_Releout Graph" Height="17" Click="MenuItem_Click" />
+            <MenuItem Header="{StaticResource StartPathfinding}" Height="17" Click="StartPathfinding" />
         </Menu>
     </Grid>
 </Window>

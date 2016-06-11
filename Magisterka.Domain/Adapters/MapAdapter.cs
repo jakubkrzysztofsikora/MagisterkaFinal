@@ -10,6 +10,7 @@ using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 
 namespace Magisterka.Domain.Adapters
@@ -18,6 +19,21 @@ namespace Magisterka.Domain.Adapters
     {
         public MapView VisualMap { get; set; }
         private Map _logicMap;
+        private PathfinderFactory _pathfinderFactory;
+
+        public MapAdapter(PathfinderFactory pathfinderFactory)
+        {
+            _pathfinderFactory = pathfinderFactory;
+        }
+
+        public NodeView StartPathfinding(NodeView currentNode, ePathfindingAlgorithms algorithm)
+        {
+            Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            Position newPosition = pathfinder.GetNextStep(_logicMap, currentNode.LogicNode.Coordinates);
+            NodeView newNode = VisualMap.GetVertexByLogicNode(_logicMap.GetNodeByPosition(newPosition));
+
+            return newNode;
+        }
 
         public void SetAsStartingPoint(NodeView nodeView)
         {
@@ -59,9 +75,10 @@ namespace Magisterka.Domain.Adapters
             });
         }
 
-        private MapAdapter(Map logicMap)
+        private MapAdapter(Map logicMap, PathfinderFactory pathfinderFactory)
         {
             _logicMap = logicMap;
+            _pathfinderFactory = pathfinderFactory;
         }
 
         private void ClearVisualMapPredefinedStartingPosition()
@@ -94,8 +111,10 @@ namespace Magisterka.Domain.Adapters
 
         public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap)
         {
-            MapAdapter adapter = new MapAdapter(logicMap);
-            adapter.VisualMap = new MapView();
+            MapAdapter adapter = new MapAdapter(logicMap, new PathfinderFactory())
+            {
+                VisualMap = new MapView()
+            };
             adapter.ConvertLogicNodesToVisualVerticles();
             adapter.ConvertLogicEdgesToVisualEdges();
             

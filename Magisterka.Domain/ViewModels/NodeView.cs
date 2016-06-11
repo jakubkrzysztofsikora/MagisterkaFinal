@@ -18,6 +18,13 @@ namespace Magisterka.Domain.ViewModels
         [DefaultValue("Vertex")]
         public string Caption { get; set; }
 
+        public eVertexState CurrentState { get; set; }
+
+        public NodeView()
+        {
+            CurrentState = eVertexState.Other;
+        }
+
         public override string ToString()
         {
             return Caption;

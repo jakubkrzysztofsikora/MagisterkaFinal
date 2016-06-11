@@ -25,5 +25,15 @@ namespace Magisterka.VisualEcosystem.Extensions
         {
             return item.GetVertexControl().GetNodeView();
         }
+
+        public static eVertexState GetState(this VertexControl vertexControl)
+        {
+            return vertexControl.GetNodeView().CurrentState;
+        }
+
+        public static void SetState(this VertexControl vertexControl, eVertexState state)
+        {
+            vertexControl.GetNodeView().CurrentState = state;
+        }
     }
 }
