@@ -28,15 +28,19 @@ namespace Magisterka
     public partial class MainWindow : Window
     {
         private MapAdapter _mapAdapter;
-        private ConfigurationValidator _validator;
-        private ErrorDisplayer _errorDisplayer;
+        private readonly IConfigurationValidator _validator;
+        private readonly IErrorDisplayer _errorDisplayer;
 
-        public MainWindow()
+        public MainWindow(IErrorDisplayer errorDisplayer, 
+                          IConfigurationValidator validator,
+                          IMapFactory mapFactory,
+                          IPathfinderFactory pathfinderFactory,
+                          Random randomizer)
         {
             InitializeComponent();
-            CreateAllLayersOfGraph();
-            _errorDisplayer = new ErrorDisplayer();
-            _validator = new ConfigurationValidator(_errorDisplayer);
+            CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
+            _errorDisplayer = errorDisplayer;
+            _validator = validator;
 
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
 
@@ -57,13 +61,12 @@ namespace Magisterka
             VisualMap.Dispose();
         }
 
-        private void CreateAllLayersOfGraph()
+        private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory)
         {
-            var mapFactory = new MapFactory(new Random());
             var map = mapFactory.GenerateDefaultMap()
                 .WithGridPositions()
-                .WithRandomBlockedNodes(new Random());
-            _mapAdapter= MapAdapter.CreateMapAdapterFromLogicMap(map);
+                .WithRandomBlockedNodes(randomizer);
+            _mapAdapter= MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory);
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

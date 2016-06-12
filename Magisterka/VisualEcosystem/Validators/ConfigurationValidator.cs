@@ -11,11 +11,11 @@ using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.Validators
 {
-    public class ConfigurationValidator
+    public class ConfigurationValidator : IConfigurationValidator
     {
-        private ErrorDisplayer _errorDisplayer;
+        private readonly IErrorDisplayer _errorDisplayer;
 
-        public ConfigurationValidator(ErrorDisplayer errorDisplayer)
+        public ConfigurationValidator(IErrorDisplayer errorDisplayer)
         {
             _errorDisplayer = errorDisplayer;
         }

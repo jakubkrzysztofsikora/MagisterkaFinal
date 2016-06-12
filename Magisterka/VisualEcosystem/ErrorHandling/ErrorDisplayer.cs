@@ -3,7 +3,7 @@ using Magisterka.VisualEcosystem.Validators;
 
 namespace Magisterka.VisualEcosystem.ErrorHandling
 {
-    public class ErrorDisplayer
+    public class ErrorDisplayer : IErrorDisplayer
     {
         public void DisplayError(eErrorTypes errorType, string message)
         {

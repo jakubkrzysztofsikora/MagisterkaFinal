@@ -90,12 +90,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DependencyInjection\DependencyProviderConfiguration.cs" />
+    <Compile Include="VisualEcosystem\ErrorHandling\IErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
     <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
     <Compile Include="VisualEcosystem\Validators\ConfigurationValidator.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\eErrorTypes.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\ErrorDisplayer.cs" />
+    <Compile Include="VisualEcosystem\Validators\IConfigurationValidator.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
     <Page Include="FrontStringResource.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -7,7 +7,7 @@ using Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies;
 
 namespace Magisterka.Domain.Graph.Pathfinding
 {
-    public class PathfinderFactory
+    public class PathfinderFactory : IPathfinderFactory
     {
         public Pathfinder CreatePathfinderWithAlgorithm(ePathfindingAlgorithms algorithm)
         {

@@ -7,7 +7,7 @@ using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
-    public class MapFactory
+    public class MapFactory : IMapFactory
     {
         private const int DefaultNodeNumber = 20;
         private const int DefaultMaxNeighborsForNode = 5;

@@ -19,17 +19,12 @@ namespace Magisterka.Domain.Adapters
     {
         public MapView VisualMap { get; set; }
         private Map _logicMap;
-        private PathfinderFactory _pathfinderFactory;
-
-        public MapAdapter(PathfinderFactory pathfinderFactory)
-        {
-            _pathfinderFactory = pathfinderFactory;
-        }
-
+        private readonly IPathfinderFactory _pathfinderFactory;
+        private Pathfinder _pathfinder;
         public NodeView StartPathfinding(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {
-            Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
-            Position newPosition = pathfinder.GetNextStep(_logicMap, currentNode.LogicNode.Coordinates);
+            _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            Position newPosition = _pathfinder.GetNextStep(_logicMap, currentNode.LogicNode.Coordinates);
             NodeView newNode = VisualMap.GetVertexByLogicNode(_logicMap.GetNodeByPosition(newPosition));
 
             return newNode;
@@ -75,7 +70,7 @@ namespace Magisterka.Domain.Adapters
             });
         }
 
-        private MapAdapter(Map logicMap, PathfinderFactory pathfinderFactory)
+        private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory)
         {
             _logicMap = logicMap;
             _pathfinderFactory = pathfinderFactory;
@@ -109,9 +104,9 @@ namespace Magisterka.Domain.Adapters
                     }));
         }
 
-        public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap)
+        public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory)
         {
-            MapAdapter adapter = new MapAdapter(logicMap, new PathfinderFactory())
+            MapAdapter adapter = new MapAdapter(logicMap, pathfinderFactory)
             {
                 VisualMap = new MapView()
             };
