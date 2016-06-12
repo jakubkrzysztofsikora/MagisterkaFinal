@@ -92,6 +92,9 @@
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\FloydWarshallStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\IPathfindingStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\JohnsonStrategy.cs" />
+    <Compile Include="Monitoring\AlgorithmMonitor.cs" />
+    <Compile Include="Monitoring\PathDetails.cs" />
+    <Compile Include="Monitoring\PerformanceResults.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\EdgeView.cs" />
     <Compile Include="ViewModels\eVertexState.cs" />

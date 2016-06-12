@@ -4,6 +4,7 @@ using System.Linq;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Monitoring;
 using NUnit.Framework;
 
 namespace MagisterkaTests
@@ -20,12 +21,12 @@ namespace MagisterkaTests
         [OneTimeSetUp]
         public void Init()
         {
-            _pathfinderFactory = new PathfinderFactory();
+            _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitor());
             _mapFactory = new MapFactory(new Random());
             _startingPosition = new Position(Guid.NewGuid());
             _endingPosition = new Position(Guid.NewGuid());
 
-            var listOfCoordinates = GenerateListOfCoordinates();
+            var listOfCoordinates = TestCommon.GenerateListOfCoordinates(_startingPosition, _endingPosition);
             _map =
                 _mapFactory.GenerateMapWithProvidedCoordinates(listOfCoordinates)
                     .WithStartingPosition(_startingPosition)
@@ -144,19 +145,5 @@ namespace MagisterkaTests
 
             return new Map(new List<Node> {nodeA, nodeB, nodeC, nodeD});
         }
-
-        private IEnumerable<Position> GenerateListOfCoordinates(int? numberOfNodes = null)
-        {
-            numberOfNodes = numberOfNodes ?? 20;
-
-            yield return _startingPosition;
-
-            for (int i = 0; i < numberOfNodes.Value - 2; i++)
-            {
-                yield return new Position(Guid.NewGuid());
-            }
-
-            yield return _endingPosition;
-        } 
     }
 }

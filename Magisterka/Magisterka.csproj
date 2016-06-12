@@ -104,7 +104,7 @@
     <Compile Include="VisualEcosystem\ErrorHandling\ErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\Validators\IConfigurationValidator.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
-    <Page Include="FrontStringResource.xaml">
+    <Page Include="StaticResource.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MainWindow.xaml">

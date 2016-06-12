@@ -4,11 +4,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding
 {
     public class PathfinderFactory : IPathfinderFactory
     {
+        private readonly AlgorithmMonitor _monitor;
+
+        public PathfinderFactory(AlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         public Pathfinder CreatePathfinderWithAlgorithm(ePathfindingAlgorithms algorithm)
         {
             switch (algorithm)

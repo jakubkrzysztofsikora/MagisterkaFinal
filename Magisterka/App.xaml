@@ -5,6 +5,6 @@
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              Startup="AppStartup">
     <Application.Resources>
-      <ResourceDictionary Source="FrontStringResource.xaml"/>
+      <ResourceDictionary Source="StaticResource.xaml"/>
     </Application.Resources>
 </Application>
