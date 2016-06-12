@@ -120,16 +120,14 @@ namespace Magisterka
                 NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.FloydWarshall);
                 VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
 
-                var animator = new PathAnimationCommand (_actor)
+                var animation = new PathAnimationCommand(_actor)
                 {
                     FromVertex = currentVertex,
                     ToVertex = nextVertexControl,
                     VisualMap = VisualMap
                 };
 
-                animator.AnimationEnded += (o, args) => VisualMap.SetCurrentNode(nextVertexControl);
-
-                animator.BeginAnimation();
+                VisualMap.GoToVertex(nextVertexControl, animation);
             }
             catch (Exception exception)
             {

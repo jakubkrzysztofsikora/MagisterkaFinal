@@ -13,6 +13,7 @@ using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
 using GraphX.PCL.Logic.Models;
 using Magisterka.Domain;
 using Magisterka.Domain.ViewModels;
+using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.Extensions;
 using QuickGraph;
 using eVertexState = Magisterka.Domain.ViewModels.eVertexState;
@@ -126,6 +127,19 @@ namespace Magisterka.VisualEcosystem
         {
             var labelToDelete = Children.OfType<VertexLabelControl>().SingleOrDefault(label => label.Name == DomainConstants.TargetNodeCaption);
             RemoveCustomChildControl(labelToDelete);
+        }
+
+        public void GoToVertex(VertexControl nextVertex, IAnimationCommand animation = null)
+        {
+            if (animation == null)
+            {
+                SetCurrentNode(nextVertex);
+            }
+            else
+            {
+                animation.AnimationEnded += (o, args) => SetCurrentNode(nextVertex);
+                animation.BeginAnimation();
+            }
         }
 
         private void AddRightClickEventHandlerToVerticles()
