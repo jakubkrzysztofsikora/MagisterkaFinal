@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using GraphX.Controls;
@@ -58,6 +59,12 @@ namespace Magisterka.VisualEcosystem
             LogicCore = logicCore;
         }
 
+        public void AddCustomChildIfNotExists(UIElement element)
+        {
+            if (!Children.Contains(element))
+                AddCustomChildControl(element);
+        }
+
         public void SetCurrentNode(VertexControl vertex)
         {
             var oldVertex = Children.OfType<VertexControl>()
@@ -77,6 +84,18 @@ namespace Magisterka.VisualEcosystem
         {
             return Children.OfType<VertexControl>()
                 .SingleOrDefault(vertex => ((NodeView) vertex.Vertex).LogicNode == node.LogicNode);
+        }
+
+        public EdgeControl GetEdgeControlBetweenNodes(NodeView fromNode, NodeView toNode)
+        {
+            return
+                Children.OfType<EdgeControl>()
+                    .FirstOrDefault(
+                        edge =>
+                            (((EdgeView) edge.DataContext).LogicEdge.NodesConnected.Key == fromNode.LogicNode &&
+                            ((EdgeView) edge.DataContext).LogicEdge.NodesConnected.Value == toNode.LogicNode) ||
+                            (((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Value == fromNode.LogicNode &&
+                            ((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Key == toNode.LogicNode));
         }
 
         public VertexControl GetCurrentVertex()

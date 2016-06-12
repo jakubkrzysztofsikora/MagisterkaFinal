@@ -9,6 +9,7 @@ using Autofac.Core;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
+using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.Validators;
 
@@ -26,6 +27,7 @@ namespace Magisterka.DependencyInjection
             builder.RegisterType<Random>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<MapFactory>().As<IMapFactory>().InstancePerLifetimeScope();
             builder.RegisterType<PathfinderFactory>().As<IPathfinderFactory>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
 
             return builder.Build();
         }

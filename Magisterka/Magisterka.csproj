@@ -91,6 +91,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DependencyInjection\DependencyProviderConfiguration.cs" />
+    <Compile Include="VisualEcosystem\Animation\AnimationCommands\IAnimationCommand.cs" />
+    <Compile Include="VisualEcosystem\Animation\AnimationCommands\PathAnimationCommand.cs" />
+    <Compile Include="VisualEcosystem\Animation\DefaultActor.cs" />
+    <Compile Include="VisualEcosystem\Animation\IMovingActor.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\IErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />

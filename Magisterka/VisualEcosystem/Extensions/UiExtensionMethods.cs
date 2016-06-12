@@ -16,6 +16,11 @@ namespace Magisterka.VisualEcosystem.Extensions
             return vertexControl.DataContext as NodeView;
         }
 
+        public static EdgeView GetEdgeView(this EdgeControl edgeControl)
+        {
+            return edgeControl.DataContext as EdgeView;
+        }
+
         public static VertexControl GetVertexControl(this Control item)
         {
             return (VertexControl) ((ItemsControl)item).Tag;

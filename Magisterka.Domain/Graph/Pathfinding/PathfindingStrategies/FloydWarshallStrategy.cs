@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -71,6 +72,10 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                     current = _nextNodes[new KeyValuePair<Node, Node>(current, targetNode)];
                     yield return current;
                 }
+            }
+            else
+            {
+                throw new PathToTargetDoesntExistException();
             }
         }
 

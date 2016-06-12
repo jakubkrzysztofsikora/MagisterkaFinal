@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Shapes;
 using GraphX.Controls;
 using GraphX.Controls.Models;
 using GraphX.PCL.Common.Enums;
@@ -14,11 +17,14 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem;
+using Magisterka.VisualEcosystem.Animation;
+using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.Validators;
 using QuickGraph;
+using Point = GraphX.Measure.Point;
 
 namespace Magisterka
 {
@@ -30,17 +36,20 @@ namespace Magisterka
         private MapAdapter _mapAdapter;
         private readonly IConfigurationValidator _validator;
         private readonly IErrorDisplayer _errorDisplayer;
+        private readonly IMovingActor _actor;
 
         public MainWindow(IErrorDisplayer errorDisplayer, 
                           IConfigurationValidator validator,
                           IMapFactory mapFactory,
                           IPathfinderFactory pathfinderFactory,
+                          IMovingActor actor,
                           Random randomizer)
         {
             InitializeComponent();
             CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
             _errorDisplayer = errorDisplayer;
             _validator = validator;
+            _actor = actor;
 
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
 
@@ -110,7 +119,17 @@ namespace Magisterka
             {
                 NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.FloydWarshall);
                 VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
-                VisualMap.SetCurrentNode(nextVertexControl);
+
+                var animator = new PathAnimationCommand (_actor)
+                {
+                    FromVertex = currentVertex,
+                    ToVertex = nextVertexControl,
+                    VisualMap = VisualMap
+                };
+
+                animator.AnimationEnded += (o, args) => VisualMap.SetCurrentNode(nextVertexControl);
+
+                animator.BeginAnimation();
             }
             catch (Exception exception)
             {
