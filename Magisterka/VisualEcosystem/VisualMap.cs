@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using GraphX.Controls;
@@ -16,7 +13,6 @@ using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.Extensions;
 using QuickGraph;
-using eVertexState = Magisterka.Domain.ViewModels.eVertexState;
 
 namespace Magisterka.VisualEcosystem
 {
@@ -71,75 +67,60 @@ namespace Magisterka.VisualEcosystem
             var oldVertex = Children.OfType<VertexControl>()
                 .SingleOrDefault(vertexControl => vertexControl.GetState() == eVertexState.Current);
 
-            if (oldVertex != null)
-            {
-                oldVertex.Background = new SolidColorBrush(Color.FromArgb(255, 227, 227, 227));
-                oldVertex.SetState(eVertexState.Other);
-            }
-
-            vertex.Background = new SolidColorBrush(Color.FromArgb(255, 243, 156, 18));
+            oldVertex?.SetState(eVertexState.Other);
             vertex.SetState(eVertexState.Current);
         }
 
-        public VertexControl GetVertexControlOfNode(NodeView node)
+        public void SetStartingNode(VertexControl vertex)
         {
-            return Children.OfType<VertexControl>()
-                .SingleOrDefault(vertex => ((NodeView) vertex.Vertex).LogicNode == node.LogicNode);
+            RemoveStartLabel();
+            CreateLabelForNode(vertex);
+            SetCurrentNode(vertex);
         }
 
-        public EdgeControl GetEdgeControlBetweenNodes(NodeView fromNode, NodeView toNode)
+        public void SetTargetNode(VertexControl vertex)
         {
-            return
-                Children.OfType<EdgeControl>()
-                    .FirstOrDefault(
-                        edge =>
-                            (((EdgeView) edge.DataContext).LogicEdge.NodesConnected.Key == fromNode.LogicNode &&
-                            ((EdgeView) edge.DataContext).LogicEdge.NodesConnected.Value == toNode.LogicNode) ||
-                            (((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Value == fromNode.LogicNode &&
-                            ((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Key == toNode.LogicNode));
+            RemoveTargetLabel();
+            CreateLabelForNode(vertex);
         }
-
+        
         public VertexControl GetCurrentVertex()
         {
             return Children.OfType<VertexControl>()
                 .SingleOrDefault(vertex => vertex.GetState() == eVertexState.Current);
         }
 
-        public void CreateLabelForNode(NodeView node)
+        public void CreateLabelForNode(VertexControl vertexControl)
         {
             DefaultVertexlabelFactory factory = new DefaultVertexlabelFactory();
-            VertexLabelControl label = factory.CreateLabel(GetVertexControlOfNode(node));
-            label.Name = node.Caption;
-            label.Name = node.Caption;
-            label.Content = node.Caption;
+            VertexLabelControl label = factory.CreateLabel(vertexControl);
+            label.Content = label.Name = vertexControl.GetNodeView().Caption;
             label.IsEnabled = true;
-            label.Background = new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+            label.Background = new SolidColorBrush((Color)Application.Current.Resources["LabelBackgroundColor"]);
             AddCustomChildControl(label);
         }
 
-        public void RemoveStartLabel()
+        public void GoToVertex(VertexControl nextVertex, IAnimationCommand animation)
+        {
+            animation.AnimationEnded += (o, args) => SetCurrentNode(nextVertex);
+            animation.BeginAnimation();
+        }
+
+        public void GoToVertex(VertexControl nextVertex)
+        {
+            SetCurrentNode(nextVertex);
+        }
+
+        private void RemoveStartLabel()
         {
             var labelToDelete = Children.OfType<VertexLabelControl>().SingleOrDefault(label => label.Name == DomainConstants.StartingNodeCaption);
             RemoveCustomChildControl(labelToDelete);
         }
 
-        public void RemoveTargetLabel()
+        private void RemoveTargetLabel()
         {
             var labelToDelete = Children.OfType<VertexLabelControl>().SingleOrDefault(label => label.Name == DomainConstants.TargetNodeCaption);
             RemoveCustomChildControl(labelToDelete);
-        }
-
-        public void GoToVertex(VertexControl nextVertex, IAnimationCommand animation = null)
-        {
-            if (animation == null)
-            {
-                SetCurrentNode(nextVertex);
-            }
-            else
-            {
-                animation.AnimationEnded += (o, args) => SetCurrentNode(nextVertex);
-                animation.BeginAnimation();
-            }
         }
 
         private void AddRightClickEventHandlerToVerticles()
@@ -159,7 +140,7 @@ namespace Magisterka.VisualEcosystem
             foreach (
                 var vertexControl in Children.OfType<VertexControl>().Where(vertex => ((NodeView)vertex.Vertex).LogicNode.IsBlocked))
             {
-                vertexControl.Background = Brushes.Crimson;
+                vertexControl.Background = new SolidColorBrush((Color)Application.Current.Resources["BlockedNodeColor"]);
             }
         }
     }

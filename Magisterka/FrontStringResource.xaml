@@ -10,5 +10,11 @@
   <system:String x:Key="GraphConfError">Graph Configuration Error</system:String>
   <system:String x:Key="GeneralError">General Application Error</system:String>
   <system:String x:Key="CannotBeDefinedPosition">This particular node cannot be defined position.</system:String>
+  
+  <Color x:Key="LabelBackgroundColor">White</Color>
+  
+  <Color x:Key="BlockedNodeColor">Crimson</Color>
+  <Color x:Key="OtherNodeColor">DarkSeaGreen</Color>
+  <Color x:Key="CurrentNodeColor">GreenYellow</Color>
 
 </ResourceDictionary>

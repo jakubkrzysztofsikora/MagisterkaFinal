@@ -1,30 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using GraphX.Controls;
-using GraphX.Controls.Models;
-using GraphX.PCL.Common.Enums;
-using GraphX.PCL.Logic.Algorithms.LayoutAlgorithms;
-using GraphX.PCL.Logic.Models;
-using Magisterka.Domain;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
-using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.Validators;
-using QuickGraph;
-using Point = GraphX.Measure.Point;
 
 namespace Magisterka
 {
@@ -33,10 +20,10 @@ namespace Magisterka
     /// </summary>
     public partial class MainWindow : Window
     {
-        private MapAdapter _mapAdapter;
-        private readonly IConfigurationValidator _validator;
-        private readonly IErrorDisplayer _errorDisplayer;
         private readonly IMovingActor _actor;
+        private readonly IErrorDisplayer _errorDisplayer;
+        private readonly IConfigurationValidator _validator;
+        private MapAdapter _mapAdapter;
 
         public MainWindow(IErrorDisplayer errorDisplayer, 
                           IConfigurationValidator validator,
@@ -45,21 +32,14 @@ namespace Magisterka
                           IMovingActor actor,
                           Random randomizer)
         {
-            InitializeComponent();
-            CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
             _errorDisplayer = errorDisplayer;
             _validator = validator;
             _actor = actor;
 
+            InitializeComponent();
+            CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
-
-            VisualMap.VertexMouseEnter += NodeEventHandler.OnNodeHoverIn;
-            VisualMap.VertexMouseLeave += NodeEventHandler.OnNodeHoverOut;
-            VisualMap.VertexRightClick += NodeEventHandler.OnNodeRightClick;
-
-            VisualMap.EdgeMouseEnter += EdgeEventHandler.OnEdgeHoverIn;
-            VisualMap.EdgeMouseLeave += EdgeEventHandler.OnEdgeHoverOut;
-
+            InitializeEventHandlers();
             VisualMap.InitilizeVisuals();
 
             ZoomControl.ZoomToFill();
@@ -68,6 +48,16 @@ namespace Magisterka
         public void Dispose()
         {
             VisualMap.Dispose();
+        }
+
+        private void InitializeEventHandlers()
+        {
+            VisualMap.VertexMouseEnter += NodeEventHandler.OnNodeHoverIn;
+            VisualMap.VertexMouseLeave += NodeEventHandler.OnNodeHoverOut;
+            VisualMap.VertexRightClick += NodeEventHandler.OnNodeRightClick;
+
+            VisualMap.EdgeMouseEnter += EdgeEventHandler.OnEdgeHoverIn;
+            VisualMap.EdgeMouseLeave += EdgeEventHandler.OnEdgeHoverOut;
         }
 
         private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory)
@@ -92,9 +82,7 @@ namespace Magisterka
             if (_validator.ValidateCanBeDefinedPosition(vertex))
             {
                 _mapAdapter.SetAsStartingPoint(node);
-                VisualMap.RemoveStartLabel();
-                VisualMap.CreateLabelForNode(node);
-                VisualMap.SetCurrentNode(((ItemsControl)sender).GetVertexControl());
+                VisualMap.SetStartingNode(vertex);
             }
         }
 
@@ -106,8 +94,7 @@ namespace Magisterka
             if (_validator.ValidateCanBeDefinedPosition(vertex))
             {
                 _mapAdapter.SetAsTargetPoint(node);
-                VisualMap.RemoveTargetLabel();
-                VisualMap.CreateLabelForNode(node);
+                VisualMap.SetTargetNode(vertex);
             }
         }
 
