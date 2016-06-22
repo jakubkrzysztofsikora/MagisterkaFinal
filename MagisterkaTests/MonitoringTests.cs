@@ -47,7 +47,11 @@ namespace MagisterkaTests
             pathfinder.GetNextStep(_map, _startingPosition);
 
             //Then
-            Assert.IsNotNull(monitor.PerformanceResults);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.AverageMemoryUsageInBytes);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.PeakMemoryUsageInBytes);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.AverageProcessorUsageInPercents);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.PeakProcessorUsageInPercents);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.TimeOfComputing);
         }
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
