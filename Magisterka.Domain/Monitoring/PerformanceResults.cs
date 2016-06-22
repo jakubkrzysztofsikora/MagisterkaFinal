@@ -8,10 +8,10 @@ namespace Magisterka.Domain.Monitoring
 {
     public class PerformanceResults
     {
-        public long TimeOfComputing { get; set; }
-        public int PeakMemoryUsageInBytes { get; set; }
-        public int AverageMemoryUsageInBytes { get; set; }
-        public int PeakProcessorUsageInPercents { get; set; }
-        public int AverageProcessorUsageInPercents { get; set; }
+        public TimeSpan TimeOfComputing { get; set; }
+        public long PeakMemoryUsageInBytes { get; set; }
+        public long AverageMemoryUsageInBytes { get; set; }
+        public long PeakProcessorUsageInPercents { get; set; }
+        public long AverageProcessorUsageInPercents { get; set; }
     }
 }
