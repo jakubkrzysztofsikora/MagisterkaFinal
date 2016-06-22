@@ -39,7 +39,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmPerformance(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor();
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -62,7 +62,7 @@ namespace MagisterkaTests
         public void ShouldLogPathDetailsAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor();
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -82,7 +82,7 @@ namespace MagisterkaTests
         public void ShouldLogPathDetailsAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor();
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
             Position currentPosition = _startingPosition;

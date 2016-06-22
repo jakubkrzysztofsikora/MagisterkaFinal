@@ -21,7 +21,7 @@ namespace MagisterkaTests
         [OneTimeSetUp]
         public void Init()
         {
-            _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitor());
+            _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor()));
             _mapFactory = new MapFactory(new Random());
             _startingPosition = new Position(Guid.NewGuid());
             _endingPosition = new Position(Guid.NewGuid());

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Magisterka.Domain.Monitoring
 {
-    public class PerformanceResults
+    public class PerformanceResults : IMonitorResults
     {
         public TimeSpan TimeOfComputing { get; set; }
         public long PeakMemoryUsageInBytes { get; set; }

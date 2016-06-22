@@ -31,6 +31,10 @@ namespace Magisterka.DependencyInjection
             builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
             builder.RegisterType<AlgorithmMonitor>().AsSelf().InstancePerLifetimeScope();
 
+            builder.RegisterType<PerformanceMonitor>()
+                .As<IPartialMonitor<PerformanceResults>>()
+                .InstancePerLifetimeScope();
+
             return builder.Build();
         }
     }
