@@ -36,7 +36,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
-        public void ShouldLogAlgorithmPerformance(ePathfindingAlgorithms algorithm)
+        public void ShouldLogAlgorithmTimeOfCumputing(ePathfindingAlgorithms algorithm)
         {
             //Given
             AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
@@ -48,10 +48,6 @@ namespace MagisterkaTests
 
             //Then
             Assert.AreNotEqual(0, monitor.PerformanceResults.TimeOfComputing.TotalSeconds);
-            Assert.AreNotEqual(0, monitor.PerformanceResults.AverageMemoryUsageInBytes);
-            Assert.AreNotEqual(0, monitor.PerformanceResults.PeakMemoryUsageInBytes);
-            Assert.AreNotEqual(0, monitor.PerformanceResults.AverageProcessorUsageInPercents);
-            Assert.AreNotEqual(0, monitor.PerformanceResults.PeakProcessorUsageInPercents);
         }
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
@@ -59,7 +55,7 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
-        public void ShouldLogPathDetailsAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
+        public void ShouldLogAlgorithmMemoryUsage(ePathfindingAlgorithms algorithm)
         {
             //Given
             AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
@@ -70,7 +66,46 @@ namespace MagisterkaTests
             pathfinder.GetNextStep(_map, _startingPosition);
 
             //Then
-            Assert.IsNotNull(monitor.PathDetails);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.AverageMemoryUsageInBytes);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.PeakMemoryUsageInBytes);
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
+        public void ShouldLogAlgorithmProcessorUsage(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            PathfinderFactory factory = new PathfinderFactory(monitor);
+            Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            pathfinder.GetNextStep(_map, _startingPosition);
+
+            //Then
+            Assert.AreNotEqual(0, monitor.PerformanceResults.AverageProcessorUsageInPercents);
+            Assert.AreNotEqual(0, monitor.PerformanceResults.PeakProcessorUsageInPercents);
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
+        public void ShouldLogStepsTakenAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            PathfinderFactory factory = new PathfinderFactory(monitor);
+            Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            pathfinder.GetNextStep(_map, _startingPosition);
+
+            //Then
             Assert.AreEqual(1, monitor.PathDetails.StepsTaken);
         }
 
@@ -79,22 +114,94 @@ namespace MagisterkaTests
         [TestCase(ePathfindingAlgorithms.AStar)]
         [TestCase(ePathfindingAlgorithms.FloydWarshall)]
         [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
-        public void ShouldLogPathDetailsAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
+        public void ShouldNumberOfVisitsPerNodeAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
             AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
-            Position currentPosition = _startingPosition;
 
             //When
-            while (currentPosition != _endingPosition)
-                currentPosition = pathfinder.GetNextStep(_map, currentPosition);
+            pathfinder.GetNextStep(_map, _startingPosition);
 
             //Then
-            Assert.IsNotNull(monitor.PathDetails);
-            Assert.AreNotEqual(1, monitor.PathDetails.StepsTaken);
-            Assert.AreNotEqual(0, monitor.PathDetails.StepsTaken);
+            Assert.IsTrue(monitor.PathDetails.NumberOfVisitsPerNode.Count == 1);
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
+        public void ShouldPathLengthAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            PathfinderFactory factory = new PathfinderFactory(monitor);
+            Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            pathfinder.GetNextStep(_map, _startingPosition);
+
+            //Then
+            Assert.AreNotEqual(0, monitor.PathDetails.PathLengthInEdgeCost);
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
+        public void ShouldLogStepsTakenAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            PathfinderFactory factory = new PathfinderFactory(monitor);
+            Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            pathfinder.GetNextStep(_map, _startingPosition);
+
+            //Then
+            Assert.IsTrue(monitor.PathDetails.StepsTaken >= 1);
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
+        public void ShouldNumberOfVisitsPerNodeManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            PathfinderFactory factory = new PathfinderFactory(monitor);
+            Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            pathfinder.GetNextStep(_map, _startingPosition);
+
+            //Then
+            Assert.IsTrue(monitor.PathDetails.NumberOfVisitsPerNode.Count >= 1);
+        }
+
+        [TestCase(ePathfindingAlgorithms.Djikstra)]
+        [TestCase(ePathfindingAlgorithms.BellmanFord)]
+        [TestCase(ePathfindingAlgorithms.AStar)]
+        [TestCase(ePathfindingAlgorithms.FloydWarshall)]
+        [TestCase(ePathfindingAlgorithms.Johnson, Ignore = "Not implemented")]
+        public void ShouldPathLengthAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
+        {
+            //Given
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            PathfinderFactory factory = new PathfinderFactory(monitor);
+            Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
+
+            //When
+            pathfinder.GetNextStep(_map, _startingPosition);
+
+            //Then
+            Assert.AreNotEqual(0, monitor.PathDetails.PathLengthInEdgeCost);
         }
     }
 }
