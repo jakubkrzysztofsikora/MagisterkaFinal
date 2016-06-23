@@ -2,6 +2,7 @@
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -9,14 +10,23 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly AlgorithmMonitor _monitor;
+
         private const long Infinity = int.MaxValue;
         private readonly List<Node> _closedSet = new List<Node>();
         private readonly List<Node> _openSet = new List<Node>();
 
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
 
+        public AStarStrategy(AlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         public void Calculate(Map map, Position currentPosition)
         {
+            _monitor.StartMonitoring();
+
             var currentNode = map.GetNodeByPosition(currentPosition);
             var targetNode = map.GetTargetNode();
 
@@ -54,14 +64,18 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                         continue;
 
                     _previousNodes[neighbor] = processedNode;
+                    _monitor.RecordStep();
                     weightedCostFromStartToNodeMap[neighbor] = tentativeCostFromStartToNode;
                     heuristicCostFromStartToEndByNodeMap[neighbor] = weightedCostFromStartToNodeMap[neighbor] +
                                                                      map.GetHeuristicScoreBetweenNodes(neighbor,
                                                                          targetNode);
                 }
             }
+            
+            List<Node> path = CreateOptimalPath(currentNode, targetNode).ToList();
+            CalculatedPath = path;
 
-            CalculatedPath = CreateOptimalPath(currentNode, targetNode);
+            _monitor.StopMonitoring();
         }
 
         private bool DiscoverNewNodeToEvaluate(Node nodeToEvaluate)
@@ -93,6 +107,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             while (targetNode != currentNode)
             {
+                _monitor.RecordStep();
                 yield return targetNode;
                 targetNode = _previousNodes[targetNode];
             }

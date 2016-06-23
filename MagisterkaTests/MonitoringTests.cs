@@ -3,6 +3,8 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
+using Magisterka.Domain.Monitoring.Performance;
+using Magisterka.Domain.Monitoring.Quality;
 using NUnit.Framework;
 
 namespace MagisterkaTests
@@ -39,7 +41,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmTimeOfCumputing(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -58,7 +60,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmMemoryUsage(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -78,7 +80,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmProcessorUsage(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -98,7 +100,7 @@ namespace MagisterkaTests
         public void ShouldLogStepsTakenAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -106,7 +108,7 @@ namespace MagisterkaTests
             pathfinder.GetNextStep(_map, _startingPosition);
 
             //Then
-            Assert.AreEqual(1, monitor.PathDetails.StepsTaken);
+            Assert.IsTrue(monitor.PathDetails.StepsTaken >= 1);
         }
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
@@ -117,7 +119,7 @@ namespace MagisterkaTests
         public void ShouldNumberOfVisitsPerNodeAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -136,7 +138,7 @@ namespace MagisterkaTests
         public void ShouldPathLengthAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -155,12 +157,12 @@ namespace MagisterkaTests
         public void ShouldLogStepsTakenAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
             //When
-            pathfinder.GetNextStep(_map, _startingPosition);
+            pathfinder.GetOptimalPath(_map, _startingPosition);
 
             //Then
             Assert.IsTrue(monitor.PathDetails.StepsTaken >= 1);
@@ -174,12 +176,12 @@ namespace MagisterkaTests
         public void ShouldNumberOfVisitsPerNodeManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
             //When
-            pathfinder.GetNextStep(_map, _startingPosition);
+            pathfinder.GetOptimalPath(_map, _startingPosition);
 
             //Then
             Assert.IsTrue(monitor.PathDetails.NumberOfVisitsPerNode.Count >= 1);
@@ -193,12 +195,12 @@ namespace MagisterkaTests
         public void ShouldPathLengthAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor());
+            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
             //When
-            pathfinder.GetNextStep(_map, _startingPosition);
+            pathfinder.GetOptimalPath(_map, _startingPosition);
 
             //Then
             Assert.AreNotEqual(0, monitor.PathDetails.PathLengthInEdgeCost);

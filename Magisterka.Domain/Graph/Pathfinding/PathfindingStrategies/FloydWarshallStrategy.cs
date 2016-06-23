@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding.Exceptions;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -13,12 +11,20 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly AlgorithmMonitor _monitor;
+
         private const long Infinity = int.MaxValue;
         private readonly Dictionary<KeyValuePair<Node, Node>, long> _distancesBetweenNodes = new Dictionary<KeyValuePair<Node, Node>, long>();
         private readonly Dictionary<KeyValuePair<Node, Node>, Node> _nextNodes = new Dictionary<KeyValuePair<Node, Node>, Node>();
 
+        public FloydWarshallStrategy(AlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         public void Calculate(Map map, Position currentPosition)
         {
+            _monitor.StartMonitoring();
             InitilizeStructures(map);
 
             foreach (Node middleNode in map.Where(node => !node.IsBlocked))
@@ -35,7 +41,10 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                 }
             }
 
-            CalculatedPath = ContructPath(map, currentPosition);
+            List<Node> path = ContructPath(map, currentPosition).ToList();
+            CalculatedPath = path;
+
+            _monitor.StopMonitoring();
         }
 
         private bool IsPathThroughOtherNodeShorter(Node startNode, Node targetNode, Node otherNode)
@@ -69,6 +78,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
                 while (!current.IsTargetNode)
                 {
+                    _monitor.RecordStep();
                     current = _nextNodes[new KeyValuePair<Node, Node>(current, targetNode)];
                     yield return current;
                 }

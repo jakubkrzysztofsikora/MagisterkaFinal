@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
-namespace Magisterka.Domain.Monitoring
+namespace Magisterka.Domain.Monitoring.Quality
 {
-    public class PathDetails
+    public class PathDetails : IMonitorResults
     {
         public int StepsTaken { get; set; }
         public Dictionary<Position, int> NumberOfVisitsPerNode { get; set; }

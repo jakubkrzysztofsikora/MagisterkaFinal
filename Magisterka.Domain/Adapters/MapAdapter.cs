@@ -61,7 +61,6 @@ namespace Magisterka.Domain.Adapters
 
         protected void ConvertLogicEdgesToVisualEdges()
         {
-            long edgeCounter = 0;
             VisualMap.Vertices.Select(nodeView => nodeView.LogicNode).ForEach(node =>
             {
                 IEnumerable<Edge> edges = node.Neighbors.Select(neighborToEdge => neighborToEdge.Value);

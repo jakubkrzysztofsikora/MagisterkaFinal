@@ -2,6 +2,7 @@
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -9,14 +10,23 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly AlgorithmMonitor _monitor;
+
         private readonly Dictionary<Node, int> _nodeToCost = new Dictionary<Node, int>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
         private Map _unoptimizedGraph;
 
+        public DijkstraStrategy(AlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         public void Calculate(Map map, Position currentPostition)
         {
+            _monitor.StartMonitoring();
+
             InitializeDistanceToNodeDictionary(map, currentPostition);
-            CalculatedPath = new List<Node>();
+            var path = new List<Node>();
             _previousNodes.Clear();
             _unoptimizedGraph = map.DeepCopy();
 
@@ -27,12 +37,16 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
                 if (nearestNode.IsTargetNode)
                 {
-                    CalculatedPath = CreateOptimalPathToNode(nearestNode);
+                    path = CreateOptimalPathToNode(nearestNode);
                     break;
                 }
 
                 UpdateDistances(nearestNode);
             }
+
+            CalculatedPath = path;
+
+            _monitor.StopMonitoring();
         }
 
         private void UpdateDistances(Node nearestNode)
@@ -57,6 +71,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             List<Node> path = new List<Node>();
             while (_previousNodes.ContainsKey(currentNode))
             {
+                _monitor.RecordStep();
                 path.Add(currentNode);
                 currentNode = _previousNodes[currentNode];
             }

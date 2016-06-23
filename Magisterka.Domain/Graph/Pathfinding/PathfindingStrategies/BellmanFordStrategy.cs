@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding.Exceptions;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -13,12 +11,22 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly AlgorithmMonitor _monitor;
+
         private readonly Dictionary<Node, long> _nodesToCosts = new Dictionary<Node, long>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
+
+        public BellmanFordStrategy(AlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         private const long Infinity = int.MaxValue;
 
         public void Calculate(Map map, Position currentPosition)
         {
+            _monitor.StartMonitoring();
+
             Node currentNode = map.GetNodeByPosition(currentPosition);
             Node targetNode = map.SingleOrDefault(node => node.IsTargetNode);
 
@@ -28,7 +36,10 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
             RelaxMapEdges(map, edges);
             
-            CalculatedPath = CreateOptimalPath(currentNode, targetNode);
+            List<Node> path = CreateOptimalPath(currentNode, targetNode).ToList();
+            CalculatedPath = path;
+
+            _monitor.StopMonitoring();
         }
 
         private void RelaxMapEdges(Map nodes, List<Edge> edges)
@@ -75,6 +86,8 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             while (targetNode != startNode)
             {
+                _monitor.RecordStep();
+
                 if (targetNode == null)
                     throw new PathToTargetDoesntExistException();
 

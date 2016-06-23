@@ -10,6 +10,8 @@ using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
+using Magisterka.Domain.Monitoring.Performance;
+using Magisterka.Domain.Monitoring.Quality;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.Validators;
@@ -33,6 +35,10 @@ namespace Magisterka.DependencyInjection
 
             builder.RegisterType<PerformanceMonitor>()
                 .As<IPartialMonitor<PerformanceResults>>()
+                .InstancePerLifetimeScope();
+
+            builder.RegisterType<AlgorithmQualityRegistry>()
+                .As<IBehaviourRegistry<PathDetails>>()
                 .InstancePerLifetimeScope();
 
             return builder.Build();

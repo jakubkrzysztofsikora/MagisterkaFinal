@@ -11,21 +11,17 @@ namespace Magisterka.Domain.Graph.Pathfinding
     public class Pathfinder
     {
         private readonly IPathfindingStrategy _strategy;
-        private readonly AlgorithmMonitor _monitor;
 
-        public Pathfinder(IPathfindingStrategy strategy, AlgorithmMonitor monitor)
+        public Pathfinder(IPathfindingStrategy strategy)
         {
             _strategy = strategy;
-            _monitor = monitor;
         }
 
         public Position GetNextStep(Map activeMap, Position currentPosition)
         {
             Validate(activeMap, currentPosition);
-
-            _monitor.StartMonitoring();
+            
             _strategy.Calculate(activeMap, currentPosition);
-            _monitor.StopMonitoring();
 
             var path = _strategy.CalculatedPath.ToList();
             bool isPathStartingWithTargetNode = path.Count > 1 && path.First().IsTargetNode;

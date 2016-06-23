@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Magisterka.Domain.Monitoring
+namespace Magisterka.Domain.Monitoring.Performance
 {
     public class PerformanceMonitor : IPartialMonitor<PerformanceResults>
     {

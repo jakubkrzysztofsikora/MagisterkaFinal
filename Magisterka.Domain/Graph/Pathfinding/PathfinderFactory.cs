@@ -22,15 +22,15 @@ namespace Magisterka.Domain.Graph.Pathfinding
             switch (algorithm)
             {
                 case ePathfindingAlgorithms.Djikstra:
-                    return new Pathfinder(new DijkstraStrategy(), _monitor);
+                    return new Pathfinder(new DijkstraStrategy(_monitor));
                 case ePathfindingAlgorithms.BellmanFord:
-                    return new Pathfinder(new BellmanFordStrategy(), _monitor);
+                    return new Pathfinder(new BellmanFordStrategy(_monitor));
                 case ePathfindingAlgorithms.AStar:
-                    return new Pathfinder(new AStarStrategy(), _monitor);
+                    return new Pathfinder(new AStarStrategy(_monitor));
                 case ePathfindingAlgorithms.FloydWarshall:
-                    return new Pathfinder(new FloydWarshallStrategy(), _monitor);
+                    return new Pathfinder(new FloydWarshallStrategy(_monitor));
                 case ePathfindingAlgorithms.Johnson:
-                    return new Pathfinder(new JohnsonStrategy(), _monitor);
+                    return new Pathfinder(new JohnsonStrategy(_monitor));
                 default:
                     throw new ArgumentOutOfRangeException(nameof(algorithm), algorithm, null);
             }
