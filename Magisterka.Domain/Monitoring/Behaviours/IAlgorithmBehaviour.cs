@@ -1,4 +1,4 @@
-﻿namespace Magisterka.Domain.Monitoring.Commands
+﻿namespace Magisterka.Domain.Monitoring.Behaviours
 {
     public interface IAlgorithmBehaviour<in TResults>
         where TResults : IMonitorResults

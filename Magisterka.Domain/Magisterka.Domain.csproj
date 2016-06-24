@@ -93,9 +93,11 @@
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\IPathfindingStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\JohnsonStrategy.cs" />
     <Compile Include="Monitoring\AlgorithmMonitor.cs" />
+    <Compile Include="Monitoring\Behaviours\EdgeTraveledBehaviour.cs" />
+    <Compile Include="Monitoring\Behaviours\NodeVisitedBehaviour.cs" />
     <Compile Include="Monitoring\Quality\AlgorithmQualityRegistry.cs" />
-    <Compile Include="Monitoring\Commands\IAlgorithmBehaviour.cs" />
-    <Compile Include="Monitoring\Commands\TakenStepBehaviour.cs" />
+    <Compile Include="Monitoring\Behaviours\IAlgorithmBehaviour.cs" />
+    <Compile Include="Monitoring\Behaviours\TakenStepBehaviour.cs" />
     <Compile Include="Monitoring\IBehaviourRegistry.cs" />
     <Compile Include="Monitoring\IMonitorResults.cs" />
     <Compile Include="Monitoring\IPartialMonitor.cs" />

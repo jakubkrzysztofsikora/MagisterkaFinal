@@ -107,9 +107,11 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             while (targetNode != currentNode)
             {
-                _monitor.RecordStep();
+                var nextNode = _previousNodes[targetNode];
+                _monitor.MonitorPathFragment(targetNode, nextNode);
+
                 yield return targetNode;
-                targetNode = _previousNodes[targetNode];
+                targetNode = nextNode;
             }
         }
     }

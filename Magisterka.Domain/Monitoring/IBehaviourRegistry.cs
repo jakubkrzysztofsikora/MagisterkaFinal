@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Magisterka.Domain.Monitoring.Commands;
+using Magisterka.Domain.Monitoring.Behaviours;
 
 namespace Magisterka.Domain.Monitoring
 {

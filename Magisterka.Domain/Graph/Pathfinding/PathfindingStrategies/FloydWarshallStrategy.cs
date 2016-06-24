@@ -78,8 +78,9 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
                 while (!current.IsTargetNode)
                 {
-                    _monitor.RecordStep();
-                    current = _nextNodes[new KeyValuePair<Node, Node>(current, targetNode)];
+                    var nextNode = _nextNodes[new KeyValuePair<Node, Node>(current, targetNode)];
+                    _monitor.MonitorPathFragment(current, nextNode);
+                    current = nextNode;
                     yield return current;
                 }
             }

@@ -1,6 +1,6 @@
 ﻿using Magisterka.Domain.Monitoring.Quality;
 
-namespace Magisterka.Domain.Monitoring.Commands
+namespace Magisterka.Domain.Monitoring.Behaviours
 {
     public class TakenStepBehaviour : IAlgorithmBehaviour<PathDetails>
     {

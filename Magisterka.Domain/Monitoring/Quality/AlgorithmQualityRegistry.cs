@@ -1,4 +1,6 @@
-﻿using Magisterka.Domain.Monitoring.Commands;
+﻿using System.Collections.Generic;
+using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Monitoring.Behaviours;
 
 namespace Magisterka.Domain.Monitoring.Quality
 {
@@ -8,7 +10,10 @@ namespace Magisterka.Domain.Monitoring.Quality
 
         public void StartRegistration()
         {
-            _results = new PathDetails();
+            _results = new PathDetails
+            {
+                NumberOfVisitsPerNode = new Dictionary<Position, int>()
+            };
         }
 
         public PathDetails StopRegistration()

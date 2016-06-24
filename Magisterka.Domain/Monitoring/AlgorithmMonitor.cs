@@ -1,4 +1,5 @@
-﻿using Magisterka.Domain.Monitoring.Commands;
+﻿using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Monitoring.Behaviours;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
 
@@ -41,6 +42,31 @@ namespace Magisterka.Domain.Monitoring
                 TakenStepBehaviour behaviour = new TakenStepBehaviour();
                 _qualityRegistry.NoteBehaviour(behaviour);
             }
+        }
+
+        public void RecordVisit(Node currentNode)
+        {
+            if (IsMonitoring)
+            {
+                NodeVisitedBehaviour behaviour = new NodeVisitedBehaviour(currentNode);
+                _qualityRegistry.NoteBehaviour(behaviour);
+            }
+        }
+
+        public void RecordEdgeCost(Node fromNode, Node toNode)
+        {
+            if (IsMonitoring)
+            {
+                EdgeTraveledBehaviour behaviour = new EdgeTraveledBehaviour(fromNode, toNode);
+                _qualityRegistry.NoteBehaviour(behaviour);
+            }
+        }
+
+        public void MonitorPathFragment(Node fromNode, Node toNode)
+        {
+            RecordStep();
+            RecordVisit(fromNode);
+            RecordEdgeCost(fromNode, toNode);
         }
     }
 }

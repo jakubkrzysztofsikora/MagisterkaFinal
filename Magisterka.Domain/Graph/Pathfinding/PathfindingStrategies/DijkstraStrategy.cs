@@ -71,9 +71,11 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             List<Node> path = new List<Node>();
             while (_previousNodes.ContainsKey(currentNode))
             {
-                _monitor.RecordStep();
+                var nextNode = _previousNodes[currentNode];
+
+                _monitor.MonitorPathFragment(currentNode, nextNode);
                 path.Add(currentNode);
-                currentNode = _previousNodes[currentNode];
+                currentNode = nextNode;
             }
 
             return path;

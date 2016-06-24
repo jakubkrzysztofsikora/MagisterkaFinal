@@ -127,7 +127,7 @@ namespace MagisterkaTests
             pathfinder.GetNextStep(_map, _startingPosition);
 
             //Then
-            Assert.IsTrue(monitor.PathDetails.NumberOfVisitsPerNode.Count == 1);
+            Assert.IsTrue(monitor.PathDetails.NumberOfVisitsPerNode.Count >= 1);
         }
 
         [TestCase(ePathfindingAlgorithms.Djikstra)]
