@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Graph.Pathfinding.Exceptions;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -12,20 +11,29 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly IAlgorithmMonitor _monitor;
+
         private const long Infinity = int.MaxValue;
         private readonly Dictionary<KeyValuePair<Node, Node>, long> _distancesBetweenNodes = new Dictionary<KeyValuePair<Node, Node>, long>();
         private readonly Dictionary<KeyValuePair<Node, Node>, Node> _nextNodes = new Dictionary<KeyValuePair<Node, Node>, Node>();
 
+        public FloydWarshallStrategy(IAlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         public void Calculate(Map map, Position currentPosition)
         {
+            _monitor.StartMonitoring();
             InitilizeStructures(map);
 
-            foreach (Node middleNode in map)
+            foreach (Node middleNode in map.Where(node => !node.IsBlocked))
             {
-                foreach (Node firstNode in map.Where(firstNode => middleNode != firstNode))
+                foreach (Node firstNode in map.Where(firstNode => middleNode != firstNode && !firstNode.IsBlocked))
                 {
                     foreach (Node finalNode in map.Where(finalNode => finalNode != middleNode && finalNode != firstNode &&
-                                                                      IsPathThroughOtherNodeShorter(firstNode, finalNode, middleNode)))
+                                                                      IsPathThroughOtherNodeShorter(firstNode, finalNode, middleNode) &&
+                                                                      !finalNode.IsBlocked))
                     {
                         SetNewDistanceBetweenNodes(firstNode, middleNode, finalNode);
                         AddNewMiddleNodeBetweenFirstAndFinalToOptimalPath(firstNode, middleNode, finalNode);
@@ -33,7 +41,10 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                 }
             }
 
-            CalculatedPath = ContructPath(map, currentPosition);
+            List<Node> path = ContructPath(map, currentPosition).ToList();
+            CalculatedPath = path;
+
+            _monitor.StopMonitoring();
         }
 
         private bool IsPathThroughOtherNodeShorter(Node startNode, Node targetNode, Node otherNode)
@@ -64,13 +75,18 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             if (_nextNodes[new KeyValuePair<Node, Node>(startNode, targetNode)] != null)
             {
                 Node current = startNode;
-                yield return current;
 
                 while (!current.IsTargetNode)
                 {
-                    current = _nextNodes[new KeyValuePair<Node, Node>(current, targetNode)];
+                    var nextNode = _nextNodes[new KeyValuePair<Node, Node>(current, targetNode)];
+                    _monitor.MonitorPathFragment(current, nextNode);
+                    current = nextNode;
                     yield return current;
                 }
+            }
+            else
+            {
+                throw new PathToTargetDoesntExistException();
             }
         }
 
@@ -86,7 +102,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
             foreach (var nodeToNode in map.SelectMany(node => node.Neighbors.Keys.Select(anotherNode => new KeyValuePair<Node, Node>(node, anotherNode))))
             {
-                _distancesBetweenNodes[nodeToNode] = nodeToNode.Key.Neighbors[nodeToNode.Value].Value;
+                _distancesBetweenNodes[nodeToNode] = nodeToNode.Key.Neighbors[nodeToNode.Value].Cost;
                 _nextNodes[nodeToNode] = nodeToNode.Value;
             }
         }

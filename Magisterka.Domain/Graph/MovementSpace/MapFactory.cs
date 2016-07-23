@@ -7,7 +7,7 @@ using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
-    public class MapFactory
+    public class MapFactory : IMapFactory
     {
         private const int DefaultNodeNumber = 20;
         private const int DefaultMaxNeighborsForNode = 5;
@@ -27,10 +27,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
             while (newMap.Count < newMap.MaximumNumberOfNodes)
             {
-                newMap.AddIfNotExists(new Node
-                {
-                    IsBlocked = RandomizeBlockedStatus()
-                });
+                newMap.AddIfNotExists(new Node());
             }
 
             GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
@@ -47,7 +44,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
             {
                 newMap.AddIfNotExists(new Node
                 {
-                    IsBlocked = RandomizeBlockedStatus(),
                     Coordinates = coordinate
                 });
             }
@@ -69,9 +65,9 @@ namespace Magisterka.Domain.Graph.MovementSpace
                             otherNode.Neighbors.Count < maxNumberOfNeighbors)
                         .Take(numberOfNeighbors - node.Neighbors.Count).Concat(node.Neighbors.Keys).Distinct();
 
-                node.Neighbors = newNeighbors.ToDictionary(x => x, x => new EdgeCost
+                node.Neighbors = newNeighbors.ToDictionary(x => x, x => new Edge
                 {
-                    Value = _randomizer.Next(MinEdgeCost, MaxEdgeCost),
+                    Cost = _randomizer.Next(MinEdgeCost, MaxEdgeCost),
                     NodesConnected = new KeyValuePair<Node, Node>(node, x)
                 });
 
@@ -80,11 +76,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
                     neighbor.Key.Neighbors.Add(node, neighbor.Value);
                 }
             }
-        }
-
-        private bool RandomizeBlockedStatus()
-        {
-            return _randomizer.Next(0, 1) != 0;
         }
     }
 }

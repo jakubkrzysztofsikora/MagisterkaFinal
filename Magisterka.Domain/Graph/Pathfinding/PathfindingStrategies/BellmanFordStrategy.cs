@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding.Exceptions;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -13,57 +11,60 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly IAlgorithmMonitor _monitor;
+
         private readonly Dictionary<Node, long> _nodesToCosts = new Dictionary<Node, long>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
+
+        public BellmanFordStrategy(IAlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         private const long Infinity = int.MaxValue;
 
         public void Calculate(Map map, Position currentPosition)
         {
+            _monitor.StartMonitoring();
+
             Node currentNode = map.GetNodeByPosition(currentPosition);
             Node targetNode = map.SingleOrDefault(node => node.IsTargetNode);
 
-            List<EdgeCost> edges = map.GetAllEdgeCosts().ToList();
+            List<Edge> edges = map.GetAllEdges().ToList();
 
             InitilizeDataStructures(map, currentNode);
 
             RelaxMapEdges(map, edges);
-
-            CheckForNegativeWeights(edges);
             
-            CalculatedPath = CreateOptimalPath(currentNode, targetNode);
+            List<Node> path = CreateOptimalPath(currentNode, targetNode).ToList();
+            CalculatedPath = path;
+
+            _monitor.StopMonitoring();
         }
 
-        private void CheckForNegativeWeights(List<EdgeCost> edges)
-        {
-            IterateEdgesAndPerformAction(edges, (edge, node1, node2) =>
-            {
-                throw new NegativeWeightCycleException();
-            });
-        }
-
-        private void RelaxMapEdges(Map nodes, List<EdgeCost> edges)
+        private void RelaxMapEdges(Map nodes, List<Edge> edges)
         {
             for (int i = 1; i < nodes.Count - 1; ++i)
             {
-                IterateEdgesAndPerformAction(edges, (edge, node1, node2) =>
+                foreach (
+                    var edge in
+                        edges.Where(edge => !edge.NodesConnected.Key.IsBlocked && !edge.NodesConnected.Value.IsBlocked))
                 {
-                    _nodesToCosts[node2] = _nodesToCosts[node1] + edge.Value;
-                    _previousNodes[node2] = node1;
-                });
+                    var node1 = edge.NodesConnected.Key;
+                    var node2 = edge.NodesConnected.Value;
+
+                    RelaxEdge(node1, node2, edge.Cost);
+                    RelaxEdge(node2, node1, edge.Cost);
+                }
             }
         }
 
-        private void IterateEdgesAndPerformAction(List<EdgeCost> edges, Action<EdgeCost, Node, Node> action)
+        private void RelaxEdge(Node incomingNode, Node outcomingNode, int cost)
         {
-            foreach (var edge in edges)
+            if (_nodesToCosts[outcomingNode] > _nodesToCosts[incomingNode] + cost)
             {
-                var node1 = edge.NodesConnected.Value;
-                var node2 = edge.NodesConnected.Key;
-
-                if (_nodesToCosts[node2] > _nodesToCosts[node1] + edge.Value && !node2.IsBlocked)
-                {
-                    action.Invoke(edge, node1, node2);
-                }
+                _nodesToCosts[outcomingNode] = _nodesToCosts[incomingNode] + cost;
+                _previousNodes[outcomingNode] = incomingNode;
             }
         }
 
@@ -81,12 +82,18 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             _nodesToCosts[currentNode] = 0;
         }
 
-        private IEnumerable<Node> CreateOptimalPath(Node currentNode, Node targetNode)
+        private IEnumerable<Node> CreateOptimalPath(Node startNode, Node targetNode)
         {
-            while (targetNode != currentNode)
+            while (targetNode != startNode)
             {
+                var nextNode = _previousNodes[targetNode];
+                _monitor.MonitorPathFragment(targetNode, nextNode);
+
+                if (targetNode == null)
+                    throw new PathToTargetDoesntExistException();
+
                 yield return targetNode;
-                targetNode = _previousNodes[targetNode];
+                targetNode = nextNode;
             }
         }
     }

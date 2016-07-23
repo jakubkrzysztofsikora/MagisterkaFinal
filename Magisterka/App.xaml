@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Magisterka"
-             StartupUri="MainWindow.xaml">
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             Startup="AppStartup">
     <Application.Resources>
-         
+      <ResourceDictionary Source="StaticResource.xaml"/>
     </Application.Resources>
 </Application>

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Magisterka.Domain.Graph.MovementSpace.Exceptions;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using QuickGraph;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
@@ -58,7 +59,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
             return _nodes.Where(node => node.Coordinates.X == level);
         }
 
-        public IEnumerable<EdgeCost> GetAllEdgeCosts()
+        public IEnumerable<Edge> GetAllEdges()
         {
             return from node in _nodes from neighbor in node.Neighbors select neighbor.Value;
         }
@@ -117,7 +118,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
             Map newMap = new Map(new List<Node>(_nodes));
             return newMap;
         }
-
+        
         public int Count => _nodes.Count();
 
         public bool IsReadOnly => true;

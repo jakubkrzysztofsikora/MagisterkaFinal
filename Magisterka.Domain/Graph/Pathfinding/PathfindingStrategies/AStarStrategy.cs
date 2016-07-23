@@ -2,6 +2,7 @@
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
@@ -9,14 +10,23 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
+        private readonly IAlgorithmMonitor _monitor;
+
         private const long Infinity = int.MaxValue;
         private readonly List<Node> _closedSet = new List<Node>();
         private readonly List<Node> _openSet = new List<Node>();
 
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
 
+        public AStarStrategy(IAlgorithmMonitor monitor)
+        {
+            _monitor = monitor;
+        }
+
         public void Calculate(Map map, Position currentPosition)
         {
+            _monitor.StartMonitoring();
+
             var currentNode = map.GetNodeByPosition(currentPosition);
             var targetNode = map.GetTargetNode();
 
@@ -42,31 +52,35 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
                 foreach (
                     var nodeToCost in
-                        processedNode.Neighbors.Where(x => !_closedSet.Contains(x.Key) && !x.Key.IsBlocked))
+                        processedNode.Neighbors.Where(x => !_closedSet.Contains(x.Key)))
                 {
                     var neighbor = nodeToCost.Key;
                     var neighborDistance = nodeToCost.Value;
                     var tentativeCostFromStartToNode = weightedCostFromStartToNodeMap[processedNode] +
-                                                       neighborDistance.Value;
+                                                       (neighbor.IsBlocked ? Infinity : neighborDistance.Cost);
 
                     bool addedNodeToOpenSet = DiscoverNewNodeToEvaluate(neighbor);
                     if (!addedNodeToOpenSet && tentativeCostFromStartToNode >= weightedCostFromStartToNodeMap[neighbor])
                         continue;
 
                     _previousNodes[neighbor] = processedNode;
+                    _monitor.RecordStep();
                     weightedCostFromStartToNodeMap[neighbor] = tentativeCostFromStartToNode;
                     heuristicCostFromStartToEndByNodeMap[neighbor] = weightedCostFromStartToNodeMap[neighbor] +
                                                                      map.GetHeuristicScoreBetweenNodes(neighbor,
                                                                          targetNode);
                 }
             }
+            
+            List<Node> path = CreateOptimalPath(currentNode, targetNode).ToList();
+            CalculatedPath = path;
 
-            CalculatedPath = CreateOptimalPath(currentNode, targetNode);
+            _monitor.StopMonitoring();
         }
 
         private bool DiscoverNewNodeToEvaluate(Node nodeToEvaluate)
         {
-            if (_openSet.Contains(nodeToEvaluate)) return false;
+            if (_openSet.Contains(nodeToEvaluate) || nodeToEvaluate.IsBlocked) return false;
             _openSet.Add(nodeToEvaluate);
             return true;
         }
@@ -93,8 +107,11 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             while (targetNode != currentNode)
             {
+                var nextNode = _previousNodes[targetNode];
+                _monitor.MonitorPathFragment(targetNode, nextNode);
+
                 yield return targetNode;
-                targetNode = _previousNodes[targetNode];
+                targetNode = nextNode;
             }
         }
     }

@@ -1,0 +1,36 @@
+﻿<ResourceDictionary
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+  <!-- String resource that can be localized -->
+  <system:String x:Key="StartPathfinding">_Start Pathinding</system:String>
+  <system:String x:Key="UnknownPathfindingError">Unknown Pathinding Error</system:String>
+  <system:String x:Key="PathConfError">Path Configuration Error</system:String>
+  <system:String x:Key="GraphConfError">Graph Configuration Error</system:String>
+  <system:String x:Key="GeneralError">General Application Error</system:String>
+  <system:String x:Key="CannotBeDefinedPosition">This particular node cannot be defined position.</system:String>
+
+  <!-- Raport strings-->
+  <system:String x:Key="RaportHeaderTitle">Results</system:String>
+  <system:String x:Key="RaportHeaderDate">Date of generation</system:String>
+  <system:String x:Key="RaportPathDetailsSectionTitle">Path Details</system:String>
+  <system:String x:Key="RaportNumberOfSteps">Number of steps taken</system:String>
+  <system:String x:Key="RaportLengthOfPath">Physical length of the path</system:String>
+  <system:String x:Key="RaportVisitsPerNodeSectionTitle">Visits per Node</system:String>
+  <system:String x:Key="RaportNodeName">Node (Name)</system:String>
+  <system:String x:Key="RaportNodeVisits">Number of visits</system:String>
+  <system:String x:Key="RaportPerformanceResultsSectionTitle">Performance Results</system:String>
+  <system:String x:Key="RaportTimeOfComputing">Time of computing (ms)</system:String>
+  <system:String x:Key="RaportPeakMemoryUsage">Peak memory usage (MB)</system:String>
+  <system:String x:Key="RaportAverageMemoryUsage">Average memory usage (MB)</system:String>
+  <system:String x:Key="RaportPeakProcessorUsage">Peak processor usage (%)</system:String>
+  <system:String x:Key="RaportAverageProcessorUsage">Average processor usage (%)</system:String>
+  
+  <Color x:Key="LabelBackgroundColor">White</Color>
+  
+  <Color x:Key="BlockedNodeColor">Crimson</Color>
+  <Color x:Key="OtherNodeColor">DarkSeaGreen</Color>
+  <Color x:Key="CurrentNodeColor">GreenYellow</Color>
+
+</ResourceDictionary>

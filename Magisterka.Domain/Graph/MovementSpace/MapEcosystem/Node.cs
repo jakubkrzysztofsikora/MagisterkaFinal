@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GraphX.PCL.Common.Models;
 
 namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {
@@ -10,16 +11,18 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
         public bool IsBlocked { get; set; }
         public bool IsStartingNode { get; set; }
         public bool IsTargetNode { get; set; }
+        public string Name { get; set; }
 
-        public IDictionary<Node, EdgeCost> Neighbors { get; set; }
+        public IDictionary<Node, Edge> Neighbors { get; set; }
 
         public Node()
         {
             Coordinates = new Position(Guid.NewGuid());
-            Neighbors = new Dictionary<Node, EdgeCost>();
+            Neighbors = new Dictionary<Node, Edge>();
+            Name = Guid.NewGuid().ToString("n");
         }
 
-        public Node(IDictionary<Node, EdgeCost> neighbors)
+        public Node(IDictionary<Node, Edge> neighbors)
         {
             Coordinates = new Position(Guid.NewGuid());
             Neighbors = neighbors;

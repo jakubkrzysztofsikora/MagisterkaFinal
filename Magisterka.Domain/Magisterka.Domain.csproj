@@ -30,6 +30,34 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GraphX.Controls, Version=2.3.3.0, Culture=neutral, PublicKeyToken=bab23663f80c9e76, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GraphX.PCL.Common, Version=2.3.3.0, Culture=neutral, PublicKeyToken=a6cdb671d651b60a, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.PCL.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="GraphX.PCL.Logic, Version=2.3.3.0, Culture=neutral, PublicKeyToken=3b65ef85075e278f, processorArchitecture=MSIL">
+      <HintPath>..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QuickGraph.Data, Version=3.6.61114.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.Graphviz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.Serialization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -40,16 +68,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\MapAdapter.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\DuplicatedPositionOnGridException.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\NodeNotOnTheGridException.cs" />
-    <Compile Include="Graph\MovementSpace\MapEcosystem\EdgeCost.cs" />
+    <Compile Include="Graph\MovementSpace\IMapFactory.cs" />
+    <Compile Include="Graph\MovementSpace\MapEcosystem\Edge.cs" />
     <Compile Include="Graph\MovementSpace\Map.cs" />
+    <Compile Include="Graph\MovementSpace\MapEcosystem\eEdgeDirection.cs" />
     <Compile Include="Graph\MovementSpace\MapFactory.cs" />
     <Compile Include="Graph\MovementSpace\MapSpecification.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Node.cs" />
     <Compile Include="Graph\MovementSpace\MapEcosystem\Position.cs" />
     <Compile Include="Graph\MovementSpace\MapValidator.cs" />
-    <Compile Include="Graph\Pathfinding\Exceptions\NegativeWeightCycleException.cs" />
+    <Compile Include="Graph\Pathfinding\Exceptions\PathToTargetDoesntExistException.cs" />
+    <Compile Include="Graph\Pathfinding\Exceptions\StartIsTargetPositionException.cs" />
+    <Compile Include="Graph\Pathfinding\IPathfinderFactory.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\AStarStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\BellmanFordStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\DijkstraStrategy.cs" />
@@ -58,7 +91,30 @@
     <Compile Include="Graph\Pathfinding\PathfinderFactory.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\FloydWarshallStrategy.cs" />
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\IPathfindingStrategy.cs" />
+    <Compile Include="Graph\Pathfinding\PathfindingStrategies\JohnsonStrategy.cs" />
+    <Compile Include="Monitoring\AlgorithmMonitor.cs" />
+    <Compile Include="Monitoring\Behaviours\EdgeTraveledBehaviour.cs" />
+    <Compile Include="Monitoring\Behaviours\NodeVisitedBehaviour.cs" />
+    <Compile Include="Monitoring\IAlgorithmMonitor.cs" />
+    <Compile Include="Monitoring\Quality\AlgorithmQualityRegistry.cs" />
+    <Compile Include="Monitoring\Behaviours\IAlgorithmBehaviour.cs" />
+    <Compile Include="Monitoring\Behaviours\TakenStepBehaviour.cs" />
+    <Compile Include="Monitoring\IBehaviourRegistry.cs" />
+    <Compile Include="Monitoring\IMonitorResults.cs" />
+    <Compile Include="Monitoring\IPartialMonitor.cs" />
+    <Compile Include="Monitoring\Quality\PathDetails.cs" />
+    <Compile Include="Monitoring\Performance\PerformanceMonitor.cs" />
+    <Compile Include="Monitoring\Performance\PerformanceResults.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\EdgeView.cs" />
+    <Compile Include="ViewModels\eVertexState.cs" />
+    <Compile Include="ViewModels\MapView.cs" />
+    <Compile Include="ViewModels\NodeView.cs" />
+    <Compile Include="DomainConstants.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
