@@ -41,7 +41,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmTimeOfCumputing(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -60,7 +60,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmMemoryUsage(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -80,7 +80,7 @@ namespace MagisterkaTests
         public void ShouldLogAlgorithmProcessorUsage(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -100,7 +100,7 @@ namespace MagisterkaTests
         public void ShouldLogStepsTakenAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -119,7 +119,7 @@ namespace MagisterkaTests
         public void ShouldNumberOfVisitsPerNodeAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -138,7 +138,7 @@ namespace MagisterkaTests
         public void ShouldPathLengthAfterOneStepOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -157,7 +157,7 @@ namespace MagisterkaTests
         public void ShouldLogStepsTakenAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -176,7 +176,7 @@ namespace MagisterkaTests
         public void ShouldNumberOfVisitsPerNodeManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 
@@ -195,7 +195,7 @@ namespace MagisterkaTests
         public void ShouldPathLengthAfterManyStepsOfPathfinding(ePathfindingAlgorithms algorithm)
         {
             //Given
-            AlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
+            IAlgorithmMonitor monitor = new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry());
             PathfinderFactory factory = new PathfinderFactory(monitor);
             Pathfinder pathfinder = factory.CreatePathfinderWithAlgorithm(algorithm);
 

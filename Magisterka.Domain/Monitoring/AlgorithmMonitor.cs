@@ -5,7 +5,7 @@ using Magisterka.Domain.Monitoring.Quality;
 
 namespace Magisterka.Domain.Monitoring
 {
-    public class AlgorithmMonitor
+    public class AlgorithmMonitor : IAlgorithmMonitor
     {
         public PathDetails PathDetails { get; set; }
         public PerformanceResults PerformanceResults { get; set; }
@@ -37,36 +37,30 @@ namespace Magisterka.Domain.Monitoring
 
         public void RecordStep()
         {
-            if (IsMonitoring)
-            {
-                TakenStepBehaviour behaviour = new TakenStepBehaviour();
-                _qualityRegistry.NoteBehaviour(behaviour);
-            }
+            TakenStepBehaviour behaviour = new TakenStepBehaviour();
+            _qualityRegistry.NoteBehaviour(behaviour);
         }
 
         public void RecordVisit(Node currentNode)
         {
-            if (IsMonitoring)
-            {
-                NodeVisitedBehaviour behaviour = new NodeVisitedBehaviour(currentNode);
-                _qualityRegistry.NoteBehaviour(behaviour);
-            }
+            NodeVisitedBehaviour behaviour = new NodeVisitedBehaviour(currentNode);
+            _qualityRegistry.NoteBehaviour(behaviour);
         }
 
         public void RecordEdgeCost(Node fromNode, Node toNode)
         {
-            if (IsMonitoring)
-            {
-                EdgeTraveledBehaviour behaviour = new EdgeTraveledBehaviour(fromNode, toNode);
-                _qualityRegistry.NoteBehaviour(behaviour);
-            }
+            EdgeTraveledBehaviour behaviour = new EdgeTraveledBehaviour(fromNode, toNode);
+            _qualityRegistry.NoteBehaviour(behaviour);
         }
 
         public void MonitorPathFragment(Node fromNode, Node toNode)
         {
-            RecordStep();
-            RecordVisit(fromNode);
-            RecordEdgeCost(fromNode, toNode);
+            if (IsMonitoring)
+            {
+                RecordStep();
+                RecordVisit(fromNode);
+                RecordEdgeCost(fromNode, toNode);
+            }
         }
     }
 }

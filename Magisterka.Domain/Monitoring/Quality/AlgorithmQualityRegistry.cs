@@ -12,7 +12,7 @@ namespace Magisterka.Domain.Monitoring.Quality
         {
             _results = new PathDetails
             {
-                NumberOfVisitsPerNode = new Dictionary<Position, int>()
+                NumberOfVisitsPerNode = new Dictionary<Node, int>()
             };
         }
 

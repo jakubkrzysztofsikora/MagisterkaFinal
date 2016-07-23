@@ -11,13 +11,13 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
-        private readonly AlgorithmMonitor _monitor;
+        private readonly IAlgorithmMonitor _monitor;
 
         private const long Infinity = int.MaxValue;
         private readonly Dictionary<KeyValuePair<Node, Node>, long> _distancesBetweenNodes = new Dictionary<KeyValuePair<Node, Node>, long>();
         private readonly Dictionary<KeyValuePair<Node, Node>, Node> _nextNodes = new Dictionary<KeyValuePair<Node, Node>, Node>();
 
-        public FloydWarshallStrategy(AlgorithmMonitor monitor)
+        public FloydWarshallStrategy(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }

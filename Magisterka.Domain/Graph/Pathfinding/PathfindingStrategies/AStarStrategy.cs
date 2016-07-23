@@ -10,7 +10,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
-        private readonly AlgorithmMonitor _monitor;
+        private readonly IAlgorithmMonitor _monitor;
 
         private const long Infinity = int.MaxValue;
         private readonly List<Node> _closedSet = new List<Node>();
@@ -18,7 +18,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
 
-        public AStarStrategy(AlgorithmMonitor monitor)
+        public AStarStrategy(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }

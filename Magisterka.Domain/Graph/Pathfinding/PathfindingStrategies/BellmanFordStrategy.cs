@@ -11,12 +11,12 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
-        private readonly AlgorithmMonitor _monitor;
+        private readonly IAlgorithmMonitor _monitor;
 
         private readonly Dictionary<Node, long> _nodesToCosts = new Dictionary<Node, long>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
 
-        public BellmanFordStrategy(AlgorithmMonitor monitor)
+        public BellmanFordStrategy(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }

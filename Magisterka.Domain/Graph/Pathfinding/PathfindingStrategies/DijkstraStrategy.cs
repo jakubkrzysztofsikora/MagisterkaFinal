@@ -10,13 +10,13 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; private set; }
 
-        private readonly AlgorithmMonitor _monitor;
+        private readonly IAlgorithmMonitor _monitor;
 
         private readonly Dictionary<Node, int> _nodeToCost = new Dictionary<Node, int>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
         private Map _unoptimizedGraph;
 
-        public DijkstraStrategy(AlgorithmMonitor monitor)
+        public DijkstraStrategy(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }

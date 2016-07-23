@@ -11,6 +11,7 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
         public bool IsBlocked { get; set; }
         public bool IsStartingNode { get; set; }
         public bool IsTargetNode { get; set; }
+        public string Name { get; set; }
 
         public IDictionary<Node, Edge> Neighbors { get; set; }
 
@@ -18,6 +19,7 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
         {
             Coordinates = new Position(Guid.NewGuid());
             Neighbors = new Dictionary<Node, Edge>();
+            Name = Guid.NewGuid().ToString("n");
         }
 
         public Node(IDictionary<Node, Edge> neighbors)

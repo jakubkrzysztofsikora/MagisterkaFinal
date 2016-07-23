@@ -13,9 +13,9 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
     {
         public IEnumerable<Node> CalculatedPath { get; }
 
-        private readonly AlgorithmMonitor _monitor;
+        private readonly IAlgorithmMonitor _monitor;
 
-        public JohnsonStrategy(AlgorithmMonitor monitor)
+        public JohnsonStrategy(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }

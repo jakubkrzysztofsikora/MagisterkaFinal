@@ -16,14 +16,14 @@ namespace Magisterka.Domain.Monitoring.Behaviours
         public void Register(PathDetails pathDetails)
         {
             IntroduceNodeIntoRegistryIfNeeded(pathDetails.NumberOfVisitsPerNode);
-            ++pathDetails.NumberOfVisitsPerNode[_currentNode.Coordinates];
+            ++pathDetails.NumberOfVisitsPerNode[_currentNode];
         }
 
-        private void IntroduceNodeIntoRegistryIfNeeded(Dictionary<Position, int> registry)
+        private void IntroduceNodeIntoRegistryIfNeeded(Dictionary<Node, int> registry)
         {
-            if (!registry.ContainsKey(_currentNode.Coordinates))
+            if (!registry.ContainsKey(_currentNode))
             {
-                registry[_currentNode.Coordinates] = 0;
+                registry[_currentNode] = 0;
             }
         }
     }

@@ -42,6 +42,10 @@
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="GraphX.Controls, Version=2.3.3.0, Culture=neutral, PublicKeyToken=bab23663f80c9e76, processorArchitecture=MSIL">
       <HintPath>..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.Controls.dll</HintPath>
       <Private>True</Private>
@@ -91,6 +95,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DependencyInjection\DependencyProviderConfiguration.cs" />
+    <Compile Include="StaticResources\RaportStringContainer.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\IAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\PathAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\DefaultActor.cs" />
@@ -146,12 +151,18 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Magisterka.Domain\Magisterka.Domain.csproj">
       <Project>{735a21db-2fc5-476a-9ad5-22d430cc48f3}</Project>
       <Name>Magisterka.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Magisterka.Infrastructure\Magisterka.Infrastructure.csproj">
+      <Project>{eb4a42d8-fbb6-4568-8add-b40b57c82327}</Project>
+      <Name>Magisterka.Infrastructure</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

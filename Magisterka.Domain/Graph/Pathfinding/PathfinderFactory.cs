@@ -10,9 +10,9 @@ namespace Magisterka.Domain.Graph.Pathfinding
 {
     public class PathfinderFactory : IPathfinderFactory
     {
-        private readonly AlgorithmMonitor _monitor;
+        private readonly IAlgorithmMonitor _monitor;
 
-        public PathfinderFactory(AlgorithmMonitor monitor)
+        public PathfinderFactory(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }
