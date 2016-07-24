@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphX.Controls;
-using GraphX.Controls.Models;
 using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace;
@@ -17,10 +11,18 @@ namespace Magisterka.Domain.Adapters
 {
     public class MapAdapter
     {
-        public MapView VisualMap { get; set; }
-        private Map _logicMap;
         private readonly IPathfinderFactory _pathfinderFactory;
+        private Map _logicMap;
         private Pathfinder _pathfinder;
+
+        private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory)
+        {
+            _logicMap = logicMap;
+            _pathfinderFactory = pathfinderFactory;
+        }
+
+        public MapView VisualMap { get; set; }
+
         public NodeView StartPathfinding(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {
             _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
@@ -52,7 +54,9 @@ namespace Magisterka.Domain.Adapters
             _logicMap.Select(node => new NodeView
             {
                 ID = nodeCounter++,
-                LogicNode = node
+                LogicNode = node,
+                Text = node.Name,
+                CurrentState = eVertexState.Other
             }).ForEach(nodeView =>
             {
                 VisualMap.AddVertex(nodeView);
@@ -61,18 +65,39 @@ namespace Magisterka.Domain.Adapters
 
         protected void ConvertLogicEdgesToVisualEdges()
         {
-            VisualMap.Vertices.Select(nodeView => nodeView.LogicNode).ForEach(node =>
+            IEnumerable<Edge> logicEdges = _logicMap.GetAllEdges();
+            IEnumerable<EdgeAdapter> edgeAdapters = logicEdges.Select(edge => new EdgeAdapter
             {
-                IEnumerable<Edge> edges = node.Neighbors.Select(neighborToEdge => neighborToEdge.Value);
-                AddEdgesToVisualMap(edges, eEdgeDirection.In);
-                AddEdgesToVisualMap(edges, eEdgeDirection.Out, edges.Count());
+                Edge = edge,
+                FromNode = edge.NodesConnected.Key,
+                ToNode = edge.NodesConnected.Value
             });
+            List<EdgeAdapter> bidirectionalEdgeAdapters = new List<EdgeAdapter>(edgeAdapters);
+            bidirectionalEdgeAdapters.AddRange(DuplicateAndMirrorEdgeAdapterCollection(edgeAdapters));
+
+
+            IEnumerable<EdgeView> visualEdges = ConstructListOfVisualEdges(bidirectionalEdgeAdapters);
+
+            VisualMap.AddEdgeRange(visualEdges);
         }
 
-        private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory)
+        private IEnumerable<EdgeView> ConstructListOfVisualEdges(IEnumerable<EdgeAdapter> edgeAdapters)
         {
-            _logicMap = logicMap;
-            _pathfinderFactory = pathfinderFactory;
+            int edgeCounter = 0;
+            return edgeAdapters.Select(
+                    edgeAdapter =>
+                        new EdgeView(edgeAdapter.Edge, VisualMap.GetVertexByLogicNode(edgeAdapter.FromNode),
+                            VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode))
+                        {
+                            ID = edgeCounter++,
+                            SkipProcessing = ProcessingOptionEnum.Freeze,
+                            Caption = $"{edgeAdapter.FromNode.Name} => {edgeAdapter.ToNode.Name} - Cost: {edgeAdapter.Edge.Cost}"
+                        });
+        }
+
+        private IEnumerable<EdgeAdapter> DuplicateAndMirrorEdgeAdapterCollection(IEnumerable<EdgeAdapter> edgeAdapters)
+        {
+            return edgeAdapters.Select(edgeAdapter => edgeAdapter.GetEdgeAdapterWithMirroredEdges());
         }
 
         private void ClearVisualMapPredefinedStartingPosition()
@@ -89,18 +114,6 @@ namespace Magisterka.Domain.Adapters
 
             NodeView targetVisualNode = VisualMap.GetVertexByLogicNode(targetNode);
             targetVisualNode.Caption = string.Empty;
-        }
-
-        private void AddEdgesToVisualMap(IEnumerable<Edge> edges, eEdgeDirection direction, long edgeCounter = 0)
-        {
-            VisualMap.AddEdgeRange(
-                    edges.Select(edge => new EdgeView(edge, VisualMap.GetVertexByLogicNode(direction == eEdgeDirection.In ?  edge.NodesConnected.Key : edge.NodesConnected.Value),
-                        VisualMap.GetVertexByLogicNode(direction == eEdgeDirection.In ? edge.NodesConnected.Value : edge.NodesConnected.Key))
-                    {
-                        ID = edgeCounter++,
-                        SkipProcessing = ProcessingOptionEnum.Freeze,
-                        Caption = $"Node {VisualMap.GetVertexByLogicNode(edge.NodesConnected.Key).ID} => Node {VisualMap.GetVertexByLogicNode(edge.NodesConnected.Value).ID} - Cost: {edge.Cost}"
-                    }));
         }
 
         public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory)

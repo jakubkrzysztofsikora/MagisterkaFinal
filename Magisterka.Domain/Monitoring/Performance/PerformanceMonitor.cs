@@ -11,13 +11,13 @@ namespace Magisterka.Domain.Monitoring.Performance
         private const bool WipeGarbageCollectorBeforeMonitor = false;
 
         private long _amountOfTicksOnStart;
+        private PerformanceCounter _cpuCounter;
+        private List<long> _cpuUsageReads;
         private long _memoryUsageOnStart;
         private List<long> _memoryUsageReads;
-        private List<long> _cpuUsageReads;
-        private PerformanceCounter _cpuCounter;
-        private bool _stopMonitoring;
 
         private Task _monitoringOperation;
+        private bool _stopMonitoring;
 
         public void Start()
         {

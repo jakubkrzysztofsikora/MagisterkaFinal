@@ -2,18 +2,17 @@
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public class AStarStrategy : IPathfindingStrategy
     {
-        public IEnumerable<Node> CalculatedPath { get; private set; }
-
-        private readonly IAlgorithmMonitor _monitor;
-
         private const long Infinity = int.MaxValue;
         private readonly List<Node> _closedSet = new List<Node>();
+
+        private readonly IAlgorithmMonitor _monitor;
         private readonly List<Node> _openSet = new List<Node>();
 
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
@@ -22,6 +21,8 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             _monitor = monitor;
         }
+
+        public IEnumerable<Node> CalculatedPath { get; private set; }
 
         public void Calculate(Map map, Position currentPosition)
         {
@@ -107,7 +108,16 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             while (targetNode != currentNode)
             {
-                var nextNode = _previousNodes[targetNode];
+                Node nextNode;
+                try
+                {
+                    nextNode = _previousNodes[targetNode];
+                }
+                catch (KeyNotFoundException exception)
+                {
+                    throw new PathToTargetDoesntExistException();
+                }
+                
                 _monitor.MonitorPathFragment(targetNode, nextNode);
 
                 yield return targetNode;

@@ -1,12 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
-using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;

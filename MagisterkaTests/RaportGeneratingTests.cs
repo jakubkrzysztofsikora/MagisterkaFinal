@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Castle.Core.Internal;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Magisterka;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
@@ -14,7 +12,6 @@ using Magisterka.Domain.Monitoring.Quality;
 using Magisterka.Infrastructure.AppSettings;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
-using Magisterka.StaticResources;
 using MagisterkaTests.TestingStubs;
 using Moq;
 using NUnit.Framework;
@@ -24,6 +21,17 @@ namespace MagisterkaTests
     [TestFixture]
     public class RaportGeneratingTests
     {
+        [TearDown]
+        public void TearDown()
+        {
+            DirectoryInfo directoryInfo = new DirectoryInfo(_appSettings.RaportPath);
+
+            foreach (var file in directoryInfo.GetFiles())
+            {
+                file.Delete();
+            }
+        }
+
         private readonly Mock<IAlgorithmMonitor> _monitorMock;
         private readonly IAppSettings _appSettings;
 
@@ -34,12 +42,12 @@ namespace MagisterkaTests
             {
                 NumberOfVisitsPerNode = new Dictionary<Node, int>
                 {
-                    { new Node(), 1 },
-                    { new Node(), 2 },
-                    { new Node(), 1 },
-                    { new Node(), 3 },
-                    { new Node(), 1 },
-                    { new Node(), 0 }
+                    { new Node("Node 1"), 1 },
+                    { new Node("Node 2"), 2 },
+                    { new Node("Node 3"), 1 },
+                    { new Node("Node 4"), 3 },
+                    { new Node("Node 5"), 1 },
+                    { new Node("Node 6"), 0 }
                 },
                 PathLengthInEdgeCost = 23,
                 StepsTaken = 6
@@ -93,17 +101,6 @@ namespace MagisterkaTests
                 Assert.IsTrue(containsAverageMemoryUsage);
                 Assert.IsTrue(containsOneOfTheNodesNames);
                 Assert.IsTrue(containsNameOfPathfindingAlgorithm);
-            }
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            DirectoryInfo directoryInfo = new DirectoryInfo(_appSettings.RaportPath);
-
-            foreach (var file in directoryInfo.GetFiles())
-            {
-                file.Delete();
             }
         }
     }

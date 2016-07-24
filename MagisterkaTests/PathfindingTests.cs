@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Graph.Pathfinding;
+using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
@@ -77,11 +78,19 @@ namespace MagisterkaTests
 
             while (currentPosition != _endingPosition)
             {
-                currentPosition = pathfinder.GetNextStep(map, currentPosition);
+                bool blockedNodeOnTheWayAndCantPassIt = false;
+                try
+                {
+                    currentPosition = pathfinder.GetNextStep(map, currentPosition);
+                }
+                catch (PathToTargetDoesntExistException exception)
+                {
+                    blockedNodeOnTheWayAndCantPassIt = true;
+                }
 
                 //Then
                 Node result = map.GetNodeByPosition(currentPosition);
-                Assert.False(result.IsBlocked);
+                Assert.True(!result.IsBlocked || blockedNodeOnTheWayAndCantPassIt);
             }
         }
 
@@ -112,10 +121,10 @@ namespace MagisterkaTests
 
         private Map CreateTestMap(Position positionToInjectInTheMiddle)
         {
-            Node nodeA = new Node();
-            Node nodeB = new Node();
-            Node nodeC = new Node();
-            Node nodeD = new Node();
+            Node nodeA = new Node("Node 1");
+            Node nodeB = new Node("Node 2");
+            Node nodeC = new Node("Node 3");
+            Node nodeD = new Node("Node 4");
 
             nodeA.IsStartingNode = true;
             nodeD.IsTargetNode = true;

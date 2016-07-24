@@ -9,18 +9,18 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public class FloydWarshallStrategy : IPathfindingStrategy
     {
-        public IEnumerable<Node> CalculatedPath { get; private set; }
-
-        private readonly IAlgorithmMonitor _monitor;
-
         private const long Infinity = int.MaxValue;
         private readonly Dictionary<KeyValuePair<Node, Node>, long> _distancesBetweenNodes = new Dictionary<KeyValuePair<Node, Node>, long>();
+
+        private readonly IAlgorithmMonitor _monitor;
         private readonly Dictionary<KeyValuePair<Node, Node>, Node> _nextNodes = new Dictionary<KeyValuePair<Node, Node>, Node>();
 
         public FloydWarshallStrategy(IAlgorithmMonitor monitor)
         {
             _monitor = monitor;
         }
+
+        public IEnumerable<Node> CalculatedPath { get; private set; }
 
         public void Calculate(Map map, Position currentPosition)
         {

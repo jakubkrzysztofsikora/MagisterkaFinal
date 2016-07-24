@@ -11,7 +11,7 @@ namespace Magisterka.VisualEcosystem.EventHandlers
         {
             var tooltip = new ToolTip();
             var nodeView = e.VertexControl.Vertex as NodeView;
-            tooltip.Content = $"Node {nodeView?.ID} - {nodeView?.LogicNode.Name}";
+            tooltip.Content = $"{nodeView?.LogicNode.Name}";
             tooltip.IsOpen = true;
             e.VertexControl.ToolTip = tooltip;
         }

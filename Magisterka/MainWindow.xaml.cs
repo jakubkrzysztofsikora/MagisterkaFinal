@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
+using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
@@ -104,7 +105,8 @@ namespace Magisterka
 
             try
             {
-                NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), ePathfindingAlgorithms.FloydWarshall);
+                NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(),
+                    ePathfindingAlgorithms.FloydWarshall);
                 VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
 
                 var animation = new PathAnimationCommand(_actor)
@@ -116,9 +118,13 @@ namespace Magisterka
 
                 VisualMap.GoToVertex(nextVertexControl, animation);
             }
-            catch (Exception exception)
+            catch (DomainException exception)
             {
                 _errorDisplayer.DisplayError(eErrorTypes.PathfindingError, exception.Message);
+            }
+            catch (Exception exception)
+            {
+                _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
             }
         }
     }

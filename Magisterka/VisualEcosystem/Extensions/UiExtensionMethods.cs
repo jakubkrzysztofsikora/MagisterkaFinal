@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -52,14 +48,15 @@ namespace Magisterka.VisualEcosystem.Extensions
 
         public static EdgeControl GetEdgeControlBetweenNodes(this VisualMap map, NodeView fromNode, NodeView toNode)
         {
+            if (!fromNode.LogicNode.IsNeighborWith(toNode.LogicNode))
+                return null;
+
             return
                 map.Children.OfType<EdgeControl>()
                     .FirstOrDefault(
                         edge =>
-                            (((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Key == fromNode.LogicNode &&
-                            ((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Value == toNode.LogicNode) ||
-                            (((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Value == fromNode.LogicNode &&
-                            ((EdgeView)edge.DataContext).LogicEdge.NodesConnected.Key == toNode.LogicNode));
+                            ((EdgeView) edge.DataContext).Source.LogicNode == fromNode.LogicNode &&
+                            ((EdgeView) edge.DataContext).Target.LogicNode == toNode.LogicNode);
         }
     }
 }

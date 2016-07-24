@@ -29,8 +29,11 @@
   
   <Color x:Key="LabelBackgroundColor">White</Color>
   
-  <Color x:Key="BlockedNodeColor">Crimson</Color>
-  <Color x:Key="OtherNodeColor">DarkSeaGreen</Color>
-  <Color x:Key="CurrentNodeColor">GreenYellow</Color>
+  <Color x:Key="BlockedNodeColor">Firebrick</Color>
+  <Color x:Key="OtherNodeColor">LightSkyBlue</Color>
+  <Color x:Key="VisitedNodeColor">DeepSkyBlue</Color>
+  <Color x:Key="CurrentNodeColor">DarkBlue</Color>
+  <Color x:Key="StartNodeColor">SlateBlue</Color>
+  <Color x:Key="TargetNodeColor">SlateBlue</Color>
 
 </ResourceDictionary>

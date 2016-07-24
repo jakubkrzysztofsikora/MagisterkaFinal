@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using GraphX.PCL.Common.Models;
+﻿using System.Collections.Generic;
 
 namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {

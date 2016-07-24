@@ -8,8 +8,6 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public class DijkstraStrategy : IPathfindingStrategy
     {
-        public IEnumerable<Node> CalculatedPath { get; private set; }
-
         private readonly IAlgorithmMonitor _monitor;
 
         private readonly Dictionary<Node, int> _nodeToCost = new Dictionary<Node, int>();
@@ -20,6 +18,8 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             _monitor = monitor;
         }
+
+        public IEnumerable<Node> CalculatedPath { get; private set; }
 
         public void Calculate(Map map, Position currentPostition)
         {

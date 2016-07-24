@@ -4,7 +4,6 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 using Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies;
-using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using GraphX.PCL.Logic.Helpers;
-using Magisterka.Domain.Graph.MovementSpace;
+﻿using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using QuickGraph;
 

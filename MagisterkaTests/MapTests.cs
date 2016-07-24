@@ -10,34 +10,39 @@ namespace MagisterkaTests
     public class MapTests
     {
         [Test]
-        public void ShouldGenerateNewProperMap()
+        public void ShouldCalculateHeurisitcScoreBetweenNodes()
         {
             //Given
             MapFactory factory = new MapFactory(new Random());
+            Map map = factory.GenerateDefaultMap().WithGridPositions();
+            int heuristicScore = 2;
+            Node firstNode = map.First();
+            Node targetNode = map.GetNodeByPosition(1, 1);
 
             //When
-            Map result = factory.GenerateDefaultMap();
+            long result = map.GetHeuristicScoreBetweenNodes(firstNode, targetNode);
 
             //Then
-            Assert.AreEqual(20, result.Count);
-            Assert.False(result.Any(node => node.Neighbors.Count == 0));
-            Assert.True(result.All(node => node.Neighbors.All(neighbor => neighbor.Key.IsNeighborWith(node))));
+            Assert.AreEqual(heuristicScore, result);
         }
 
         [Test]
-        public void ShouldGetNodeByItsPosition()
+        public void ShouldClearAllDefinedPositions()
         {
             //Given
             MapFactory factory = new MapFactory(new Random());
             Map map = factory.GenerateDefaultMap();
-            Node expectedResult = map.First();
-            Position positionOfTheNodeToFind = expectedResult.Coordinates;
+            Node startingNode = map.First();
+            Node targetNode = map.ElementAt(new Random().Next(0, map.Count - 1));
+            map = map
+                .WithStartingPosition(startingNode.Coordinates)
+                .WithTargetPosition(targetNode.Coordinates);
 
             //When
-            Node result = map.GetNodeByPosition(positionOfTheNodeToFind);
+            map = map.WithNoDefinedPositions();
 
             //Then
-            Assert.AreEqual(expectedResult, result);
+            Assert.True(!map.Any(node => node.IsStartingNode || node.IsTargetNode));
         }
 
         [Test]
@@ -71,39 +76,34 @@ namespace MagisterkaTests
         }
 
         [Test]
-        public void ShouldClearAllDefinedPositions()
+        public void ShouldGenerateNewProperMap()
+        {
+            //Given
+            MapFactory factory = new MapFactory(new Random());
+
+            //When
+            Map result = factory.GenerateDefaultMap();
+
+            //Then
+            Assert.AreEqual(20, result.Count);
+            Assert.False(result.Any(node => node.Neighbors.Count == 0));
+            Assert.True(result.All(node => node.Neighbors.All(neighbor => neighbor.Key.IsNeighborWith(node))));
+        }
+
+        [Test]
+        public void ShouldGetNodeByItsPosition()
         {
             //Given
             MapFactory factory = new MapFactory(new Random());
             Map map = factory.GenerateDefaultMap();
-            Node startingNode = map.First();
-            Node targetNode = map.ElementAt(new Random().Next(0, map.Count - 1));
-            map = map
-                .WithStartingPosition(startingNode.Coordinates)
-                .WithTargetPosition(targetNode.Coordinates);
+            Node expectedResult = map.First();
+            Position positionOfTheNodeToFind = expectedResult.Coordinates;
 
             //When
-            map = map.WithNoDefinedPositions();
+            Node result = map.GetNodeByPosition(positionOfTheNodeToFind);
 
             //Then
-            Assert.True(!map.Any(node => node.IsStartingNode || node.IsTargetNode));
-        }
-
-        [Test]
-        public void ShouldCalculateHeurisitcScoreBetweenNodes()
-        {
-            //Given
-            MapFactory factory = new MapFactory(new Random());
-            Map map = factory.GenerateDefaultMap().WithGridPositions();
-            int heuristicScore = 2;
-            Node firstNode = map.First();
-            Node targetNode = map.GetNodeByPosition(1, 1);
-
-            //When
-            long result = map.GetHeuristicScoreBetweenNodes(firstNode, targetNode);
-
-            //Then
-            Assert.AreEqual(heuristicScore, result);
+            Assert.AreEqual(expectedResult, result);
         }
 
         [Test]

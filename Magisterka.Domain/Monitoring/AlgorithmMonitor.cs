@@ -7,12 +7,8 @@ namespace Magisterka.Domain.Monitoring
 {
     public class AlgorithmMonitor : IAlgorithmMonitor
     {
-        public PathDetails PathDetails { get; set; }
-        public PerformanceResults PerformanceResults { get; set; }
-        public bool IsMonitoring { get; set; }
-
         private readonly IPartialMonitor<PerformanceResults> _performanceMonitor;
-        private readonly IBehaviourRegistry<PathDetails> _qualityRegistry; 
+        private readonly IBehaviourRegistry<PathDetails> _qualityRegistry;
 
         public AlgorithmMonitor(IPartialMonitor<PerformanceResults> performanceMonitor,
                                 IBehaviourRegistry<PathDetails> qualityMonitor)
@@ -20,6 +16,10 @@ namespace Magisterka.Domain.Monitoring
             _performanceMonitor = performanceMonitor;
             _qualityRegistry = qualityMonitor;
         }
+
+        public PathDetails PathDetails { get; set; }
+        public PerformanceResults PerformanceResults { get; set; }
+        public bool IsMonitoring { get; set; }
 
         public void StartMonitoring()
         {
