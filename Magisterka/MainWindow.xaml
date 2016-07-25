@@ -11,6 +11,8 @@
       <ContextMenu x:Key="NodeContextMenu">
           <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
           <MenuItem Header="Set as target" Click="SetTargetPoint" Tag="" />
+          <Separator/>
+          <MenuItem Header="Delete" Click="DeleteNode" Tag="" />
       </ContextMenu>
     </Window.Resources>
     <Grid>

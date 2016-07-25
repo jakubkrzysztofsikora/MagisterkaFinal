@@ -99,6 +99,15 @@ namespace Magisterka
             }
         }
 
+        private void DeleteNode(object sender, RoutedEventArgs e)
+        {
+            VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
+            NodeView node = vertex.GetNodeView();
+
+            _mapAdapter.Delete(node);
+            VisualMap.UpdateLayout();
+        }
+
         private void StartPathfinding(object sender, RoutedEventArgs e)
         {
             VertexControl currentVertex = VisualMap.GetCurrentVertex();

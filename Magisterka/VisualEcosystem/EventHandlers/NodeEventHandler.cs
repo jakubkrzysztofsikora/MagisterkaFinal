@@ -27,7 +27,7 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             ContextMenu contextMenu = Application.Current.MainWindow.FindResource("NodeContextMenu") as ContextMenu;
             contextMenu.PlacementTarget = sender as Button;
             contextMenu.IsOpen = true;
-            foreach (ItemsControl menuPosition in contextMenu.Items)
+            foreach (Control menuPosition in contextMenu.Items)
             {
                 menuPosition.Tag = e.VertexControl;
             }

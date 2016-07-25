@@ -48,6 +48,30 @@ namespace Magisterka.Domain.Adapters
             nodeView.Caption = DomainConstants.TargetNodeCaption;
         }
 
+        public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory)
+        {
+            MapAdapter adapter = new MapAdapter(logicMap, pathfinderFactory)
+            {
+                VisualMap = new MapView()
+            };
+            adapter.ConvertLogicNodesToVisualVerticles();
+            adapter.ConvertLogicEdgesToVisualEdges();
+
+            return adapter;
+        }
+
+        public void Delete(NodeView node)
+        {
+            _logicMap.Delete(node.LogicNode);
+            VisualMap.RemoveVertex(node);
+        }
+
+        public void Delete(EdgeView edge)
+        {
+            _logicMap.Delete(edge.LogicEdge);
+            VisualMap.RemoveEdge(edge);
+        }
+
         protected void ConvertLogicNodesToVisualVerticles()
         {
             long nodeCounter = 0;
@@ -114,18 +138,6 @@ namespace Magisterka.Domain.Adapters
 
             NodeView targetVisualNode = VisualMap.GetVertexByLogicNode(targetNode);
             targetVisualNode.Caption = string.Empty;
-        }
-
-        public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory)
-        {
-            MapAdapter adapter = new MapAdapter(logicMap, pathfinderFactory)
-            {
-                VisualMap = new MapView()
-            };
-            adapter.ConvertLogicNodesToVisualVerticles();
-            adapter.ConvertLogicEdgesToVisualEdges();
-            
-            return adapter;
         }
     }
 }

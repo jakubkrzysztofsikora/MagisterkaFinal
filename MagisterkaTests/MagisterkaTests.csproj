@@ -97,6 +97,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="MapAdapterTests.cs" />
     <Compile Include="MapTests.cs" />
     <Compile Include="MonitoringTests.cs" />
     <Compile Include="PathfindingTests.cs" />

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
@@ -117,6 +118,21 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             Map newMap = new Map(new List<Node>(_nodes));
             return newMap;
+        }
+
+        public void Delete(Node node)
+        {
+            node.Neighbors.Select(x => x.Value).ForEach(Delete);
+            _nodes = _nodes.Where(n => n != node);
+        }
+
+        public void Delete(Edge edge)
+        {
+            var nodesWithEdgeToDelete = _nodes.Where(node => node.Neighbors.Values.Contains(edge));
+            nodesWithEdgeToDelete.ForEach(node =>
+            {
+                node.Neighbors = node.Neighbors.Where(n => n.Value != edge).ToDictionary(x => x.Key, x => x.Value);
+            });
         }
     }
 }
