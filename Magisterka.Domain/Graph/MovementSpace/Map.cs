@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.ViewModels;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
@@ -38,9 +39,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public void Add(Node item)
         {
-            if (Count >= MaximumNumberOfNodes)
-                throw new IndexOutOfRangeException();
-
             _nodes = _nodes.Concat(new[] { item });
         }
 
@@ -133,6 +131,12 @@ namespace Magisterka.Domain.Graph.MovementSpace
             {
                 node.Neighbors = node.Neighbors.Where(n => n.Value != edge).ToDictionary(x => x.Key, x => x.Value);
             });
+        }
+
+        public void AddEdge(Edge edge)
+        {
+            edge.NodesConnected.Key.Neighbors.Add(edge.NodesConnected.Value, edge);
+            edge.NodesConnected.Value.Neighbors.Add(edge.NodesConnected.Key, edge);
         }
     }
 }

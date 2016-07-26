@@ -26,6 +26,9 @@
   <system:String x:Key="RaportAverageMemoryUsage">Average memory usage (MB)</system:String>
   <system:String x:Key="RaportPeakProcessorUsage">Peak processor usage (%)</system:String>
   <system:String x:Key="RaportAverageProcessorUsage">Average processor usage (%)</system:String>
+
+  <!-- Modal strings -->
+  <system:String x:Key="ChangeEdgeCost">Edge Cost</system:String>
   
   <Color x:Key="LabelBackgroundColor">White</Color>
   

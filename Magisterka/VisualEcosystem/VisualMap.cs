@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using GraphX.Controls;
@@ -17,6 +19,7 @@ namespace Magisterka.VisualEcosystem
     public class VisualMap : GraphArea<NodeView, EdgeView, BidirectionalGraph<NodeView, EdgeView>>
     {
         public event VertexSelectedEventHandler VertexRightClick;
+        public event EdgeSelectedEventHandler EdgeRightClick;
 
         public void InitilizeVisuals()
         {
@@ -27,8 +30,7 @@ namespace Magisterka.VisualEcosystem
             ShowAllVerticesLabels(false);
             ShowAllEdgesLabels(false);
             ShowAllEdgesArrows(false);
-            AddRightClickEventHandlerToVerticles();
-
+            
             MarkBlockedNodes();
         }
 
@@ -52,6 +54,19 @@ namespace Magisterka.VisualEcosystem
 
 
             LogicCore = logicCore;
+        }
+
+        public void InitializeEventHandlers()
+        {
+            AddRightClickEventHandlerToElements<VertexControl, VertexSelectedEventHandler, VertexSelectedEventArgs>(
+                VertexRightClick,
+                (vertexControl, mouseEventArgs, modifierKey) =>
+                    new VertexSelectedEventArgs(vertexControl, mouseEventArgs, modifierKey));
+
+            AddRightClickEventHandlerToElements<EdgeControl, EdgeSelectedEventHandler, EdgeSelectedEventArgs>(
+                EdgeRightClick,
+                (edgeControl, mouseArgs, modifierKey) =>
+                    new EdgeSelectedEventArgs(edgeControl, mouseArgs, modifierKey));
         }
 
         public void AddCustomChildIfNotExists(UIElement element)
@@ -135,14 +150,24 @@ namespace Magisterka.VisualEcosystem
             RemoveCustomChildControl(labelToDelete);
         }
 
-        private void AddRightClickEventHandlerToVerticles()
+        private void AddRightClickEventHandlerToElements<TElement, TEventHandler, TEventArgs>(TEventHandler eventHandler, Func<TElement, MouseButtonEventArgs, ModifierKeys, TEventArgs> constructor)
+            where TElement : Control
+            where TEventArgs : EventArgs
+            where TEventHandler : class 
         {
-            foreach (var vertexControl in Children.OfType<VertexControl>())
+            bool isVertexEventHandler = eventHandler is VertexSelectedEventHandler;
+            bool isEdgeEventHandler = eventHandler is EdgeSelectedEventHandler;
+            if (!isVertexEventHandler && !isEdgeEventHandler)
+                return;
+
+            foreach (var control in Children.OfType<TElement>())
             {
-                vertexControl.PreviewMouseRightButtonDown += delegate
+                control.PreviewMouseRightButtonDown += delegate
                 {
-                    VertexRightClick?.Invoke(vertexControl,
-                        new VertexSelectedEventArgs(vertexControl, null, ModifierKeys.None));
+                    if (isVertexEventHandler)
+                        (eventHandler as VertexSelectedEventHandler)?.Invoke(control, constructor(control, null, ModifierKeys.None) as VertexSelectedEventArgs);
+                    else if (isEdgeEventHandler)
+                        (eventHandler as EdgeSelectedEventHandler)?.Invoke(control, constructor(control, null, ModifierKeys.None) as EdgeSelectedEventArgs);
                 };
             }
         }

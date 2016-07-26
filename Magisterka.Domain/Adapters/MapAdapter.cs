@@ -60,16 +60,33 @@ namespace Magisterka.Domain.Adapters
             return adapter;
         }
 
-        public void Delete(NodeView node)
+        public void DeleteNode(NodeView node)
         {
             _logicMap.Delete(node.LogicNode);
             VisualMap.RemoveVertex(node);
         }
 
-        public void Delete(EdgeView edge)
+        public void DeleteEdge(EdgeView edge)
         {
             _logicMap.Delete(edge.LogicEdge);
             VisualMap.RemoveEdge(edge);
+        }
+
+        public void AddNode(NodeView node)
+        {
+            VisualMap.AddVertex(node);
+            _logicMap.Add(node.LogicNode);
+        }
+
+        public void AddEdge(EdgeView edge)
+        {
+            VisualMap.AddEdge(edge);
+            _logicMap.AddEdge(edge.LogicEdge);
+        }
+
+        public void ChangeCost(EdgeView edge, int answer)
+        {
+            edge.LogicEdge.Cost = answer;
         }
 
         protected void ConvertLogicNodesToVisualVerticles()

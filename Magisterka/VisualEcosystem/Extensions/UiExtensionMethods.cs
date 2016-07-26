@@ -24,6 +24,11 @@ namespace Magisterka.VisualEcosystem.Extensions
             return (VertexControl) ((ItemsControl)item).Tag;
         }
 
+        public static EdgeControl GetEdgeControl(this Control item)
+        {
+            return (EdgeControl)((ItemsControl)item).Tag;
+        }
+
         public static NodeView GetNodeViewFromUiElement(this Control item)
         {
             return item.GetVertexControl().GetNodeView();

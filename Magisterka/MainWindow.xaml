@@ -12,7 +12,12 @@
           <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
           <MenuItem Header="Set as target" Click="SetTargetPoint" Tag="" />
           <Separator/>
-          <MenuItem Header="Delete" Click="DeleteNode" Tag="" />
+          <MenuItem Header="Delete Node" Click="DeleteNode" Tag="" />
+      </ContextMenu>
+      <ContextMenu x:Key="EdgeContextMenu">
+        <MenuItem Header="Change Cost" Click="ChangeCost" Tag="" />
+        <Separator/>
+        <MenuItem Header="Delete Edge" Click="DeleteEdge" Tag="" />
       </ContextMenu>
     </Window.Resources>
     <Grid>

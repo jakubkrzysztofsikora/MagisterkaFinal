@@ -12,6 +12,7 @@ using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
+using Magisterka.VisualEcosystem.InputModals;
 using Magisterka.VisualEcosystem.Validators;
 
 namespace Magisterka
@@ -40,8 +41,10 @@ namespace Magisterka
             InitializeComponent();
             CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
-            InitializeEventHandlers();
+            
             VisualMap.InitilizeVisuals();
+            InitializeEventHandlers();
+            VisualMap.InitializeEventHandlers();
 
             ZoomControl.ZoomToFill();
         }
@@ -59,6 +62,7 @@ namespace Magisterka
 
             VisualMap.EdgeMouseEnter += EdgeEventHandler.OnEdgeHoverIn;
             VisualMap.EdgeMouseLeave += EdgeEventHandler.OnEdgeHoverOut;
+            VisualMap.EdgeRightClick += EdgeEventHandler.OnEdgeRightClick;
         }
 
         private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory)
@@ -104,8 +108,7 @@ namespace Magisterka
             VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
             NodeView node = vertex.GetNodeView();
 
-            _mapAdapter.Delete(node);
-            VisualMap.UpdateLayout();
+            _mapAdapter.DeleteNode(node);
         }
 
         private void StartPathfinding(object sender, RoutedEventArgs e)
@@ -135,6 +138,26 @@ namespace Magisterka
             {
                 _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
             }
+        }
+
+        private void ChangeCost(object sender, RoutedEventArgs e)
+        {
+            EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
+            EdgeView edge = edgeControl.GetEdgeView();
+
+            ChangeEdgeCostModal modal = new ChangeEdgeCostModal($"{edge.Caption} {Application.Current.Resources["ChangeEdgeCost"]}", edge.LogicEdge.Cost);
+            bool? answered = modal.ShowDialog();
+
+            if (answered != null && answered.Value == true)
+                _mapAdapter.ChangeCost(edge, modal.Answer);
+        }
+
+        private void DeleteEdge(object sender, RoutedEventArgs e)
+        {
+            EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
+            EdgeView edge = edgeControl.GetEdgeView();
+
+            _mapAdapter.DeleteEdge(edge);
         }
     }
 }
