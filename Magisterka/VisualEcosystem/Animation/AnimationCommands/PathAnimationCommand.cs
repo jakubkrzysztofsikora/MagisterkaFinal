@@ -14,16 +14,18 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
     public class PathAnimationCommand : IAnimationCommand
     {
         private const int AnimationsNeededToComplete = 2;
-        private const int DefaultBaseFullAnimationLength = 800;
         private readonly IMovingActor _actorToMove;
+        private readonly int _defaultBaseFullAnimationLength;
+
         private int _animationsCompleted;
         private List<Point> _routingPoints;
 
         private EdgeView _throughEdge;
 
-        public PathAnimationCommand(IMovingActor actor)
+        public PathAnimationCommand(IMovingActor actor, eAnimationSpeed animationSpeed)
         {
             _actorToMove = actor;
+            _defaultBaseFullAnimationLength = (int) animationSpeed;
         }
 
         public VisualMap VisualMap { get; set; }
@@ -69,7 +71,7 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
                 ? _routingPoints[iteration]
                 : _routingPoints.Last();
 
-            int partialAnimationLength = DefaultBaseFullAnimationLength / _routingPoints.Count * _throughEdge.LogicEdge.Cost;
+            int partialAnimationLength = _defaultBaseFullAnimationLength / _routingPoints.Count * _throughEdge.LogicEdge.Cost;
             DoubleAnimation anim1 = new DoubleAnimation(currentActorPoint.X, nextActorPoint.X, TimeSpan.FromMilliseconds(partialAnimationLength));
             DoubleAnimation anim2 = new DoubleAnimation(currentActorPoint.Y, nextActorPoint.Y, TimeSpan.FromMilliseconds(partialAnimationLength));
             anim1.Completed += (sender, args) => FireCompletedEventIfPossible(iteration);

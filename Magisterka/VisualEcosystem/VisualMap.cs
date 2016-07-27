@@ -58,15 +58,18 @@ namespace Magisterka.VisualEcosystem
 
         public void InitializeEventHandlers()
         {
-            AddRightClickEventHandlerToElements<VertexControl, VertexSelectedEventHandler, VertexSelectedEventArgs>(
+            GenerateGraphFinished += delegate
+            {
+                AddRightClickEventHandlerToElements<VertexControl, VertexSelectedEventHandler, VertexSelectedEventArgs>(
                 VertexRightClick,
                 (vertexControl, mouseEventArgs, modifierKey) =>
                     new VertexSelectedEventArgs(vertexControl, mouseEventArgs, modifierKey));
 
-            AddRightClickEventHandlerToElements<EdgeControl, EdgeSelectedEventHandler, EdgeSelectedEventArgs>(
+                AddRightClickEventHandlerToElements<EdgeControl, EdgeSelectedEventHandler, EdgeSelectedEventArgs>(
                 EdgeRightClick,
                 (edgeControl, mouseArgs, modifierKey) =>
                     new EdgeSelectedEventArgs(edgeControl, mouseArgs, modifierKey));
+            };
         }
 
         public void AddCustomChildIfNotExists(UIElement element)

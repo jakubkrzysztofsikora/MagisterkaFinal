@@ -20,13 +20,13 @@ namespace Magisterka.VisualEcosystem.InputModals
     /// </summary>
     public partial class ChangeEdgeCostModal : Window
     {
-        public int Answer => Convert.ToInt32(txtAnswer.Text);
+        public int Answer => Convert.ToInt32(NewEdgeCost.Text);
 
         public ChangeEdgeCostModal(string question, int defaultAnswer)
         {
             InitializeComponent();
-            lblQuestion.Content = question;
-            txtAnswer.Text = defaultAnswer.ToString();
+            Label.Content = question;
+            NewEdgeCost.Text = defaultAnswer.ToString();
         }
 
         private void btnDialogOk_Click(object sender, RoutedEventArgs e)
@@ -36,18 +36,18 @@ namespace Magisterka.VisualEcosystem.InputModals
 
         private void Window_ContentRendered(object sender, EventArgs e)
         {
-            txtAnswer.SelectAll();
-            txtAnswer.Focus();
+            NewEdgeCost.SelectAll();
+            NewEdgeCost.Focus();
         }
 
         private new void PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            e.Handled = !IsNumericValue(txtAnswer.Text);
+            e.Handled = !IsNumericValue(NewEdgeCost.Text);
         }
 
         private bool IsNumericValue(string text)
         {
-            Regex regex = new Regex("[^0-9.-]+");
+            Regex regex = new Regex(@"\d+");
             return !regex.IsMatch(text);
         }
     }

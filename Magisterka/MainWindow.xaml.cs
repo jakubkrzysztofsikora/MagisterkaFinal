@@ -14,13 +14,14 @@ using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.InputModals;
 using Magisterka.VisualEcosystem.Validators;
+using MahApps.Metro.Controls;
 
 namespace Magisterka
 {
     /// <summary>
     ///     Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         private readonly IMovingActor _actor;
         private readonly IErrorDisplayer _errorDisplayer;
@@ -39,14 +40,13 @@ namespace Magisterka
             _actor = actor;
 
             InitializeComponent();
+            LoadingOn();
             CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
             
             VisualMap.InitilizeVisuals();
             InitializeEventHandlers();
             VisualMap.InitializeEventHandlers();
-
-            ZoomControl.ZoomToFill();
         }
 
         public void Dispose()
@@ -63,6 +63,23 @@ namespace Magisterka
             VisualMap.EdgeMouseEnter += EdgeEventHandler.OnEdgeHoverIn;
             VisualMap.EdgeMouseLeave += EdgeEventHandler.OnEdgeHoverOut;
             VisualMap.EdgeRightClick += EdgeEventHandler.OnEdgeRightClick;
+
+            VisualMap.GenerateGraphFinished += (eAnimationSpeed, args) => LoadingOff();
+            
+            SizeChanged += (e,args) => ZoomControl.ZoomToFill();
+        }
+
+        private void LoadingOn()
+        {
+            GraphTabs.Visibility = Visibility.Hidden;
+            ProgressRing.IsActive = true;
+        }
+
+        private void LoadingOff()
+        {
+            GraphTabs.Visibility = Visibility.Visible;
+            ProgressRing.IsActive = false;
+            ZoomControl.ZoomToFill();
         }
 
         private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory)
@@ -121,7 +138,7 @@ namespace Magisterka
                     ePathfindingAlgorithms.FloydWarshall);
                 VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
 
-                var animation = new PathAnimationCommand(_actor)
+                var animation = new PathAnimationCommand(_actor, eAnimationSpeed.Fast)
                 {
                     FromVertex = currentVertex,
                     ToVertex = nextVertexControl,

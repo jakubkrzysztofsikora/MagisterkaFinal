@@ -28,7 +28,8 @@
   <system:String x:Key="RaportAverageProcessorUsage">Average processor usage (%)</system:String>
 
   <!-- Modal strings -->
-  <system:String x:Key="ChangeEdgeCost">Edge Cost</system:String>
+  <system:String x:Key="ChangeEdgeCostTitle">Change Edge Cost</system:String>
+  <system:String x:Key="ChangeEdgeCostContent">Edge Cost</system:String>
   
   <Color x:Key="LabelBackgroundColor">White</Color>
   

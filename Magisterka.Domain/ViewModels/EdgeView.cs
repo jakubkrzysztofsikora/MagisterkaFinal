@@ -10,6 +10,7 @@ namespace Magisterka.Domain.ViewModels
         public EdgeView(Edge logicEdge, NodeView source, NodeView destination) : base(source, destination, logicEdge.Cost)
         {
             LogicEdge = logicEdge;
+            SetStandardCaption();
         }
 
         public Edge LogicEdge { get; set; }
@@ -17,6 +18,11 @@ namespace Magisterka.Domain.ViewModels
         [XmlAttribute("text")]
         [DefaultValue("Edge")]
         public string Caption { get; set; }
+
+        public void SetStandardCaption()
+        {
+            Caption = $"{Source.LogicNode.Name} => {Target.LogicNode.Name} - Cost: {LogicEdge.Cost}";
+        }
 
         public override string ToString()
         {

@@ -18,5 +18,11 @@ namespace Magisterka.Domain.ViewModels
                     .Select(nodeView => nodeView.ID)
                     .SingleOrDefault();
         }
+
+        public void ChangeEdgeCost(EdgeView edge, int newCost)
+        {
+            edge.Weight = newCost;
+            edge.SetStandardCaption();
+        }
     }
 }

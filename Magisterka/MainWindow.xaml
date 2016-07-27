@@ -1,12 +1,16 @@
-﻿<Window
+﻿<Controls:MetroWindow x:Name="Window"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:VisualEcosystem="clr-namespace:Magisterka.VisualEcosystem" x:Class="Magisterka.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" ResizeMode="NoResize" WindowState="Maximized">
+        Icon="Images\graph.ico"
+        ShowIconOnTitleBar="True"
+        ShowTitleBar="True"
+        Title="Graph Pathfinder">
     <Window.Resources>
       <ContextMenu x:Key="NodeContextMenu">
           <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
@@ -21,12 +25,25 @@
       </ContextMenu>
     </Window.Resources>
     <Grid>
-        <graphx:ZoomControl x:Name="ZoomControl">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <Menu Grid.Row="0" Grid.Column="0" x:Name="Menu" >
+        <MenuItem Header="_Releout Graph" Click="MenuItem_Click" />
+        <MenuItem Header="{StaticResource StartPathfinding}" Click="StartPathfinding" />
+      </Menu>
+      <Controls:ProgressRing Grid.Row="1" Grid.Column="0" Panel.ZIndex="1000" x:Name="ProgressRing" IsActive="True"/>
+      <TabControl Grid.Row="1" Grid.Column="0" x:Name="GraphTabs" Visibility="Hidden">
+        <TabItem Header="Untitled">
+          <graphx:ZoomControl x:Name="ZoomControl">
             <VisualEcosystem:VisualMap x:Name="VisualMap"/>
-        </graphx:ZoomControl>
-        <Menu x:Name="menu" HorizontalAlignment="Left" Height="17" VerticalAlignment="Top" Width="519">
-            <MenuItem Header="_Releout Graph" Height="17" Click="MenuItem_Click" />
-            <MenuItem Header="{StaticResource StartPathfinding}" Height="17" Click="StartPathfinding" />
-        </Menu>
+          </graphx:ZoomControl>
+        </TabItem>
+        <TabItem Header="+" />
+      </TabControl>
     </Grid>
-</Window>
+</Controls:MetroWindow>

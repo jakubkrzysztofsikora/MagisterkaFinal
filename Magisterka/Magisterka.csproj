@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>graph.ico</ApplicationIcon>
+    <ApplicationIcon>Images\graph.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -58,6 +58,10 @@
       <HintPath>..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <HintPath>..\packages\QuickGraphPCL.3.6.61114.2\lib\net40-client\QuickGraph.dll</HintPath>
       <Private>True</Private>
@@ -76,6 +80,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -98,6 +106,7 @@
     <Compile Include="StaticResources\RaportStringContainer.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\IAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\PathAnimationCommand.cs" />
+    <Compile Include="VisualEcosystem\Animation\eAnimationSpeed.cs" />
     <Compile Include="VisualEcosystem\Animation\DefaultActor.cs" />
     <Compile Include="VisualEcosystem\Animation\IMovingActor.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\IErrorDisplayer.cs" />
@@ -172,7 +181,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="graph.ico" />
+    <Resource Include="Images\graph.ico" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

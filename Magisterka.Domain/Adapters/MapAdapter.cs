@@ -86,6 +86,7 @@ namespace Magisterka.Domain.Adapters
 
         public void ChangeCost(EdgeView edge, int answer)
         {
+            VisualMap.ChangeEdgeCost(edge, answer);
             edge.LogicEdge.Cost = answer;
         }
 
@@ -131,8 +132,7 @@ namespace Magisterka.Domain.Adapters
                             VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode))
                         {
                             ID = edgeCounter++,
-                            SkipProcessing = ProcessingOptionEnum.Freeze,
-                            Caption = $"{edgeAdapter.FromNode.Name} => {edgeAdapter.ToNode.Name} - Cost: {edgeAdapter.Edge.Cost}"
+                            SkipProcessing = ProcessingOptionEnum.Freeze
                         });
         }
 
