@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="Adapters\EdgeAdapter.cs" />
     <Compile Include="Adapters\MapAdapter.cs" />
+    <Compile Include="Converters\EnumDescriptionTypeConverter.cs" />
     <Compile Include="ExceptionContracts\DomainException.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\DuplicatedPositionOnGridException.cs" />
     <Compile Include="Graph\MovementSpace\Exceptions\NodeNotOnTheGridException.cs" />

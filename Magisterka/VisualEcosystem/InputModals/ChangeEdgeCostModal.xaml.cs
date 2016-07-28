@@ -12,13 +12,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Magisterka.VisualEcosystem.InputModals
 {
     /// <summary>
     /// Interaction logic for ChangeEdgeCostModal.xaml
     /// </summary>
-    public partial class ChangeEdgeCostModal : Window
+    public partial class ChangeEdgeCostModal : MetroWindow
     {
         public int Answer => Convert.ToInt32(NewEdgeCost.Text);
 

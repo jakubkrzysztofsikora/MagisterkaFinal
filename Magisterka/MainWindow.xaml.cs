@@ -6,6 +6,7 @@ using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
+using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
@@ -23,9 +24,14 @@ namespace Magisterka
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        public IAlgorithmMonitor Monitor { get; private set; }
+
         private readonly IMovingActor _actor;
+        private readonly Random _randomizer;
         private readonly IErrorDisplayer _errorDisplayer;
         private readonly IConfigurationValidator _validator;
+        private readonly IMapFactory _mapFactory;
+        private readonly IPathfinderFactory _pathfinderFactory;
         private MapAdapter _mapAdapter;
 
         public MainWindow(IErrorDisplayer errorDisplayer, 
@@ -33,20 +39,18 @@ namespace Magisterka
                           IMapFactory mapFactory,
                           IPathfinderFactory pathfinderFactory,
                           IMovingActor actor,
+                          IAlgorithmMonitor monitor,
                           Random randomizer)
         {
             _errorDisplayer = errorDisplayer;
             _validator = validator;
+            _mapFactory = mapFactory;
+            _pathfinderFactory = pathfinderFactory;
             _actor = actor;
+            _randomizer = randomizer;
+            Monitor = monitor;
 
             InitializeComponent();
-            LoadingOn();
-            CreateAllLayersOfGraph(mapFactory, randomizer, pathfinderFactory);
-            VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
-            
-            VisualMap.InitilizeVisuals();
-            InitializeEventHandlers();
-            VisualMap.InitializeEventHandlers();
         }
 
         public void Dispose()
@@ -71,13 +75,13 @@ namespace Magisterka
 
         private void LoadingOn()
         {
-            GraphTabs.Visibility = Visibility.Hidden;
+            ZoomControl.Visibility = Visibility.Hidden;
             ProgressRing.IsActive = true;
         }
 
         private void LoadingOff()
         {
-            GraphTabs.Visibility = Visibility.Visible;
+            ZoomControl.Visibility = Visibility.Visible;
             ProgressRing.IsActive = false;
             ZoomControl.ZoomToFill();
         }
@@ -90,10 +94,14 @@ namespace Magisterka
             _mapAdapter= MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory);
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void GenerateAGraph(object sender, RoutedEventArgs e)
         {
-            VisualMap.RelayoutGraph(true);
-            ZoomControl.ZoomToFill();
+            LoadingOn();
+            CreateAllLayersOfGraph(_mapFactory, _randomizer, _pathfinderFactory);
+            VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
+            VisualMap.InitilizeVisuals();
+            InitializeEventHandlers();
+            VisualMap.InitializeEventHandlers();
         }
 
         private void SetStartingPoint(object sender, RoutedEventArgs e)
@@ -175,6 +183,11 @@ namespace Magisterka
             EdgeView edge = edgeControl.GetEdgeView();
 
             _mapAdapter.DeleteEdge(edge);
+        }
+
+        private void ToggleTileMenu(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

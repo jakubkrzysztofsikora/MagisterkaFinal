@@ -4,8 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+        xmlns:Magisterka="clr-namespace:Magisterka"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:VisualEcosystem="clr-namespace:Magisterka.VisualEcosystem" x:Class="Magisterka.MainWindow"
+        xmlns:VisualEcosystem="clr-namespace:Magisterka.VisualEcosystem"
+        xmlns:Animation="clr-namespace:Magisterka.VisualEcosystem.Animation"
+        xmlns:PathfindingDomain="clr-namespace:Magisterka.Domain.Graph.Pathfinding;assembly=Magisterka.Domain"
+        xmlns:fa="http://schemas.fontawesome.io/icons/"
+        xmlns:inputModals="clr-namespace:Magisterka.VisualEcosystem.InputModals"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        x:Class="Magisterka.MainWindow"
         mc:Ignorable="d"
         Icon="Images\graph.ico"
         ShowIconOnTitleBar="True"
@@ -23,27 +30,83 @@
         <Separator/>
         <MenuItem Header="Delete Edge" Click="DeleteEdge" Tag="" />
       </ContextMenu>
+       <ObjectDataProvider x:Key="pathfindingAlgorithms" MethodName="GetValues"
+                          ObjectType="{x:Type sys:Enum}">
+          <ObjectDataProvider.MethodParameters>
+              <x:Type TypeName="PathfindingDomain:ePathfindingAlgorithms"/>
+          </ObjectDataProvider.MethodParameters>
+      </ObjectDataProvider>
+      <ObjectDataProvider x:Key="animationSpeed" MethodName="GetValues"
+                          ObjectType="{x:Type sys:Enum}">
+          <ObjectDataProvider.MethodParameters>
+              <x:Type TypeName="Animation:eAnimationSpeed"/>
+          </ObjectDataProvider.MethodParameters>
+      </ObjectDataProvider>
+      <Style x:Key="ComboStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="SelectedIndex" Value="0"/>
+      </Style>
     </Window.Resources>
     <Grid>
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto"/>
         <RowDefinition Height="Auto"/>
+        <RowDefinition Height="1*"/>
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="3*"/>
+        <ColumnDefinition Width="1*"/>
       </Grid.ColumnDefinitions>
       <Menu Grid.Row="0" Grid.Column="0" x:Name="Menu" >
-        <MenuItem Header="_Releout Graph" Click="MenuItem_Click" />
+        <MenuItem Header="{StaticResource GenerateGraph}" Click="GenerateAGraph" />
         <MenuItem Header="{StaticResource StartPathfinding}" Click="StartPathfinding" />
       </Menu>
-      <Controls:ProgressRing Grid.Row="1" Grid.Column="0" Panel.ZIndex="1000" x:Name="ProgressRing" IsActive="True"/>
-      <TabControl Grid.Row="1" Grid.Column="0" x:Name="GraphTabs" Visibility="Hidden">
-        <TabItem Header="Untitled">
-          <graphx:ZoomControl x:Name="ZoomControl">
+      <WrapPanel Grid.Row="1"
+                       Grid.Column="0"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top">
+        <Controls:Tile HorizontalAlignment="Left" Title="New Node" 
+                    TiltFactor="2"
+                    Cursor="Hand"
+                    Width="100" Height="100" >
+        <fa:FontAwesome Icon="Neuter" FontSize="25" VerticalAlignment="Center" />
+      </Controls:Tile>
+      <Controls:Tile HorizontalAlignment="Left" Title="New Edge" 
+                    TiltFactor="2"
+                    Cursor="Hand"
+                    Width="100" Height="100" >
+        <fa:FontAwesome Icon="Minus" FontSize="25" VerticalAlignment="Center" />
+      </Controls:Tile>
+      </WrapPanel>
+      <Controls:ProgressRing Grid.Row="2" Grid.Column="0" x:Name="ProgressRing" IsActive="True"/>
+      <graphx:ZoomControl Grid.Row="2" Grid.Column="0" x:Name="ZoomControl">
             <VisualEcosystem:VisualMap x:Name="VisualMap"/>
-          </graphx:ZoomControl>
-        </TabItem>
-        <TabItem Header="+" />
-      </TabControl>
+       </graphx:ZoomControl>
+      <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
+        <GroupBox Header="{StaticResource PathfindingHeader}" HorizontalAlignment="Stretch" >
+          <StackPanel>
+            <Label Content="{StaticResource SelectPathfindingAlgorithm}"></Label>
+            <ComboBox
+	            HorizontalAlignment="Stretch"
+	            VerticalAlignment="Top"
+              Style="{StaticResource ComboStyle}"
+	            ItemsSource="{Binding Source={StaticResource pathfindingAlgorithms}}" />
+          
+            <Label Content="{StaticResource SelectAnimationSpeed}"></Label>
+            <ComboBox
+	            HorizontalAlignment="Stretch"
+	            VerticalAlignment="Top"
+              Style="{StaticResource ComboStyle}"
+	            ItemsSource="{Binding Source={StaticResource animationSpeed}}" />
+          </StackPanel>
+	      </GroupBox>
+        <GroupBox Header="{StaticResource StatsHeader}" HorizontalAlignment="Stretch">
+          <StackPanel>
+            <DataGrid ItemsSource="{Binding Monitor}" d:DataContext="{d:DesignData MainWindow}">
+
+            </DataGrid>
+            <Button Style="{DynamicResource SquareButtonStyle}">Generate Excel</Button>
+          </StackPanel>
+	      </GroupBox>
+      </StackPanel>
     </Grid>
 </Controls:MetroWindow>

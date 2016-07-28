@@ -1,8 +1,10 @@
-﻿<Window x:Class="Magisterka.VisualEcosystem.InputModals.ChangeEdgeCostModal"
+﻿<controls:MetroWindow x:Class="Magisterka.VisualEcosystem.InputModals.ChangeEdgeCostModal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         Title="{StaticResource ChangeEdgeCostTitle}" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen"
-        ContentRendered="Window_ContentRendered">
+        ContentRendered="Window_ContentRendered"
+        ResizeMode="NoResize">
   <Grid Margin="15">
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="Auto" />
@@ -22,4 +24,4 @@
       <Button IsCancel="True" MinWidth="60">_Cancel</Button>
     </WrapPanel>
   </Grid>
-</Window>
+</controls:MetroWindow>
