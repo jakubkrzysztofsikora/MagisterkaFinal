@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using GraphX.Controls;
+using GraphX.PCL.Common.Enums;
+using GraphX.PCL.Logic.Algorithms;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.MovementSpace;
@@ -15,6 +19,7 @@ using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.InputModals;
 using Magisterka.VisualEcosystem.Validators;
+using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls;
 
 namespace Magisterka
@@ -25,6 +30,7 @@ namespace Magisterka
     public partial class MainWindow : MetroWindow
     {
         public IAlgorithmMonitor Monitor { get; private set; }
+        public static ICommand TakePathfindingStepCommand { get; private set; }
 
         private readonly IMovingActor _actor;
         private readonly Random _randomizer;
@@ -51,6 +57,7 @@ namespace Magisterka
             Monitor = monitor;
 
             InitializeComponent();
+            TakePathfindingStepCommand = new TakePathfindingStepCommand(_mapAdapter, VisualMap, _actor);
         }
 
         public void Dispose()
@@ -133,6 +140,7 @@ namespace Magisterka
             VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
             NodeView node = vertex.GetNodeView();
 
+            VisualMap.RemoveVertexAndEdges(node, EdgesType.All, false, false);
             _mapAdapter.DeleteNode(node);
         }
 
@@ -143,7 +151,8 @@ namespace Magisterka
             try
             {
                 NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(),
-                    ePathfindingAlgorithms.FloydWarshall);
+                    (ePathfindingAlgorithms)ChoosenAlgorithm.SelectedIndex);
+
                 VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
 
                 var animation = new PathAnimationCommand(_actor, eAnimationSpeed.Fast)
@@ -165,6 +174,12 @@ namespace Magisterka
             }
         }
 
+        private void DisplayAlgorithmMonitor(object sender, ExecutedRoutedEventArgs executedRoutedEventArgs)
+        {
+            AlgorithmStats.Visibility = Visibility.Visible;
+            StepsTaken.Content = Monitor.PathDetails.StepsTaken;
+        }
+
         private void ChangeCost(object sender, RoutedEventArgs e)
         {
             EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
@@ -177,17 +192,16 @@ namespace Magisterka
                 _mapAdapter.ChangeCost(edge, modal.Answer);
         }
 
-        private void DeleteEdge(object sender, RoutedEventArgs e)
+        private void DeleteEdge(object sender, RoutedEventArgs eventArgs)
         {
             EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
             EdgeView edge = edgeControl.GetEdgeView();
+            EdgeView symetricEdge = _mapAdapter.VisualMap.Edges.Single(e => e != edge && e.Target.LogicNode == edge.Source.LogicNode && e.Source.LogicNode == edge.Target.LogicNode);
 
+            VisualMap.RemoveEdge(edge);
+            VisualMap.RemoveEdge(symetricEdge);
             _mapAdapter.DeleteEdge(edge);
-        }
-
-        private void ToggleTileMenu(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
+            _mapAdapter.DeleteEdge(symetricEdge);
         }
     }
 }

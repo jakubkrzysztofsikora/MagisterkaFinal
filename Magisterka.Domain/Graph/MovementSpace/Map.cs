@@ -103,7 +103,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public IEnumerable<Edge> GetAllEdges()
         {
-            return from node in _nodes from neighbor in node.Neighbors select neighbor.Value;
+            return _nodes.SelectMany(node => node.Neighbors.Values).Distinct();
         }
 
         public void AddIfNotExists(Node item)

@@ -4,8 +4,11 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib">
 
   <!-- String resource that can be localized -->
-  <system:String x:Key="GenerateGraph">Generate a Random Graph</system:String>
-  <system:String x:Key="StartPathfinding">Start Pathinding</system:String>
+  <system:String x:Key="GenerateGraph">Graph</system:String>
+  <system:String x:Key="GenerateRandomGraph">Generate Randomly</system:String>
+  <system:String x:Key="StartPathfinding">Pathfinding</system:String>
+  <system:String x:Key="PathfindingStep">Run One Step</system:String>
+  <system:String x:Key="PathfindingAll">Run Full Simulation</system:String>
   <system:String x:Key="UnknownPathfindingError">Unknown Pathinding Error</system:String>
   <system:String x:Key="PathConfError">Path Configuration Error</system:String>
   <system:String x:Key="GraphConfError">Graph Configuration Error</system:String>
@@ -15,6 +18,8 @@
   <system:String x:Key="StatsHeader">Pathfinding Statistics</system:String>
   <system:String x:Key="SelectPathfindingAlgorithm">Select Pathfinding Algorithm</system:String>
   <system:String x:Key="SelectAnimationSpeed">Select Animation Speed</system:String>
+  <system:String x:Key="StepsTaken">Number of Steps Taken</system:String>
+  <system:String x:Key="PathDetailsHeader">Path Statistics</system:String>
 
   <!-- Raport strings-->
   <system:String x:Key="RaportHeaderTitle">Results</system:String>
