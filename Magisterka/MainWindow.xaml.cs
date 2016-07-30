@@ -5,7 +5,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using GraphX.Controls;
 using GraphX.PCL.Common.Enums;
-using GraphX.PCL.Logic.Algorithms;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.MovementSpace;
@@ -13,7 +12,6 @@ using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
-using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
@@ -59,16 +57,6 @@ namespace Magisterka
             InitializeComponent();
         }
 
-        public void EnableGui()
-        {
-            IsEnabled = true;
-        }
-
-        public void DisableGui()
-        {
-            IsEnabled = false;
-        }
-
         public void Dispose()
         {
             VisualMap.Dispose();
@@ -76,6 +64,10 @@ namespace Magisterka
 
         private void InitializeEventHandlers()
         {
+            NodeEventHandler.NameOfNodeContextMenu = "NodeContextMenu";
+            NodeEventHandler.NameOfSetAsBlocked = "SetAsBlocked";
+            NodeEventHandler.NameOfSetAsUnblocked = "SetAsUnblocked";
+
             VisualMap.VertexMouseEnter += NodeEventHandler.OnNodeHoverIn;
             VisualMap.VertexMouseLeave += NodeEventHandler.OnNodeHoverOut;
             VisualMap.VertexRightClick += NodeEventHandler.OnNodeRightClick;
@@ -103,19 +95,22 @@ namespace Magisterka
         private void LoadingOn()
         {
             ZoomControl.Visibility = Visibility.Hidden;
+            GraphPlaceholder.Visibility = Visibility.Hidden;
+            ProgressRing.Visibility = Visibility.Visible;
             ProgressRing.IsActive = true;
         }
 
         private void LoadingOff()
         {
             ZoomControl.Visibility = Visibility.Visible;
+            ProgressRing.Visibility = Visibility.Hidden;
             ProgressRing.IsActive = false;
             ZoomControl.ZoomToFill();
         }
 
-        private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory)
+        private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory, bool empty = false)
         {
-            var map = mapFactory.GenerateDefaultMap()
+            var map = (empty ? mapFactory.GenerateMap(0, 5) : mapFactory.GenerateDefaultMap())
                 .WithGridPositions()
                 .WithRandomBlockedNodes(randomizer);
             _mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory);
@@ -233,6 +228,27 @@ namespace Magisterka
             {
                 DisplayAlgorithmMonitor();
             }
+        }
+
+        private void NewGraphExecution(object sender, ExecutedRoutedEventArgs e)
+        {
+            LoadingOn();
+            RemoveAnyExistingGraphElements();
+            UnsuscribeFromEvents();
+            CreateAllLayersOfGraph(_mapFactory, _randomizer, _pathfinderFactory, true);
+            VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
+            VisualMap.InitilizeVisuals();
+            InitializeEventHandlers();
+            VisualMap.InitializeEventHandlers();
+        }
+
+        private void SetBlockedNode(object sender, RoutedEventArgs e)
+        {
+            VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
+            NodeView node = vertex.GetNodeView();
+
+            _mapAdapter.SetAsBlockedNode(node);
+            VisualMap.MarkBlockedNode(vertex);
         }
     }
 }

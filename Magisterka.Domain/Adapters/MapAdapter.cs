@@ -197,5 +197,10 @@ namespace Magisterka.Domain.Adapters
             NodeView targetVisualNode = VisualMap.GetVertexByLogicNode(targetNode);
             targetVisualNode.Caption = string.Empty;
         }
+
+        public void SetAsBlockedNode(NodeView node)
+        {
+            node.LogicNode.IsBlocked = true;
+        }
     }
 }

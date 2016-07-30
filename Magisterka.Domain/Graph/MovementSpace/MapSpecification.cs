@@ -42,6 +42,9 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public static Map WithGridPositions(this Map map)
         {
+            if (!map.Any())
+                return map; 
+
             Node firstNode = map.First();
             firstNode.Coordinates.X = 0;
             firstNode.Coordinates.Y = 0;

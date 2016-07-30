@@ -6,6 +6,8 @@
   <!-- String resource that can be localized -->
   <system:String x:Key="GenerateGraph">Graph</system:String>
   <system:String x:Key="GenerateRandomGraph">Generate Randomly</system:String>
+  <system:String x:Key="NewGraph">New</system:String>
+  <system:String x:Key="GraphPlaceholderText">Create a New Graph...</system:String>
   <system:String x:Key="ClearGraph">Clear Graph</system:String>
   <system:String x:Key="StartPathfinding">Pathfinding</system:String>
   <system:String x:Key="PathfindingStep">Run One Step</system:String>

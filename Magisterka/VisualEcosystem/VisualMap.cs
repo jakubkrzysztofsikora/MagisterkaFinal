@@ -105,6 +105,11 @@ namespace Magisterka.VisualEcosystem
             vertex.SetState(eVertexState.Target);
         }
 
+        public void MarkBlockedNode(VertexControl vertex)
+        {
+            vertex.Background = new SolidColorBrush((Color)Application.Current.Resources["BlockedNodeColor"]);
+        }
+
         public void ClearGraph()
         {
             RemoveStartLabel();
@@ -197,7 +202,7 @@ namespace Magisterka.VisualEcosystem
             foreach (
                 var vertexControl in Children.OfType<VertexControl>().Where(vertex => ((NodeView)vertex.Vertex).LogicNode.IsBlocked))
             {
-                vertexControl.Background = new SolidColorBrush((Color)Application.Current.Resources["BlockedNodeColor"]);
+                MarkBlockedNode(vertexControl);
             }
         }
     }
