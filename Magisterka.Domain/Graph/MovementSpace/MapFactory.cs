@@ -35,11 +35,10 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
             foreach (var coordinate in listOfCoordinates)
             {
+                var node = GenerateNewNode(nodeCounter);
+                node.Coordinates = coordinate;
                 ++nodeCounter;
-                newMap.AddIfNotExists(new Node($"{NodeNamePrefix} {nodeCounter}")
-                {
-                    Coordinates = coordinate
-                });
+                newMap.AddIfNotExists(node);
             }
 
             GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
@@ -54,13 +53,18 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
             while (newMap.Count < newMap.MaximumNumberOfNodes)
             {
+                newMap.AddIfNotExists(GenerateNewNode(nodeCounter));
                 ++nodeCounter;
-                newMap.AddIfNotExists(new Node($"{NodeNamePrefix} {nodeCounter}"));
             }
 
             GenerateNodesNeighbors(ref newMap, maxNumberOfNeighborsPerNode);
 
             return newMap;
+        }
+
+        public Node GenerateNewNode(int nodesCount)
+        {
+            return new Node($"{NodeNamePrefix} {nodesCount + 1}");
         }
 
         private void GenerateNodesNeighbors(ref Map map, int maxNumberOfNeighbors)

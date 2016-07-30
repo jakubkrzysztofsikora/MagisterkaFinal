@@ -8,5 +8,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
         Map GenerateDefaultMap();
         Map GenerateMap(int numberOfNodes, int maxNumberOfNeighborsPerNode);
         Map GenerateMapWithProvidedCoordinates(IEnumerable<Position> coordinates);
+        Node GenerateNewNode(int nodesCount);
     }
 }

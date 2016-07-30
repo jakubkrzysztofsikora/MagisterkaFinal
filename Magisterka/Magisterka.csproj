@@ -129,6 +129,7 @@
     <Compile Include="VisualEcosystem\ErrorHandling\IErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
+    <Compile Include="VisualEcosystem\EventHandlers\TileMenuEventHandler.cs" />
     <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
     <Compile Include="VisualEcosystem\InputModals\ChangeEdgeCostModal.xaml.cs">
       <DependentUpon>ChangeEdgeCostModal.xaml</DependentUpon>
@@ -137,6 +138,7 @@
     <Compile Include="VisualEcosystem\ErrorHandling\ErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\Validators\IConfigurationValidator.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\AddNewNodeCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\ClearGraphCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\CommandValidator.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\CustomCommands.cs" />

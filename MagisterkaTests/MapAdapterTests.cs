@@ -24,7 +24,7 @@ namespace MagisterkaTests
             //Given
             MapFactory logicMapFactory = new MapFactory(new Random());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())));
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView nodeToDelete = mapAdapter.VisualMap.GetVertexByLogicNode(logicMap.First());
 
             //When
@@ -42,7 +42,7 @@ namespace MagisterkaTests
             //Given
             MapFactory logicMapFactory = new MapFactory(new Random());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())));
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             EdgeView edgeToDelete = mapAdapter.VisualMap.GetAllEdges(mapAdapter.VisualMap.Vertices.First()).First();
 
             //When
@@ -60,7 +60,7 @@ namespace MagisterkaTests
             //Given
             MapFactory logicMapFactory = new MapFactory(new Random());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())));
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView node = new NodeView
             {
                 LogicNode = new Node("test")
@@ -79,7 +79,7 @@ namespace MagisterkaTests
             //Given
             MapFactory logicMapFactory = new MapFactory(new Random());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())));
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView node1 = new NodeView
             {
                 LogicNode = new Node("test1")

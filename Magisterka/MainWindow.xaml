@@ -22,6 +22,7 @@
       <CommandBinding Command="Commands:CustomCommands.TakePathfindingStepCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.ClearGraphCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.AddNewNodeCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="New" Executed="NewGraphExecution"></CommandBinding>
     </Window.CommandBindings>
     <Window.Resources>
@@ -92,6 +93,7 @@
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top">
         <Controls:Tile HorizontalAlignment="Left" Title="New Node" 
+                    x:Name="NewNodeTile"
                     TiltFactor="2"
                     Cursor="Hand"
                     Width="100" Height="100" >

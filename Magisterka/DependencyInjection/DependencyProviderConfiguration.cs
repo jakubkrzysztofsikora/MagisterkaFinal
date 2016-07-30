@@ -1,5 +1,6 @@
 ﻿using System;
 using Autofac;
+using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
@@ -10,6 +11,7 @@ using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.StaticResources;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
+using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Validators;
 
 namespace Magisterka.DependencyInjection

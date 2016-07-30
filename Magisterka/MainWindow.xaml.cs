@@ -3,6 +3,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using GraphX.Controls;
 using GraphX.PCL.Common.Enums;
 using Magisterka.Domain.Adapters;
@@ -19,6 +21,7 @@ using Magisterka.VisualEcosystem.InputModals;
 using Magisterka.VisualEcosystem.Validators;
 using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls;
+using FontAwesome = FontAwesome.WPF.FontAwesome;
 
 namespace Magisterka
 {
@@ -35,6 +38,7 @@ namespace Magisterka
         private readonly IConfigurationValidator _validator;
         private readonly IMapFactory _mapFactory;
         private readonly IPathfinderFactory _pathfinderFactory;
+        private TileMenuEventHandler _tileMenuEventHandler;
         private MapAdapter _mapAdapter;
 
         public MainWindow(IErrorDisplayer errorDisplayer, 
@@ -77,7 +81,8 @@ namespace Magisterka
             VisualMap.EdgeRightClick += EdgeEventHandler.OnEdgeRightClick;
 
             VisualMap.GenerateGraphFinished += (eAnimationSpeed, args) => LoadingOff();
-            
+
+            NewNodeTile.Click += _tileMenuEventHandler.ClickOnCreateANodeTile;
             SizeChanged += (e,args) => ZoomControl.ZoomToFill();
         }
 
@@ -113,7 +118,8 @@ namespace Magisterka
             var map = (empty ? mapFactory.GenerateMap(0, 5) : mapFactory.GenerateDefaultMap())
                 .WithGridPositions()
                 .WithRandomBlockedNodes(randomizer);
-            _mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory);
+            _mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory, mapFactory);
+            _tileMenuEventHandler = new TileMenuEventHandler(_mapAdapter);
         }
 
         private void GenerateAGraph(object sender, RoutedEventArgs e)

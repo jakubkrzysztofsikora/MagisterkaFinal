@@ -14,14 +14,16 @@ namespace Magisterka.Domain.Adapters
         public MapView VisualMap { get; set; }
 
         private readonly IPathfinderFactory _pathfinderFactory;
+        private readonly IMapFactory _mapFactory;
         private Map _logicMap;
         private Pathfinder _pathfinder;
         private bool _graphChanged;
 
-        private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory)
+        private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory, IMapFactory mapFactory)
         {
             _logicMap = logicMap;
             _pathfinderFactory = pathfinderFactory;
+            _mapFactory = mapFactory;
             _graphChanged = true;
         }
 
@@ -98,6 +100,23 @@ namespace Magisterka.Domain.Adapters
             _graphChanged = true;
         }
 
+        public NodeView AddNode()
+        {
+            Node logicNode = _mapFactory.GenerateNewNode(_logicMap.Count);
+            NodeView nodeView = new NodeView
+            {
+                ID = _logicMap.Count + 1,
+                LogicNode = logicNode,
+                Text = logicNode.Name,
+                CurrentState = eVertexState.Other
+            };
+            VisualMap.AddVertex(nodeView);
+            _logicMap.Add(logicNode);
+            _graphChanged = true;
+
+            return nodeView;
+        }
+
         public void AddNode(NodeView node)
         {
             VisualMap.AddVertex(node);
@@ -119,9 +138,9 @@ namespace Magisterka.Domain.Adapters
             _graphChanged = true;
         }
 
-        public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory)
+        public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory, IMapFactory mapFactory)
         {
-            MapAdapter adapter = new MapAdapter(logicMap, pathfinderFactory)
+            MapAdapter adapter = new MapAdapter(logicMap, pathfinderFactory, mapFactory)
             {
                 VisualMap = new MapView()
             };
