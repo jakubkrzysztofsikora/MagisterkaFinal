@@ -6,6 +6,7 @@
   <!-- String resource that can be localized -->
   <system:String x:Key="GenerateGraph">Graph</system:String>
   <system:String x:Key="GenerateRandomGraph">Generate Randomly</system:String>
+  <system:String x:Key="ClearGraph">Clear Graph</system:String>
   <system:String x:Key="StartPathfinding">Pathfinding</system:String>
   <system:String x:Key="PathfindingStep">Run One Step</system:String>
   <system:String x:Key="PathfindingAll">Run Full Simulation</system:String>
@@ -45,7 +46,7 @@
   
   <Color x:Key="BlockedNodeColor">Firebrick</Color>
   <Color x:Key="OtherNodeColor">LightSkyBlue</Color>
-  <Color x:Key="VisitedNodeColor">DeepSkyBlue</Color>
+  <Color x:Key="VisitedNodeColor">SteelBlue</Color>
   <Color x:Key="CurrentNodeColor">DarkBlue</Color>
   <Color x:Key="StartNodeColor">SlateBlue</Color>
   <Color x:Key="TargetNodeColor">SlateBlue</Color>

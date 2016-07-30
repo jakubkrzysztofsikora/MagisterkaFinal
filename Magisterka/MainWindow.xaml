@@ -19,7 +19,9 @@
         ShowTitleBar="True"
         Title="Graph Pathfinder">
     <Window.CommandBindings>
-      <CommandBinding Command="Commands:CustomCommands.TakePathfindingStepCommand" CanExecute="TakePathfindingStepCanExecute" Executed="TakePathfindingStepExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.TakePathfindingStepCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.ClearGraphCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
     </Window.CommandBindings>
     <Window.Resources>
       <ContextMenu x:Key="NodeContextMenu">
@@ -67,10 +69,11 @@
       <Menu Grid.Row="0" Grid.Column="0" x:Name="Menu" >
         <MenuItem Header="{StaticResource GenerateGraph}" >
           <MenuItem Header="{StaticResource GenerateRandomGraph}"  Click="GenerateAGraph" />
+        <MenuItem Header="{StaticResource ClearGraph}" Command="Commands:CustomCommands.ClearGraphCommand" />
         </MenuItem>
         <MenuItem Header="{StaticResource StartPathfinding}" >
           <MenuItem Header="{StaticResource PathfindingStep}" Command="Commands:CustomCommands.TakePathfindingStepCommand" />
-          <MenuItem Header="{StaticResource PathfindingAll}" />
+          <MenuItem Header="{StaticResource PathfindingAll}" Command="Commands:CustomCommands.StartPathfindingSimulationCommand" />
         </MenuItem>
       </Menu>
       <WrapPanel Grid.Row="1"
@@ -107,6 +110,7 @@
 
             <Label Content="{StaticResource SelectAnimationSpeed}"></Label>
             <ComboBox
+              x:Name="ChoosenAnimationSpeed"
 	            HorizontalAlignment="Stretch"
 	            VerticalAlignment="Top"
               Style="{StaticResource ComboStyle}"

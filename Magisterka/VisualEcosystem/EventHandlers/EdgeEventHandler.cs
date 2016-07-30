@@ -18,8 +18,12 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
         public static void OnEdgeHoverOut(object sender, EdgeSelectedEventArgs e)
         {
-            ((ToolTip)e.EdgeControl.ToolTip).IsOpen = false;
-            e.EdgeControl.ToolTip = null;
+            var tooltip = (ToolTip)e.EdgeControl.ToolTip;
+            if (tooltip != null)
+            {
+                tooltip.IsOpen = false;
+                e.EdgeControl.ToolTip = null;
+            }
         }
 
         public static void OnEdgeRightClick(object sender, EdgeSelectedEventArgs e)

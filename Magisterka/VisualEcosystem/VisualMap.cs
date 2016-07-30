@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Castle.Core.Internal;
 using GraphX.Controls;
 using GraphX.Controls.Models;
 using GraphX.PCL.Common.Enums;
@@ -23,7 +24,7 @@ namespace Magisterka.VisualEcosystem
 
         public void InitilizeVisuals()
         {
-            GenerateGraph(true);
+            GenerateGraph();
             SetEdgesDashStyle(EdgeDashStyle.Dot);
             SetVerticesMathShape(VertexShape.Ellipse);
             SetVerticesDrag(true, true);
@@ -31,6 +32,7 @@ namespace Magisterka.VisualEcosystem
             ShowAllEdgesLabels(false);
             ShowAllEdgesArrows(false);
             
+            SetStateColors();
             MarkBlockedNodes();
         }
 
@@ -43,7 +45,7 @@ namespace Magisterka.VisualEcosystem
                 DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA,
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.CompoundFDP,
                 EnableParallelEdges = false,
-                EdgeCurvingEnabled = false,
+                EdgeCurvingEnabled = true,
                 AsyncAlgorithmCompute = true,
                 DefaultOverlapRemovalAlgorithmParams =
                 {
@@ -103,6 +105,16 @@ namespace Magisterka.VisualEcosystem
             vertex.SetState(eVertexState.Target);
         }
 
+        public void ClearGraph()
+        {
+            RemoveStartLabel();
+            RemoveTargetLabel();
+            RemoveStateFromPreviousNode(eVertexState.Start);
+            RemoveStateFromPreviousNode(eVertexState.Target);
+            RemoveStateFromPreviousNode(eVertexState.Current);
+            RemoveStateFromPreviousNode(eVertexState.Visited);
+        }
+
         public VertexControl GetCurrentVertex()
         {
             return Children.OfType<VertexControl>()
@@ -135,6 +147,11 @@ namespace Magisterka.VisualEcosystem
             SetCurrentNode(nextVertex);
         }
 
+        private void SetStateColors()
+        {
+            Children.OfType<VertexControl>().ForEach(vertex => vertex.SetState(vertex.GetState()));
+        }
+
         private void RemoveStartLabel()
         {
             var labelToDelete = Children.OfType<VertexLabelControl>().SingleOrDefault(label => label.Name == DomainConstants.StartingNodeCaption);
@@ -144,7 +161,7 @@ namespace Magisterka.VisualEcosystem
         private void RemoveStateFromPreviousNode(eVertexState state)
         {
             Children.OfType<VertexControl>()
-                .SingleOrDefault(vertex => vertex.GetState() == state)?.SetState(eVertexState.Other);
+                .Where(vertex => vertex.GetState() == state).ForEach(vertex => vertex.SetState(eVertexState.Other));
         }
 
         private void RemoveTargetLabel()

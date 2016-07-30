@@ -1,4 +1,4 @@
-﻿namespace Magisterka.VisualEcosystem.ErrorHandling
+﻿namespace Magisterka.Domain.ExceptionContracts
 {
     public enum eErrorTypes
     {

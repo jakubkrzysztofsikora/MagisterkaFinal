@@ -16,11 +16,13 @@ namespace Magisterka.Domain.Adapters
         private readonly IPathfinderFactory _pathfinderFactory;
         private Map _logicMap;
         private Pathfinder _pathfinder;
+        private bool _graphChanged;
 
         private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory)
         {
             _logicMap = logicMap;
             _pathfinderFactory = pathfinderFactory;
+            _graphChanged = true;
         }
 
         public bool CanStartPathfinding()
@@ -28,13 +30,40 @@ namespace Magisterka.Domain.Adapters
             return _logicMap.Any(node => node.IsStartingNode) && _logicMap.Any(node => node.IsTargetNode);
         }
 
-        public NodeView StartPathfinding(NodeView currentNode, ePathfindingAlgorithms algorithm)
+        public NodeView StartPathfindingByStep(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {
             _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
             Position newPosition = _pathfinder.GetNextStep(_logicMap, currentNode.LogicNode.Coordinates);
             NodeView newNode = VisualMap.GetVertexByLogicNode(_logicMap.GetNodeByPosition(newPosition));
+            _graphChanged = false;
 
             return newNode;
+        }
+
+        public IEnumerable<NodeView> StartPathfindingAllRoute(NodeView currentNode, ePathfindingAlgorithms algorithm)
+        {
+            _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            var logicPath = _pathfinder.GetOptimalPath(_logicMap, currentNode.LogicNode.Coordinates, _graphChanged);
+            _graphChanged = false;
+
+            return logicPath.Select(node => VisualMap.GetVertexByLogicNode(node));
+        }
+
+        public void ClearGraph()
+        {
+            ClearVisualMapPredefinedStartingPosition();
+            ClearVisualMapPredefinedTargetPosition();
+            _logicMap.WithNoDefinedPositions();
+        }
+
+        public void DeleteGraphData()
+        {
+            _logicMap.ForEach(node =>
+            {
+                _logicMap.Remove(node);
+            });
+            
+            VisualMap = new MapView();
         }
 
         public void SetAsStartingPoint(NodeView nodeView)
@@ -43,6 +72,7 @@ namespace Magisterka.Domain.Adapters
             
             ClearVisualMapPredefinedStartingPosition();
             nodeView.Caption = DomainConstants.StartingNodeCaption;
+            _graphChanged = true;
         }
 
         public void SetAsTargetPoint(NodeView nodeView)
@@ -51,6 +81,42 @@ namespace Magisterka.Domain.Adapters
 
             ClearVisualMapPredefinedTargetPosition();
             nodeView.Caption = DomainConstants.TargetNodeCaption;
+            _graphChanged = true;
+        }
+
+        public void DeleteNode(NodeView node)
+        {
+            _logicMap.Delete(node.LogicNode);
+            VisualMap.RemoveVertex(node);
+            _graphChanged = true;
+        }
+
+        public void DeleteEdge(EdgeView edge)
+        {
+            _logicMap.Delete(edge.LogicEdge);
+            VisualMap.RemoveEdge(edge);
+            _graphChanged = true;
+        }
+
+        public void AddNode(NodeView node)
+        {
+            VisualMap.AddVertex(node);
+            _logicMap.Add(node.LogicNode);
+            _graphChanged = true;
+        }
+
+        public void AddEdge(EdgeView edge)
+        {
+            VisualMap.AddEdge(edge);
+            _logicMap.AddEdge(edge.LogicEdge);
+            _graphChanged = true;
+        }
+
+        public void ChangeCost(EdgeView edge, int answer)
+        {
+            VisualMap.ChangeEdgeCost(edge, answer);
+            edge.LogicEdge.Cost = answer;
+            _graphChanged = true;
         }
 
         public static MapAdapter CreateMapAdapterFromLogicMap(Map logicMap, IPathfinderFactory pathfinderFactory)
@@ -63,36 +129,6 @@ namespace Magisterka.Domain.Adapters
             adapter.ConvertLogicEdgesToVisualEdges();
 
             return adapter;
-        }
-
-        public void DeleteNode(NodeView node)
-        {
-            _logicMap.Delete(node.LogicNode);
-            VisualMap.RemoveVertex(node);
-        }
-
-        public void DeleteEdge(EdgeView edge)
-        {
-            _logicMap.Delete(edge.LogicEdge);
-            VisualMap.RemoveEdge(edge);
-        }
-
-        public void AddNode(NodeView node)
-        {
-            VisualMap.AddVertex(node);
-            _logicMap.Add(node.LogicNode);
-        }
-
-        public void AddEdge(EdgeView edge)
-        {
-            VisualMap.AddEdge(edge);
-            _logicMap.AddEdge(edge.LogicEdge);
-        }
-
-        public void ChangeCost(EdgeView edge, int answer)
-        {
-            VisualMap.ChangeEdgeCost(edge, answer);
-            edge.LogicEdge.Cost = answer;
         }
 
         protected void ConvertLogicNodesToVisualVerticles()

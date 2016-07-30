@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Magisterka.Domain.ExceptionContracts;
 
 namespace Magisterka.VisualEcosystem.ErrorHandling
 {

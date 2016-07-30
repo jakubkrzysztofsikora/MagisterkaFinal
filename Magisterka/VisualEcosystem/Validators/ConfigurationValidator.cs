@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using GraphX.Controls;
+using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.Extensions;

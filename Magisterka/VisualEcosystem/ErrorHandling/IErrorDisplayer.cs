@@ -1,4 +1,6 @@
-﻿namespace Magisterka.VisualEcosystem.ErrorHandling
+﻿using Magisterka.Domain.ExceptionContracts;
+
+namespace Magisterka.VisualEcosystem.ErrorHandling
 {
     public interface IErrorDisplayer
     {

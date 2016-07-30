@@ -1,6 +1,7 @@
 ﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
+using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
@@ -14,15 +15,19 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         private MapAdapter _mapAdapter;
         private readonly MainWindow _applicationWindow;
         private readonly IMovingActor _animatingActor;
+        private readonly CommandValidator _validator;
 
         public TakePathfindingStepCommand(MainWindow applicationWindow, 
-            IMovingActor animatingActor) : base("Take pathfinding step", "TakePathfindingStep", typeof(TakePathfindingStepCommand), new InputGestureCollection
+            IMovingActor animatingActor, 
+            CommandValidator validator) 
+            : base("Take pathfinding step", "TakePathfindingStep", typeof(TakePathfindingStepCommand), new InputGestureCollection
         {
             new KeyGesture(Key.F5, ModifierKeys.None)
         })
         {
             _applicationWindow = applicationWindow;
             _animatingActor = animatingActor;
+            _validator = validator;
         }
 
         public bool CanExecute(object mapAdapter)
@@ -34,13 +39,18 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 
         public void Execute(object parameter)
         {
+            var enumParams = parameter as object[];
+            _validator.ValidateConfiguration(_mapAdapter, enumParams);
+            var algorithm = (ePathfindingAlgorithms)enumParams[0];
+            var animationSpeed = (eAnimationSpeed)enumParams[1];
+
             VertexControl currentVertex = _applicationWindow.VisualMap.GetCurrentVertex();
 
-            NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), (ePathfindingAlgorithms)parameter);
+            NodeView nextNode = _mapAdapter.StartPathfindingByStep(currentVertex.GetNodeView(), algorithm);
 
             VertexControl nextVertexControl = _applicationWindow.VisualMap.GetVertexControlOfNode(nextNode);
 
-            var animation = new PathAnimationCommand(_animatingActor, eAnimationSpeed.Fast)
+            var animation = new PathAnimationCommand(_animatingActor, animationSpeed)
             {
                 FromVertex = currentVertex,
                 ToVertex = nextVertexControl,

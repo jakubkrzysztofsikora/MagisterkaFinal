@@ -59,6 +59,16 @@ namespace Magisterka
             InitializeComponent();
         }
 
+        public void EnableGui()
+        {
+            IsEnabled = true;
+        }
+
+        public void DisableGui()
+        {
+            IsEnabled = false;
+        }
+
         public void Dispose()
         {
             VisualMap.Dispose();
@@ -79,6 +89,17 @@ namespace Magisterka
             SizeChanged += (e,args) => ZoomControl.ZoomToFill();
         }
 
+        private void UnsuscribeFromEvents()
+        {
+            VisualMap.VertexMouseEnter -= NodeEventHandler.OnNodeHoverIn;
+            VisualMap.VertexMouseLeave -= NodeEventHandler.OnNodeHoverOut;
+            VisualMap.VertexRightClick -= NodeEventHandler.OnNodeRightClick;
+
+            VisualMap.EdgeMouseEnter -= EdgeEventHandler.OnEdgeHoverIn;
+            VisualMap.EdgeMouseLeave -= EdgeEventHandler.OnEdgeHoverOut;
+            VisualMap.EdgeRightClick -= EdgeEventHandler.OnEdgeRightClick;
+        }
+
         private void LoadingOn()
         {
             ZoomControl.Visibility = Visibility.Hidden;
@@ -97,17 +118,26 @@ namespace Magisterka
             var map = mapFactory.GenerateDefaultMap()
                 .WithGridPositions()
                 .WithRandomBlockedNodes(randomizer);
-            _mapAdapter= MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory);
+            _mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory);
         }
 
         private void GenerateAGraph(object sender, RoutedEventArgs e)
         {
             LoadingOn();
+            RemoveAnyExistingGraphElements();
+            UnsuscribeFromEvents();
             CreateAllLayersOfGraph(_mapFactory, _randomizer, _pathfinderFactory);
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
             VisualMap.InitilizeVisuals();
             InitializeEventHandlers();
             VisualMap.InitializeEventHandlers();
+        }
+
+        private void RemoveAnyExistingGraphElements()
+        {
+            _mapAdapter?.DeleteGraphData();
+            VisualMap.RemoveAllVertices();
+            VisualMap.RemoveAllEdges();
         }
 
         private void SetStartingPoint(object sender, RoutedEventArgs e)
@@ -145,8 +175,11 @@ namespace Magisterka
 
         private void DisplayAlgorithmMonitor()
         {
-            AlgorithmStats.Visibility = Visibility.Visible;
-            StepsTaken.Content = Monitor.PathDetails.StepsTaken;
+            if (Monitor?.PathDetails != null && Monitor.PerformanceResults != null)
+            {
+                AlgorithmStats.Visibility = Visibility.Visible;
+                StepsTaken.Content = Monitor.PathDetails.StepsTaken;
+            }
         }
 
         private void ChangeCost(object sender, RoutedEventArgs e)
@@ -173,26 +206,33 @@ namespace Magisterka
             _mapAdapter.DeleteEdge(symetricEdge);
         }
 
-        private void TakePathfindingStepCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void CustomCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = e.Command.CanExecute(_mapAdapter);
         }
 
-        private void TakePathfindingStepExecuted(object sender, ExecutedRoutedEventArgs e)
+        private void CustomCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             try
             {
-                e.Command.Execute((ePathfindingAlgorithms)ChoosenAlgorithm.SelectedIndex);
+                e.Command.Execute(new object[]
+                {
+                    (ePathfindingAlgorithms) ChoosenAlgorithm.SelectedValue,
+                    (eAnimationSpeed) ChoosenAnimationSpeed.SelectedValue
+                });
             }
             catch (DomainException exception)
             {
-                _errorDisplayer.DisplayError(eErrorTypes.PathfindingError, exception.Message);
+                _errorDisplayer.DisplayError(exception.ErrorType, exception.Message);
             }
             catch (Exception exception)
             {
                 _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
             }
-            DisplayAlgorithmMonitor();
+            finally
+            {
+                DisplayAlgorithmMonitor();
+            }
         }
     }
 }

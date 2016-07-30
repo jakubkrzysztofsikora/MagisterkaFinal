@@ -18,8 +18,12 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
         public static void OnNodeHoverOut(object sender, VertexSelectedEventArgs e)
         {
-            ((ToolTip)e.VertexControl.ToolTip).IsOpen = false;
-            e.VertexControl.ToolTip = null;
+            var tooltip = (ToolTip) e.VertexControl.ToolTip;
+            if (tooltip != null)
+            {
+                tooltip.IsOpen = false;
+                e.VertexControl.ToolTip = null;
+            }
         }
 
         public static void OnNodeRightClick(object sender, VertexSelectedEventArgs e)

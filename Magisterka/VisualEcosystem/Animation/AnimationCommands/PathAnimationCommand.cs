@@ -6,6 +6,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using GraphX.Controls;
 using GraphX.Measure;
+using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
 
@@ -38,6 +39,13 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             NodeView currentNode = FromVertex.GetNodeView();
             NodeView nextNode = ToVertex.GetNodeView();
             _throughEdge = VisualMap.GetEdgeControlBetweenNodes(currentNode, nextNode).GetEdgeView();
+
+            if (_throughEdge == null)
+                throw new DomainException("There is no direct edge connection between the nodes.")
+                {
+                    ErrorType = eErrorTypes.PathfindingError
+                };
+
             _routingPoints = new List<Point>(_throughEdge.RoutingPoints);
 
             PrepareAnimationComponents(currentNode, nextNode);
