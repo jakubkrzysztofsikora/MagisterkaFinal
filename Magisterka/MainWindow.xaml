@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:graphx="http://schemas.panthernet.ru/graphx/"
-        xmlns:local="clr-namespace:Magisterka"
+        xmlns:Commands="clr-namespace:Magisterka.VisualEcosystem.WindowCommands"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:VisualEcosystem="clr-namespace:Magisterka.VisualEcosystem"
         xmlns:Animation="clr-namespace:Magisterka.VisualEcosystem.Animation"
@@ -19,7 +19,7 @@
         ShowTitleBar="True"
         Title="Graph Pathfinder">
     <Window.CommandBindings>
-      <CommandBinding x:Name="TakeStepCommand" Command="local:MainWindow.TakePathfindingStepCommand"  Executed="DisplayAlgorithmMonitor" />
+      <CommandBinding Command="Commands:CustomCommands.TakePathfindingStepCommand" CanExecute="TakePathfindingStepCanExecute" Executed="TakePathfindingStepExecuted" />
     </Window.CommandBindings>
     <Window.Resources>
       <ContextMenu x:Key="NodeContextMenu">
@@ -69,7 +69,7 @@
           <MenuItem Header="{StaticResource GenerateRandomGraph}"  Click="GenerateAGraph" />
         </MenuItem>
         <MenuItem Header="{StaticResource StartPathfinding}" >
-          <MenuItem Header="{StaticResource PathfindingStep}" Command="local:MainWindow.TakePathfindingStepCommand" CommandParameter="ChoosenAlgorithm" />
+          <MenuItem Header="{StaticResource PathfindingStep}" Command="Commands:CustomCommands.TakePathfindingStepCommand" />
           <MenuItem Header="{StaticResource PathfindingAll}" />
         </MenuItem>
       </Menu>

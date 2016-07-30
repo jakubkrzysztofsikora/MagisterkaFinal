@@ -30,7 +30,6 @@ namespace Magisterka
     public partial class MainWindow : MetroWindow
     {
         public IAlgorithmMonitor Monitor { get; private set; }
-        public static ICommand TakePathfindingStepCommand { get; private set; }
 
         private readonly IMovingActor _actor;
         private readonly Random _randomizer;
@@ -56,8 +55,8 @@ namespace Magisterka
             _randomizer = randomizer;
             Monitor = monitor;
 
+            CustomCommands.InitilizeCustomCommands(this, _actor);
             InitializeComponent();
-            TakePathfindingStepCommand = new TakePathfindingStepCommand(_mapAdapter, VisualMap, _actor);
         }
 
         public void Dispose()
@@ -144,37 +143,7 @@ namespace Magisterka
             _mapAdapter.DeleteNode(node);
         }
 
-        private void StartPathfinding(object sender, RoutedEventArgs e)
-        {
-            VertexControl currentVertex = VisualMap.GetCurrentVertex();
-
-            try
-            {
-                NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(),
-                    (ePathfindingAlgorithms)ChoosenAlgorithm.SelectedIndex);
-
-                VertexControl nextVertexControl = VisualMap.GetVertexControlOfNode(nextNode);
-
-                var animation = new PathAnimationCommand(_actor, eAnimationSpeed.Fast)
-                {
-                    FromVertex = currentVertex,
-                    ToVertex = nextVertexControl,
-                    VisualMap = VisualMap
-                };
-
-                VisualMap.GoToVertex(nextVertexControl, animation);
-            }
-            catch (DomainException exception)
-            {
-                _errorDisplayer.DisplayError(eErrorTypes.PathfindingError, exception.Message);
-            }
-            catch (Exception exception)
-            {
-                _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
-            }
-        }
-
-        private void DisplayAlgorithmMonitor(object sender, ExecutedRoutedEventArgs executedRoutedEventArgs)
+        private void DisplayAlgorithmMonitor()
         {
             AlgorithmStats.Visibility = Visibility.Visible;
             StepsTaken.Content = Monitor.PathDetails.StepsTaken;
@@ -202,6 +171,28 @@ namespace Magisterka
             VisualMap.RemoveEdge(symetricEdge);
             _mapAdapter.DeleteEdge(edge);
             _mapAdapter.DeleteEdge(symetricEdge);
+        }
+
+        private void TakePathfindingStepCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = e.Command.CanExecute(_mapAdapter);
+        }
+
+        private void TakePathfindingStepExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                e.Command.Execute((ePathfindingAlgorithms)ChoosenAlgorithm.SelectedIndex);
+            }
+            catch (DomainException exception)
+            {
+                _errorDisplayer.DisplayError(eErrorTypes.PathfindingError, exception.Message);
+            }
+            catch (Exception exception)
+            {
+                _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
+            }
+            DisplayAlgorithmMonitor();
         }
     }
 }

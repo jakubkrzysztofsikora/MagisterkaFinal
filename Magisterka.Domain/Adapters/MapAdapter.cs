@@ -11,6 +11,8 @@ namespace Magisterka.Domain.Adapters
 {
     public class MapAdapter
     {
+        public MapView VisualMap { get; set; }
+
         private readonly IPathfinderFactory _pathfinderFactory;
         private Map _logicMap;
         private Pathfinder _pathfinder;
@@ -21,7 +23,10 @@ namespace Magisterka.Domain.Adapters
             _pathfinderFactory = pathfinderFactory;
         }
 
-        public MapView VisualMap { get; set; }
+        public bool CanStartPathfinding()
+        {
+            return _logicMap.Any(node => node.IsStartingNode) && _logicMap.Any(node => node.IsTargetNode);
+        }
 
         public NodeView StartPathfinding(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {

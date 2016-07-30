@@ -1,59 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
-using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
-using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
-    public class TakePathfindingStepCommand : ICommand
+    public class TakePathfindingStepCommand : RoutedUICommand,ICommand
     {
-        private readonly MapAdapter _mapAdapter;
-        private readonly VisualMap _frontGraph;
+        private MapAdapter _mapAdapter;
+        private readonly MainWindow _applicationWindow;
         private readonly IMovingActor _animatingActor;
 
-        public TakePathfindingStepCommand(MapAdapter mapAdapter, 
-            VisualMap frontGraph, 
-            IMovingActor animatingActor)
+        public TakePathfindingStepCommand(MainWindow applicationWindow, 
+            IMovingActor animatingActor) : base("Take pathfinding step", "TakePathfindingStep", typeof(TakePathfindingStepCommand), new InputGestureCollection
         {
-            _mapAdapter = mapAdapter;
-            _frontGraph = frontGraph;
+            new KeyGesture(Key.F5, ModifierKeys.None)
+        })
+        {
+            _applicationWindow = applicationWindow;
             _animatingActor = animatingActor;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object mapAdapter)
         {
-            return true;//todo: temp, change to checking entry conditions
+            var adapter = mapAdapter as MapAdapter;
+            _mapAdapter = adapter;
+            return _applicationWindow.VisualMap != null && _applicationWindow.VisualMap.IsLoaded && _mapAdapter != null && _mapAdapter.CanStartPathfinding();
         }
 
         public void Execute(object parameter)
         {
-            VertexControl currentVertex = _frontGraph.GetCurrentVertex();
+            VertexControl currentVertex = _applicationWindow.VisualMap.GetCurrentVertex();
 
             NodeView nextNode = _mapAdapter.StartPathfinding(currentVertex.GetNodeView(), (ePathfindingAlgorithms)parameter);
 
-            VertexControl nextVertexControl = _frontGraph.GetVertexControlOfNode(nextNode);
+            VertexControl nextVertexControl = _applicationWindow.VisualMap.GetVertexControlOfNode(nextNode);
 
             var animation = new PathAnimationCommand(_animatingActor, eAnimationSpeed.Fast)
             {
                 FromVertex = currentVertex,
                 ToVertex = nextVertexControl,
-                VisualMap = _frontGraph
+                VisualMap = _applicationWindow.VisualMap
             };
 
-            _frontGraph.GoToVertex(nextVertexControl, animation);
+            _applicationWindow.VisualMap.GoToVertex(nextVertexControl, animation);
         }
-
-        public event EventHandler CanExecuteChanged;
     }
 }
