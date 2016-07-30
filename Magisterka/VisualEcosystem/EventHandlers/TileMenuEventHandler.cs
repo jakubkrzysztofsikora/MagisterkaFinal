@@ -25,5 +25,10 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             if (CustomCommands.AddNewNodeCommand.CanExecute(_mapAdapter))
                 CustomCommands.AddNewNodeCommand.Execute(_mapAdapter);
         }
+
+        public void ClickOnCreateAnEdgeTile(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }
