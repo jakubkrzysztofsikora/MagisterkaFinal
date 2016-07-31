@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -74,6 +75,13 @@ namespace Magisterka.VisualEcosystem
             };
         }
 
+        public void RefreshGraph()
+        {
+            GenerateGraph();
+            Children.OfType<VertexControl>().Where(vertex => vertex.GetState() == eVertexState.Other).ForEach(vertex => vertex.SetState(eVertexState.Other));
+            MarkBlockedNodes();
+        }
+
         public void AddCustomChildIfNotExists(UIElement element)
         {
             if (!Children.Contains(element))
@@ -108,6 +116,11 @@ namespace Magisterka.VisualEcosystem
         public void MarkBlockedNode(VertexControl vertex)
         {
             vertex.Background = new SolidColorBrush((Color)Application.Current.Resources["BlockedNodeColor"]);
+        }
+
+        public void MarkUnblockedNode(VertexControl vertex)
+        {
+            vertex.SetState(eVertexState.Other);
         }
 
         public void ClearGraph()

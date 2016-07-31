@@ -2,6 +2,7 @@
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
@@ -13,6 +14,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         private readonly Dictionary<Node, int> _nodeToCost = new Dictionary<Node, int>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
         private Map _unoptimizedGraph;
+        private Node _startingNode;
 
         public DijkstraStrategy(IAlgorithmMonitor monitor)
         {
@@ -25,6 +27,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
         {
             _monitor.StartMonitoring();
 
+            _startingNode = map.GetNodeByPosition(currentPostition);
             InitializeDistanceToNodeDictionary(map, currentPostition);
             var path = new List<Node>();
             _previousNodes.Clear();
@@ -78,7 +81,15 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                 currentNode = nextNode;
             }
 
+            if (!path.Any() || IsPathCutOutByBlockedNodes(path))
+                throw new PathToTargetDoesntExistException();
+
             return path;
+        }
+
+        private bool IsPathCutOutByBlockedNodes(IEnumerable<Node> path)
+        {
+            return !path.Last().Neighbors.ContainsKey(_startingNode);
         }
 
         private void InitializeDistanceToNodeDictionary(Map map, Position currentPosition)

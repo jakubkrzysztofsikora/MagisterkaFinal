@@ -130,6 +130,7 @@
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\TileMenuEventHandler.cs" />
+    <Compile Include="VisualEcosystem\EventHandlers\VisualMapEventHandler.cs" />
     <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
     <Compile Include="VisualEcosystem\InputModals\ChangeEdgeCostModal.xaml.cs">
       <DependentUpon>ChangeEdgeCostModal.xaml</DependentUpon>

@@ -39,6 +39,7 @@ namespace Magisterka
         private readonly IMapFactory _mapFactory;
         private readonly IPathfinderFactory _pathfinderFactory;
         private TileMenuEventHandler _tileMenuEventHandler;
+        private VisualMapEventHandler _visualMapEventHandler;
         private MapAdapter _mapAdapter;
 
         public MainWindow(IErrorDisplayer errorDisplayer, 
@@ -61,11 +62,6 @@ namespace Magisterka
             InitializeComponent();
         }
 
-        public void Dispose()
-        {
-            VisualMap.Dispose();
-        }
-
         private void InitializeEventHandlers()
         {
             NodeEventHandler.NameOfNodeContextMenu = "NodeContextMenu";
@@ -83,6 +79,7 @@ namespace Magisterka
             VisualMap.GenerateGraphFinished += (eAnimationSpeed, args) => LoadingOff();
 
             NewNodeTile.Click += _tileMenuEventHandler.ClickOnCreateANodeTile;
+            NewEdgeTile.Click += _tileMenuEventHandler.ClickOnCreateAnEdgeTile;
             SizeChanged += (e,args) => ZoomControl.ZoomToFill();
         }
 
@@ -95,6 +92,12 @@ namespace Magisterka
             VisualMap.EdgeMouseEnter -= EdgeEventHandler.OnEdgeHoverIn;
             VisualMap.EdgeMouseLeave -= EdgeEventHandler.OnEdgeHoverOut;
             VisualMap.EdgeRightClick -= EdgeEventHandler.OnEdgeRightClick;
+
+            if (_tileMenuEventHandler != null)
+            {
+                NewNodeTile.Click -= _tileMenuEventHandler.ClickOnCreateANodeTile;
+                NewEdgeTile.Click -= _tileMenuEventHandler.ClickOnCreateAnEdgeTile;
+            }
         }
 
         private void LoadingOn()
@@ -113,13 +116,14 @@ namespace Magisterka
             ZoomControl.ZoomToFill();
         }
 
-        private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory, bool empty = false)
+        private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory, bool shouldGraphBeEmpty = false)
         {
-            var map = (empty ? mapFactory.GenerateMap(0, 5) : mapFactory.GenerateDefaultMap())
+            var map = (shouldGraphBeEmpty ? mapFactory.GenerateMap(0, 5) : mapFactory.GenerateDefaultMap())
                 .WithGridPositions()
                 .WithRandomBlockedNodes(randomizer);
             _mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory, mapFactory);
             _tileMenuEventHandler = new TileMenuEventHandler(_mapAdapter);
+            _visualMapEventHandler = new VisualMapEventHandler(_mapAdapter, _validator, VisualMap);
         }
 
         private void GenerateAGraph(object sender, RoutedEventArgs e)
@@ -143,35 +147,17 @@ namespace Magisterka
 
         private void SetStartingPoint(object sender, RoutedEventArgs e)
         {
-            VertexControl vertex = ((ItemsControl) sender).GetVertexControl();
-            NodeView node = vertex.GetNodeView();
-
-            if (_validator.ValidateCanBeDefinedPosition(vertex))
-            {
-                _mapAdapter.SetAsStartingPoint(node);
-                VisualMap.SetStartingNode(vertex);
-            }
+            _visualMapEventHandler.SetStartingPoint(sender, e);
         }
 
         private void SetTargetPoint(object sender, RoutedEventArgs e)
         {
-            VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
-            NodeView node = vertex.GetNodeView();
-
-            if (_validator.ValidateCanBeDefinedPosition(vertex))
-            {
-                _mapAdapter.SetAsTargetPoint(node);
-                VisualMap.SetTargetNode(vertex);
-            }
+            _visualMapEventHandler.SetTargetPoint(sender, e);
         }
 
         private void DeleteNode(object sender, RoutedEventArgs e)
         {
-            VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
-            NodeView node = vertex.GetNodeView();
-
-            VisualMap.RemoveVertexAndEdges(node, EdgesType.All, false, false);
-            _mapAdapter.DeleteNode(node);
+            _visualMapEventHandler.DeleteNode(sender, e);
         }
 
         private void DisplayAlgorithmMonitor()
@@ -197,14 +183,7 @@ namespace Magisterka
 
         private void DeleteEdge(object sender, RoutedEventArgs eventArgs)
         {
-            EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
-            EdgeView edge = edgeControl.GetEdgeView();
-            EdgeView symetricEdge = _mapAdapter.VisualMap.Edges.Single(e => e != edge && e.Target.LogicNode == edge.Source.LogicNode && e.Source.LogicNode == edge.Target.LogicNode);
-
-            VisualMap.RemoveEdge(edge);
-            VisualMap.RemoveEdge(symetricEdge);
-            _mapAdapter.DeleteEdge(edge);
-            _mapAdapter.DeleteEdge(symetricEdge);
+            _visualMapEventHandler.DeleteEdge(sender, eventArgs);
         }
 
         private void CustomCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -236,7 +215,7 @@ namespace Magisterka
             }
         }
 
-        private void NewGraphExecution(object sender, ExecutedRoutedEventArgs e)
+        private void CreateNewGraph(object sender, ExecutedRoutedEventArgs e)
         {
             LoadingOn();
             RemoveAnyExistingGraphElements();
@@ -250,11 +229,12 @@ namespace Magisterka
 
         private void SetBlockedNode(object sender, RoutedEventArgs e)
         {
-            VertexControl vertex = ((ItemsControl)sender).GetVertexControl();
-            NodeView node = vertex.GetNodeView();
+            _visualMapEventHandler.SetBlockedNode(sender, e);
+        }
 
-            _mapAdapter.SetAsBlockedNode(node);
-            VisualMap.MarkBlockedNode(vertex);
+        private void SetUnBlockedNode(object sender, RoutedEventArgs e)
+        {
+            _visualMapEventHandler.SetUnblockedNode(sender, e);
         }
     }
 }

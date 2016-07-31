@@ -8,6 +8,8 @@ using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
+using MagisterkaTests.TestingStubs;
+using Moq;
 using NUnit.Framework;
 
 namespace MagisterkaTests
@@ -24,7 +26,7 @@ namespace MagisterkaTests
         [OneTimeSetUp]
         public void Init()
         {
-            _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry()));
+            _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitorStub());
             _mapFactory = new MapFactory(new Random());
             _startingPosition = new Position(Guid.NewGuid());
             _endingPosition = new Position(Guid.NewGuid());
@@ -72,13 +74,13 @@ namespace MagisterkaTests
             //Given
             Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
             Map map = _map.WithRandomBlockedNodes(new Random());
+            bool blockedNodeOnTheWayAndCantPassIt = false;
 
             //When
             Position currentPosition = _startingPosition;
 
-            while (currentPosition != _endingPosition)
+            while (currentPosition != _endingPosition && !blockedNodeOnTheWayAndCantPassIt)
             {
-                bool blockedNodeOnTheWayAndCantPassIt = false;
                 try
                 {
                     currentPosition = pathfinder.GetNextStep(map, currentPosition);

@@ -221,5 +221,10 @@ namespace Magisterka.Domain.Adapters
         {
             node.LogicNode.IsBlocked = true;
         }
+
+        public void SetAsUnblocked(NodeView node)
+        {
+            node.LogicNode.IsBlocked = false;
+        }
     }
 }

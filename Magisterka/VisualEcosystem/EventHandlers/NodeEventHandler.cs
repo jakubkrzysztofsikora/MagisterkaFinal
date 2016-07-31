@@ -39,15 +39,8 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             contextMenu.IsOpen = true;
             AddVertexControlsToMenuTags(contextMenu, e.VertexControl);
 
-            MenuItem setAsBlockedItem = LogicalTreeHelper.FindLogicalNode(contextMenu, NameOfSetAsBlocked) as MenuItem;
-            setAsBlockedItem.Visibility = e.VertexControl.GetNodeView().LogicNode.IsBlocked
-                ? Visibility.Collapsed
-                : Visibility.Visible;
-            
-            MenuItem setAsUnblockedItem = LogicalTreeHelper.FindLogicalNode(contextMenu, NameOfSetAsUnblocked) as MenuItem;
-            setAsUnblockedItem.Visibility = e.VertexControl.GetNodeView().LogicNode.IsBlocked
-                ? Visibility.Visible
-                : Visibility.Collapsed;
+            SetMenuPositionDependantOnProperty(contextMenu, e.VertexControl.GetNodeView().LogicNode.IsBlocked, NameOfSetAsBlocked);
+            SetMenuPositionDependantOnProperty(contextMenu, !e.VertexControl.GetNodeView().LogicNode.IsBlocked, NameOfSetAsUnblocked);
         }
 
         private static void SetMenuPositionDependantOnProperty(ContextMenu menu, bool booleanProperty, string nameOfMenuPosition)

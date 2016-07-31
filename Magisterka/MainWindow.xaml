@@ -23,14 +23,14 @@
       <CommandBinding Command="Commands:CustomCommands.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.ClearGraphCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.AddNewNodeCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
-      <CommandBinding Command="New" Executed="NewGraphExecution"></CommandBinding>
+      <CommandBinding Command="New" Executed="CreateNewGraph"></CommandBinding>
     </Window.CommandBindings>
     <Window.Resources>
       <ContextMenu x:Key="NodeContextMenu">
           <MenuItem Header="Set as starting point" Click="SetStartingPoint" Tag="" />
           <MenuItem Header="Set as target" Click="SetTargetPoint" Tag="" />
           <MenuItem Header="Mark as blocked" x:Name="SetAsBlocked" Click="SetBlockedNode" Tag="" />
-          <MenuItem Header="Mark as unblocked" x:Name="SetAsUnblocked" Click="SetBlockedNode" Tag=""/>
+          <MenuItem Header="Mark as unblocked" x:Name="SetAsUnblocked" Click="SetUnBlockedNode" Tag=""/>
           <Separator/>
           <MenuItem Header="Delete Node" Click="DeleteNode" Tag="" />
       </ContextMenu>
@@ -99,7 +99,7 @@
                     Width="100" Height="100" >
         <fa:FontAwesome Icon="Neuter" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
-      <Controls:Tile HorizontalAlignment="Left" Title="New Edge" 
+      <Controls:Tile x:Name="NewEdgeTile" HorizontalAlignment="Left" Title="New Edge" 
                     TiltFactor="2"
                     Cursor="Hand"
                     Width="100" Height="100" >

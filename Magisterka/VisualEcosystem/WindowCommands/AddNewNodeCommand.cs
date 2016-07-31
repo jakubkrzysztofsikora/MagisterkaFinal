@@ -33,7 +33,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public void Execute(object mapAdapter)
         {
             var node =_mapAdapter.AddNode();
-            _window.VisualMap.GenerateGraph();
+            _window.VisualMap.RefreshGraph();
         }
     }
 }
