@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using DocumentFormat.OpenXml;
@@ -15,13 +14,12 @@ namespace Magisterka.Infrastructure.RaportGenerating
 {
     public class ExcelRaportCommand : IRaportCommand
     {
-        public ePathfindingAlgorithms PathfindingAlgorithm { get; set; }
-        public IAlgorithmMonitor AlgorithmMonitor { get; set; }
-        public IRaportStringContainerContract RaportStrings { get; set; }
-
         private const string SheetId = "rId1";
         private const string NamespacePrefix = "r";
         private const string NamespaceAddress = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+        public ePathfindingAlgorithms PathfindingAlgorithm { get; set; }
+        public IAlgorithmMonitor AlgorithmMonitor { get; set; }
+        public IRaportStringContainerContract RaportStrings { get; set; }
 
         public string CreateRaportFile(string path)
         {

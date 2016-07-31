@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>graph.ico</ApplicationIcon>
+    <ApplicationIcon>Images\graph.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -44,6 +44,11 @@
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="FontAwesome.WPF, Version=4.5.0.37524, Culture=neutral, PublicKeyToken=0758b07a11a4f466, processorArchitecture=MSIL">
+      <HintPath>..\packages\FontAwesome.WPF.4.5.0.8\lib\net40\FontAwesome.WPF.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="GraphX.Controls, Version=2.3.3.0, Culture=neutral, PublicKeyToken=bab23663f80c9e76, processorArchitecture=MSIL">
@@ -56,6 +61,10 @@
     </Reference>
     <Reference Include="GraphX.PCL.Logic, Version=2.3.3.0, Culture=neutral, PublicKeyToken=3b65ef85075e278f, processorArchitecture=MSIL">
       <HintPath>..\packages\GraphX.2.3.3.0\lib\net40-client\GraphX.PCL.Logic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.2.4.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
@@ -76,6 +85,22 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Reactive.Core, Version=2.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Core.2.2.4\lib\net45\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Interfaces.2.2.4\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Linq.2.2.4\lib\net45\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -98,19 +123,37 @@
     <Compile Include="StaticResources\RaportStringContainer.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\IAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\PathAnimationCommand.cs" />
+    <Compile Include="VisualEcosystem\Animation\eAnimationSpeed.cs" />
     <Compile Include="VisualEcosystem\Animation\DefaultActor.cs" />
     <Compile Include="VisualEcosystem\Animation\IMovingActor.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\IErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\EdgeEventHandler.cs" />
     <Compile Include="VisualEcosystem\EventHandlers\NodeEventHandler.cs" />
+    <Compile Include="VisualEcosystem\EventHandlers\TileMenuEventHandler.cs" />
+    <Compile Include="VisualEcosystem\EventHandlers\VisualMapEventHandler.cs" />
     <Compile Include="VisualEcosystem\Extensions\UiExtensionMethods.cs" />
+    <Compile Include="VisualEcosystem\InputModals\ChangeEdgeCostModal.xaml.cs">
+      <DependentUpon>ChangeEdgeCostModal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VisualEcosystem\Validators\ConfigurationValidator.cs" />
-    <Compile Include="VisualEcosystem\ErrorHandling\eErrorTypes.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\ErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\Validators\IConfigurationValidator.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\AddNewEdgeCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\AddNewNodeCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ClearGraphCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\CommandValidator.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\CustomCommands.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\GenerateExcelRaportCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ToggleEdgeArrowsCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ToggleEdgeLabelsCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ToggleNodeDraggingCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\RelayoutGraphCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\StartPathfindingSimulationCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\TakePathfindingStepCommand.cs" />
     <Page Include="StaticResource.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +167,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="VisualEcosystem\InputModals\ChangeEdgeCostModal.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -166,8 +212,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="graph.ico" />
+    <Resource Include="Images\graph.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

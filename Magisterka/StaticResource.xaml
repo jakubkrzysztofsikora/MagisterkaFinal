@@ -4,12 +4,35 @@
   xmlns:system="clr-namespace:System;assembly=mscorlib">
 
   <!-- String resource that can be localized -->
-  <system:String x:Key="StartPathfinding">_Start Pathinding</system:String>
+  <system:String x:Key="GenerateGraph">Graph</system:String>
+  <system:String x:Key="GenerateRandomGraph">Generate Randomly</system:String>
+  <system:String x:Key="NewGraph">New</system:String>
+  <system:String x:Key="GraphPlaceholderText">Create a New Graph...</system:String>
+  <system:String x:Key="ClearGraph">Clear Graph</system:String>
+  <system:String x:Key="StartPathfinding">Pathfinding</system:String>
+  <system:String x:Key="PathfindingStep">Run One Step</system:String>
+  <system:String x:Key="PathfindingAll">Run Full Simulation</system:String>
   <system:String x:Key="UnknownPathfindingError">Unknown Pathinding Error</system:String>
   <system:String x:Key="PathConfError">Path Configuration Error</system:String>
   <system:String x:Key="GraphConfError">Graph Configuration Error</system:String>
   <system:String x:Key="GeneralError">General Application Error</system:String>
   <system:String x:Key="CannotBeDefinedPosition">This particular node cannot be defined position.</system:String>
+  <system:String x:Key="PathfindingHeader">Pathfinding Options</system:String>
+  <system:String x:Key="StatsHeader">Pathfinding Statistics</system:String>
+  <system:String x:Key="SelectPathfindingAlgorithm">Select Pathfinding Algorithm</system:String>
+  <system:String x:Key="SelectAnimationSpeed">Select Animation Speed</system:String>
+  <system:String x:Key="StepsTaken">Number of Steps Taken</system:String>
+  <system:String x:Key="PathDetailsHeader">Quality Statistics</system:String>
+  <system:String x:Key="PerformanceDetailsHeader">Performance Statistics</system:String>
+
+  <!-- Tiles Titles -->
+  <system:String x:Key="NewNodeTile">New Node</system:String>
+  <system:String x:Key="RelayoutTile">Relayout</system:String>
+  <system:String x:Key="NewEdgeTile">New Edge</system:String>
+  <system:String x:Key="DraggingTile">Node Dragging</system:String>
+  <system:String x:Key="EdgeLablesTile">Edge Labels</system:String>
+  <system:String x:Key="EdgeArrowsTile">Edge Arrows</system:String>
+  <system:String x:Key="GenerateExcelTile">Excel Raport</system:String>
 
   <!-- Raport strings-->
   <system:String x:Key="RaportHeaderTitle">Results</system:String>
@@ -26,11 +49,20 @@
   <system:String x:Key="RaportAverageMemoryUsage">Average memory usage (MB)</system:String>
   <system:String x:Key="RaportPeakProcessorUsage">Peak processor usage (%)</system:String>
   <system:String x:Key="RaportAverageProcessorUsage">Average processor usage (%)</system:String>
+
+  <!-- Modal strings -->
+  <system:String x:Key="ChangeEdgeCostTitle">Change Edge Cost</system:String>
+  <system:String x:Key="NewEdgeCostTitle">New Edge Cost</system:String>
+  <system:String x:Key="ChangeEdgeCostContent">Edge Cost</system:String>
   
   <Color x:Key="LabelBackgroundColor">White</Color>
-  
-  <Color x:Key="BlockedNodeColor">Crimson</Color>
-  <Color x:Key="OtherNodeColor">DarkSeaGreen</Color>
-  <Color x:Key="CurrentNodeColor">GreenYellow</Color>
+
+  <SolidColorBrush x:Key="MapBackground">#F0F0F0</SolidColorBrush>
+  <Color x:Key="BlockedNodeColor">Firebrick</Color>
+  <Color x:Key="OtherNodeColor">LightSkyBlue</Color>
+  <Color x:Key="VisitedNodeColor">SteelBlue</Color>
+  <Color x:Key="CurrentNodeColor">DarkBlue</Color>
+  <Color x:Key="StartNodeColor">SlateBlue</Color>
+  <Color x:Key="TargetNodeColor">SlateBlue</Color>
 
 </ResourceDictionary>

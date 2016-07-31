@@ -3,6 +3,9 @@
     public enum eVertexState
     {
         Other,
-        Current
+        Current,
+        Visited,
+        Start,
+        Target
     }
 }

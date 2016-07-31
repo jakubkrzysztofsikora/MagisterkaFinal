@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
@@ -13,10 +7,12 @@ using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
 using Magisterka.Infrastructure.AppSettings;
+using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.StaticResources;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
+using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Validators;
 
 namespace Magisterka.DependencyInjection
@@ -36,6 +32,7 @@ namespace Magisterka.DependencyInjection
             builder.RegisterType<PathfinderFactory>().As<IPathfinderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
             builder.RegisterType<AlgorithmMonitor>().As<IAlgorithmMonitor>().InstancePerLifetimeScope();
+            builder.RegisterType<RaportGenerator>().As<IRaportGenerator>().InstancePerLifetimeScope();
 
             builder.RegisterType<RaportStringContainer>()
                 .As<IRaportStringContainerContract>()

@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Magisterka.VisualEcosystem.Validators;
+using Magisterka.Domain.ExceptionContracts;
 
 namespace Magisterka.VisualEcosystem.ErrorHandling
 {

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Magisterka.Domain.Graph.MovementSpace.Exceptions;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Graph.MovementSpace
@@ -10,10 +8,13 @@ namespace Magisterka.Domain.Graph.MovementSpace
     public class MapFactory : IMapFactory
     {
         private const int DefaultNodeNumber = 20;
-        private const int DefaultMaxNeighborsForNode = 5;
+        private const int DefaultMaxNeighborsForNode = 4;
         private const int MinEdgeCost = 1;
         private const int MaxEdgeCost = 10;
         private const int MinNeighborNumber = 1;
+
+        private const string NodeNamePrefix = "Node";
+
         private readonly Random _randomizer;
 
         public MapFactory(Random randomizer)
@@ -23,11 +24,21 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public Map GenerateDefaultMap()
         {
-            var newMap = new Map(DefaultNodeNumber);
+            return GenerateMap(DefaultNodeNumber, DefaultMaxNeighborsForNode);
+        }
 
-            while (newMap.Count < newMap.MaximumNumberOfNodes)
+        public Map GenerateMapWithProvidedCoordinates(IEnumerable<Position> coordinates)
+        {
+            var listOfCoordinates = coordinates.ToList();
+            var newMap = new Map(listOfCoordinates.Count);
+            var nodeCounter = 0;
+
+            foreach (var coordinate in listOfCoordinates)
             {
-                newMap.AddIfNotExists(new Node());
+                var node = GenerateNewNode(nodeCounter);
+                node.Coordinates = coordinate;
+                ++nodeCounter;
+                newMap.AddIfNotExists(node);
             }
 
             GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
@@ -35,22 +46,25 @@ namespace Magisterka.Domain.Graph.MovementSpace
             return newMap;
         }
 
-        public Map GenerateMapWithProvidedCoordinates(IEnumerable<Position> coordinates)
+        public Map GenerateMap(int numberOfNodes, int maxNumberOfNeighborsPerNode)
         {
-            var listOfCoordinates = coordinates.ToList();
-            var newMap = new Map(listOfCoordinates.Count);
+            var newMap = new Map(numberOfNodes);
+            var nodeCounter = 0;
 
-            foreach (var coordinate in listOfCoordinates)
+            while (newMap.Count < newMap.MaximumNumberOfNodes)
             {
-                newMap.AddIfNotExists(new Node
-                {
-                    Coordinates = coordinate
-                });
+                newMap.AddIfNotExists(GenerateNewNode(nodeCounter));
+                ++nodeCounter;
             }
 
-            GenerateNodesNeighbors(ref newMap, DefaultMaxNeighborsForNode);
+            GenerateNodesNeighbors(ref newMap, maxNumberOfNeighborsPerNode);
 
             return newMap;
+        }
+
+        public Node GenerateNewNode(int nodesCount)
+        {
+            return new Node($"{NodeNamePrefix} {nodesCount + 1}");
         }
 
         private void GenerateNodesNeighbors(ref Map map, int maxNumberOfNeighbors)

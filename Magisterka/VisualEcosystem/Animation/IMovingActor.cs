@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Magisterka.VisualEcosystem.Animation
 {
     public interface IMovingActor
     {
+        double Width { get; }
+        double Height { get; }
         UIElement PresentActor();
     }
 }

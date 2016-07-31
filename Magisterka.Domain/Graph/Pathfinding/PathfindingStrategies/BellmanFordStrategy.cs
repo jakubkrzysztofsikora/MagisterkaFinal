@@ -9,7 +9,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 {
     public class BellmanFordStrategy : IPathfindingStrategy
     {
-        public IEnumerable<Node> CalculatedPath { get; private set; }
+        private const long Infinity = int.MaxValue;
 
         private readonly IAlgorithmMonitor _monitor;
 
@@ -21,7 +21,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             _monitor = monitor;
         }
 
-        private const long Infinity = int.MaxValue;
+        public IEnumerable<Node> CalculatedPath { get; private set; }
 
         public void Calculate(Map map, Position currentPosition)
         {
@@ -87,10 +87,11 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             while (targetNode != startNode)
             {
                 var nextNode = _previousNodes[targetNode];
-                _monitor.MonitorPathFragment(targetNode, nextNode);
-
-                if (targetNode == null)
+                if (nextNode == null)
                     throw new PathToTargetDoesntExistException();
+
+
+                _monitor.MonitorPathFragment(targetNode, nextNode);
 
                 yield return targetNode;
                 targetNode = nextNode;

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Magisterka.Domain.ExceptionContracts;
 
 namespace Magisterka.Domain.Graph.Pathfinding.Exceptions
 {
-    public class StartIsTargetPositionException : Exception
+    public class StartIsTargetPositionException : DomainException
     {
         public StartIsTargetPositionException() : base("Starting node is also a target.")
         {

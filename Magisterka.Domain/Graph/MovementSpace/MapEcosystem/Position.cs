@@ -1,19 +1,18 @@
 ﻿using System;
-using Magisterka.Domain.Graph.MovementSpace.Exceptions;
 
 namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {
     public class Position : IComparable
     {
-        public int? X { get; set; }
-        public int? Y { get; set; }
-
         private readonly Guid _nodeId;
 
         public Position(Guid nodeId)
         {
             _nodeId = nodeId;
         }
+
+        public int? X { get; set; }
+        public int? Y { get; set; }
 
         public int CompareTo(object obj)
         {

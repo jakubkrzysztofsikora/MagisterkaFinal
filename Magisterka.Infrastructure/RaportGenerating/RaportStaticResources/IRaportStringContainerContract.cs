@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Magisterka.Infrastructure.RaportGenerating.RaportStaticResources
+﻿namespace Magisterka.Infrastructure.RaportGenerating.RaportStaticResources
 {
     public interface IRaportStringContainerContract
     {

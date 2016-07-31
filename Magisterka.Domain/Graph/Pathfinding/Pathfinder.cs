@@ -4,7 +4,6 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding.Exceptions;
 using Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies;
-using Magisterka.Domain.Monitoring;
 
 namespace Magisterka.Domain.Graph.Pathfinding
 {
@@ -31,12 +30,19 @@ namespace Magisterka.Domain.Graph.Pathfinding
                 : path.Select(node => node.Coordinates).First();
         }
 
-        public IEnumerable<Node> GetOptimalPath(Map activeMap, Position currentPosition)
+        public IEnumerable<Node> GetOptimalPath(Map activeMap, Position currentPosition, bool calculateNewPath = true)
         {
             Validate(activeMap, currentPosition);
-            _strategy.Calculate(activeMap, currentPosition);
 
-            return _strategy.CalculatedPath;
+            if (calculateNewPath || _strategy.CalculatedPath == null || !_strategy.CalculatedPath.Any())
+                _strategy.Calculate(activeMap, currentPosition);
+
+            var path = _strategy.CalculatedPath.ToList();
+            bool isPathStartingWithTargetNode = path.Count > 1 && path.First().IsTargetNode;
+
+            return isPathStartingWithTargetNode 
+                ? _strategy.CalculatedPath.Reverse() 
+                : _strategy.CalculatedPath;
         }
 
         private void Validate(Map activeMap, Position currentPosition)

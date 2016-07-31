@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 using System.Windows.Controls;
 using GraphX.Controls.Models;
 using Magisterka.Domain.ViewModels;
@@ -22,8 +18,23 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
         public static void OnEdgeHoverOut(object sender, EdgeSelectedEventArgs e)
         {
-            ((ToolTip)e.EdgeControl.ToolTip).IsOpen = false;
-            e.EdgeControl.ToolTip = null;
+            var tooltip = (ToolTip)e.EdgeControl.ToolTip;
+            if (tooltip != null)
+            {
+                tooltip.IsOpen = false;
+                e.EdgeControl.ToolTip = null;
+            }
+        }
+
+        public static void OnEdgeRightClick(object sender, EdgeSelectedEventArgs e)
+        {
+            ContextMenu contextMenu = Application.Current.MainWindow.FindResource("EdgeContextMenu") as ContextMenu;
+            contextMenu.PlacementTarget = sender as Button;
+            contextMenu.IsOpen = true;
+            foreach (Control menuPosition in contextMenu.Items)
+            {
+                menuPosition.Tag = e.EdgeControl;
+            }
         }
     }
 }

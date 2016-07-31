@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies;
 using Magisterka.Domain.Monitoring;
 
