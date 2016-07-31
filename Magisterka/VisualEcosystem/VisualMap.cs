@@ -29,12 +29,11 @@ namespace Magisterka.VisualEcosystem
         public void InitilizeVisuals()
         {
             GenerateGraph();
-            SetEdgesDashStyle(EdgeDashStyle.Dot);
+            SetEdgesDashStyle(EdgeDashStyle.Solid);
             SetVerticesMathShape(VertexShape.Ellipse);
             SetVerticesDrag(VerticlesDragging, true);
             ShowAllVerticesLabels(ShowVerticlesLabels);
             ShowAllEdgesLabels(ShowEdgeLabels);
-            ShowAllEdgesArrows(ShowEdgeArrows);
             
             SetStateColors();
             MarkBlockedNodes();
@@ -45,7 +44,7 @@ namespace Magisterka.VisualEcosystem
             var logicCore = new GXLogicCore<NodeView, EdgeView, BidirectionalGraph<NodeView, EdgeView>>
             {
                 Graph = visualMap,
-                DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.Bundling,
+                DefaultEdgeRoutingAlgorithm = EdgeRoutingAlgorithmTypeEnum.SimpleER,
                 DefaultOverlapRemovalAlgorithm = OverlapRemovalAlgorithmTypeEnum.FSA,
                 DefaultLayoutAlgorithm = LayoutAlgorithmTypeEnum.CompoundFDP,
                 EnableParallelEdges = false,
@@ -75,6 +74,8 @@ namespace Magisterka.VisualEcosystem
                 EdgeRightClick,
                 (edgeControl, mouseArgs, modifierKey) =>
                     new EdgeSelectedEventArgs(edgeControl, mouseArgs, modifierKey));
+
+                ShowAllEdgesArrows(ShowEdgeArrows);
             };
         }
 
@@ -90,9 +91,15 @@ namespace Magisterka.VisualEcosystem
             ShowEdgeLabels = newValue;
         }
 
+        public new void ShowAllEdgesArrows(bool newValue)
+        {
+            ShowAllEdgesArrows(isEnabled: newValue);
+            ShowEdgeArrows = newValue;
+        }
+
         public void RefreshGraph()
         {
-            GenerateGraph();
+            RelayoutGraph();
             Children.OfType<VertexControl>().Where(vertex => vertex.GetState() == eVertexState.Other).ForEach(vertex => vertex.SetState(eVertexState.Other));
             MarkBlockedNodes();
         }

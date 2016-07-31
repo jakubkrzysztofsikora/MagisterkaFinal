@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Magisterka.Domain.Adapters;
+﻿using System.Windows.Input;
+using Magisterka.Domain.Monitoring;
+using Magisterka.Infrastructure.RaportGenerating;
+using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.VisualEcosystem.Animation;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
@@ -19,8 +16,14 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public static ICommand RelayoutGraphCommand { get; set; }
         public static ICommand ToggleNodeDraggingCommand { get; set; }
         public static ICommand ToggleEdgeLabelsCommand { get; set; }
+        public static ICommand ToggleEdgeArrowsCommand { get; set; }
+        public static ICommand GenerateExcelRaportCommand { get; set; }
 
-        public static void InitilizeCustomCommands(MainWindow window, IMovingActor actor)
+        public static void InitilizeCustomCommands(MainWindow window, 
+            IMovingActor actor, 
+            IAlgorithmMonitor algorithmMonitor, 
+            IRaportGenerator raportGenerator, 
+            IRaportStringContainerContract raportStringContent)
         {
             TakePathfindingStepCommand = new TakePathfindingStepCommand(window, actor, new CommandValidator());
             StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(window, actor, new CommandValidator());
@@ -30,6 +33,8 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             RelayoutGraphCommand = new RelayoutGraphCommand(window);
             ToggleNodeDraggingCommand = new ToggleNodeDraggingCommand(window);
             ToggleEdgeLabelsCommand = new ToggleEdgeLabelsCommand(window);
+            ToggleEdgeArrowsCommand = new ToggleEdgeArrowsCommand(window);
+            GenerateExcelRaportCommand = new GenerateExcelRaportCommand(algorithmMonitor, raportGenerator, raportStringContent, window);
         }
     }
 }

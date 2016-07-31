@@ -7,6 +7,7 @@ using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
 using Magisterka.Infrastructure.AppSettings;
+using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.StaticResources;
 using Magisterka.VisualEcosystem.Animation;
@@ -31,6 +32,7 @@ namespace Magisterka.DependencyInjection
             builder.RegisterType<PathfinderFactory>().As<IPathfinderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
             builder.RegisterType<AlgorithmMonitor>().As<IAlgorithmMonitor>().InstancePerLifetimeScope();
+            builder.RegisterType<RaportGenerator>().As<IRaportGenerator>().InstancePerLifetimeScope();
 
             builder.RegisterType<RaportStringContainer>()
                 .As<IRaportStringContainerContract>()

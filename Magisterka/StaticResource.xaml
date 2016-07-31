@@ -24,6 +24,15 @@
   <system:String x:Key="StepsTaken">Number of Steps Taken</system:String>
   <system:String x:Key="PathDetailsHeader">Path Statistics</system:String>
 
+  <!-- Tiles Titles -->
+  <system:String x:Key="NewNodeTile">New Node</system:String>
+  <system:String x:Key="RelayoutTile">Relayout</system:String>
+  <system:String x:Key="NewEdgeTile">New Edge</system:String>
+  <system:String x:Key="DraggingTile">Dragging</system:String>
+  <system:String x:Key="EdgeLablesTile">Edge Label</system:String>
+  <system:String x:Key="EdgeArrowsTile">Edge Arrow</system:String>
+  <system:String x:Key="GenerateExcelTile">Raport</system:String>
+
   <!-- Raport strings-->
   <system:String x:Key="RaportHeaderTitle">Results</system:String>
   <system:String x:Key="RaportHeaderDate">Date of generation</system:String>

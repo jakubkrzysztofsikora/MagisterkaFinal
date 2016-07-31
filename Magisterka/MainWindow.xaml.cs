@@ -14,6 +14,8 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.ViewModels;
+using Magisterka.Infrastructure.RaportGenerating;
+using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
@@ -39,6 +41,8 @@ namespace Magisterka
         private readonly IConfigurationValidator _validator;
         private readonly IMapFactory _mapFactory;
         private readonly IPathfinderFactory _pathfinderFactory;
+        private readonly IRaportGenerator _raportGenerator;
+        private readonly IRaportStringContainerContract _raportStringContent;
         private TileMenuEventHandler _tileMenuEventHandler;
         private VisualMapEventHandler _visualMapEventHandler;
         private MapAdapter _mapAdapter;
@@ -49,6 +53,8 @@ namespace Magisterka
                           IPathfinderFactory pathfinderFactory,
                           IMovingActor actor,
                           IAlgorithmMonitor monitor,
+                          IRaportGenerator raportGenerator,
+                          IRaportStringContainerContract raportStringContent,
                           Random randomizer)
         {
             _errorDisplayer = errorDisplayer;
@@ -57,9 +63,11 @@ namespace Magisterka
             _pathfinderFactory = pathfinderFactory;
             _actor = actor;
             _randomizer = randomizer;
+            _raportStringContent = raportStringContent;
+            _raportGenerator = raportGenerator;
             Monitor = monitor;
 
-            CustomCommands.InitilizeCustomCommands(this, _actor);
+            CustomCommands.InitilizeCustomCommands(this, _actor, Monitor, _raportGenerator, _raportStringContent);
             InitializeComponent();
             NewNodeTile.IsEnabled = false;
             NewEdgeTile.IsEnabled = false;
@@ -68,6 +76,8 @@ namespace Magisterka
             VisualMap.ShowVerticlesLabels = false;
             VisualMap.VerticlesDragging = true;
             DraggingTileIcon.Icon = VisualMap.VerticlesDragging ? FontAwesomeIcon.Unlock : FontAwesomeIcon.Lock;
+            EdgeLabelsTileIcon.Icon = VisualMap.ShowEdgeLabels ? FontAwesomeIcon.Eye : FontAwesomeIcon.EyeSlash;
+            EdgeArrowsTileIcon.Icon = VisualMap.ShowEdgeArrows ? FontAwesomeIcon.Exchange : FontAwesomeIcon.Minus;
         }
 
         private void InitializeEventHandlers()

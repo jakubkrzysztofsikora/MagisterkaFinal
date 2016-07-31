@@ -19,9 +19,10 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
         private readonly int _defaultBaseFullAnimationLength;
 
         private int _animationsCompleted;
-        private List<Point> _routingPoints;
+        private List<Point> _allRoutingPoints;
 
         private EdgeView _throughEdge;
+        private Point[] _throughEdgeRoutingPoints;
 
         public PathAnimationCommand(IMovingActor actor, eAnimationSpeed animationSpeed)
         {
@@ -46,7 +47,8 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
                     ErrorType = eErrorTypes.PathfindingError
                 };
 
-            _routingPoints = new List<Point>(_throughEdge.RoutingPoints);
+            _throughEdgeRoutingPoints = _throughEdge.RoutingPoints ?? new Point[] {};
+            _allRoutingPoints = new List<Point>(_throughEdgeRoutingPoints);
 
             PrepareAnimationComponents(currentNode, nextNode);
             
@@ -58,12 +60,12 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             var vertexPositions = VisualMap.GetVertexPositions();
             VisualMap.AddCustomChildIfNotExists(_actorToMove.PresentActor());
 
-            _routingPoints.Insert(0, vertexPositions.Single(nodePostion => nodePostion.Key.LogicNode == currentNode.LogicNode).Value);
-            _routingPoints.Add(vertexPositions.Single(nodePostion => nodePostion.Key.LogicNode == nextNode.LogicNode).Value);
+            _allRoutingPoints.Insert(0, vertexPositions.Single(nodePostion => nodePostion.Key.LogicNode == currentNode.LogicNode).Value);
+            _allRoutingPoints.Add(vertexPositions.Single(nodePostion => nodePostion.Key.LogicNode == nextNode.LogicNode).Value);
                 
 
-            Canvas.SetLeft(_actorToMove.PresentActor(), _routingPoints.First().X);
-            Canvas.SetTop(_actorToMove.PresentActor(), _routingPoints.First().Y);
+            Canvas.SetLeft(_actorToMove.PresentActor(), _allRoutingPoints.First().X);
+            Canvas.SetTop(_actorToMove.PresentActor(), _allRoutingPoints.First().Y);
         }
 
         private void Animate(int iteration = 0)
@@ -73,13 +75,13 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             _actorToMove.PresentActor().RenderTransform = trans;
 
             Point currentActorPoint = iteration == 0
-                ? _routingPoints.First()
-                : _routingPoints[iteration - 1];
-            Point nextActorPoint = _throughEdge.RoutingPoints.Length > iteration
-                ? _routingPoints[iteration]
-                : _routingPoints.Last();
+                ? _allRoutingPoints.First()
+                : _allRoutingPoints[iteration - 1];
+            Point nextActorPoint = _allRoutingPoints.Count > iteration + 1
+                ? _allRoutingPoints[iteration]
+                : _allRoutingPoints.Last();
 
-            int partialAnimationLength = _defaultBaseFullAnimationLength / _routingPoints.Count * _throughEdge.LogicEdge.Cost;
+            int partialAnimationLength = _defaultBaseFullAnimationLength / _allRoutingPoints.Count * _throughEdge.LogicEdge.Cost;
             DoubleAnimation anim1 = new DoubleAnimation(currentActorPoint.X, nextActorPoint.X, TimeSpan.FromMilliseconds(partialAnimationLength));
             DoubleAnimation anim2 = new DoubleAnimation(currentActorPoint.Y, nextActorPoint.Y, TimeSpan.FromMilliseconds(partialAnimationLength));
             anim1.Completed += (sender, args) => FireCompletedEventIfPossible(iteration);
@@ -94,7 +96,7 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             ++_animationsCompleted;
             
             bool animationToTransitionalPointEnded = _animationsCompleted == AnimationsNeededToComplete;
-            bool finalDestinationReached = animationToTransitionalPointEnded && _throughEdge.RoutingPoints.Length == iteration;
+            bool finalDestinationReached = animationToTransitionalPointEnded && _allRoutingPoints.Count == iteration + 1;
 
             if (finalDestinationReached)
             {

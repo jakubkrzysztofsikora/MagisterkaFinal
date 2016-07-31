@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using GraphX.Controls;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ViewModels;
+using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.InputModals;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
@@ -41,9 +43,13 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 
         private void AddEdge(EdgeAdapter edgeAdapter)
         {
-            edgeAdapter.MapAdapter.AddEdge(new EdgeView(edgeAdapter.Edge,
+            EdgeView edgeView = new EdgeView(edgeAdapter.Edge,
                 edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.FromNode),
-                edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode)));
+                edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode));
+            edgeAdapter.MapAdapter.AddEdge(edgeView);
+            VertexControl fromVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Source);
+            VertexControl toVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Target);
+            _window.VisualMap.AddEdge(edgeView, new EdgeControl(fromVertexControl, toVertexControl, edgeView));
         }
     }
 }

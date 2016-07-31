@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
-using DocumentFormat.OpenXml.Drawing;
+﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
-using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
@@ -33,6 +25,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public void Execute(object mapAdapter)
         {
             var node =_mapAdapter.AddNode();
+            _window.VisualMap.AddVertex(node, new VertexControl(node));
             _window.VisualMap.RefreshGraph();
         }
     }
