@@ -1,9 +1,14 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using GraphX.Controls;
 using GraphX.Controls.Models;
+using Magisterka.Domain.Adapters;
+using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
+using Magisterka.VisualEcosystem.WindowCommands;
+using MahApps.Metro.Controls;
 
 namespace Magisterka.VisualEcosystem.EventHandlers
 {
@@ -12,6 +17,9 @@ namespace Magisterka.VisualEcosystem.EventHandlers
         public static string NameOfNodeContextMenu { get; set; }
         public static string NameOfSetAsBlocked { get; set; }
         public static string NameOfSetAsUnblocked { get; set; }
+
+        public static EdgeAdapter NewEdgeAdapter { get; set; }
+        private static Tile _clickedTile;
 
         public static void OnNodeHoverIn(object sender, VertexSelectedEventArgs e)
         {
@@ -32,6 +40,23 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             }
         }
 
+        public static void OnNodeMouseDown(object sender, VertexSelectedEventArgs e)
+        {
+            if (NewEdgeAdapter != null)
+            {
+                if (NewEdgeAdapter.FromNode == null)
+                    NewEdgeAdapter.FromNode = e.VertexControl.GetNodeView().LogicNode;
+                else
+                {
+                    NewEdgeAdapter.ToNode = e.VertexControl.GetNodeView().LogicNode;
+
+                    if (CustomCommands.AddNewEdgeCommand.CanExecute(NewEdgeAdapter))
+                        CustomCommands.AddNewEdgeCommand.Execute(NewEdgeAdapter);
+                    StopNewEdgeProcess();
+                }
+            }
+        }
+
         public static void OnNodeRightClick(object sender, VertexSelectedEventArgs e)
         {
             ContextMenu contextMenu = Application.Current.MainWindow.FindResource(NameOfNodeContextMenu) as ContextMenu;
@@ -41,6 +66,22 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
             SetMenuPositionDependantOnProperty(contextMenu, e.VertexControl.GetNodeView().LogicNode.IsBlocked, NameOfSetAsBlocked);
             SetMenuPositionDependantOnProperty(contextMenu, !e.VertexControl.GetNodeView().LogicNode.IsBlocked, NameOfSetAsUnblocked);
+        }
+
+        public static void InitilizeNewEdgeProcess(Tile clickedTile, MapAdapter mapAdapter)
+        {
+            NewEdgeAdapter = new EdgeAdapter
+            {
+                MapAdapter = mapAdapter
+            };
+            clickedTile.Title = "Cancel";
+            _clickedTile = clickedTile;
+        }
+
+        public static void StopNewEdgeProcess()
+        {
+            NewEdgeAdapter = null;
+            _clickedTile.Title = "New Edge";
         }
 
         private static void SetMenuPositionDependantOnProperty(ContextMenu menu, bool booleanProperty, string nameOfMenuPosition)

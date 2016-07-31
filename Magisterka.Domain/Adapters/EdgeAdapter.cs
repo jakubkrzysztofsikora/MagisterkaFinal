@@ -1,12 +1,31 @@
-﻿using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+﻿using System.Collections.Generic;
+using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 
 namespace Magisterka.Domain.Adapters
 {
     public class EdgeAdapter
     {
-        public Edge Edge { get; set; }
+        public Edge Edge
+        {
+            get
+            {
+                return _edge = _edge ?? new Edge
+                {
+                    Cost = 1,
+                    NodesConnected = new KeyValuePair<Node, Node>(FromNode, ToNode)
+                };
+            }
+            set
+            {
+                _edge = value;
+            }
+        }
+
         public Node FromNode { get; set; }
         public Node ToNode { get; set; }
+        public MapAdapter MapAdapter { get; set; }
+
+        private Edge _edge;
 
         public EdgeAdapter GetEdgeAdapterWithMirroredEdges()
         {
@@ -23,6 +42,7 @@ namespace Magisterka.Domain.Adapters
             mirroredEdgeAdapter.FromNode = ToNode;
             mirroredEdgeAdapter.ToNode = temporaryNode;
             mirroredEdgeAdapter.Edge = Edge;
+            mirroredEdgeAdapter.MapAdapter = MapAdapter;
 
             return mirroredEdgeAdapter;
         }

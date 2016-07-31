@@ -135,8 +135,14 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public void AddEdge(Edge edge)
         {
-            edge.NodesConnected.Key.Neighbors.Add(edge.NodesConnected.Value, edge);
-            edge.NodesConnected.Value.Neighbors.Add(edge.NodesConnected.Key, edge);
+            AddNeighbor(edge.NodesConnected.Key, edge.NodesConnected.Value, edge);
+            AddNeighbor(edge.NodesConnected.Value, edge.NodesConnected.Key, edge);
+        }
+
+        private void AddNeighbor(Node node, Node neighbor, Edge edgeConnecting)
+        {
+            if (!node.Neighbors.ContainsKey(neighbor))
+                node.Neighbors.Add(neighbor, edgeConnecting);
         }
     }
 }

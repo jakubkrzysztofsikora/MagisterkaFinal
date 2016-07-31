@@ -15,13 +15,15 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public static ICommand StartPathfindingSimulationCommand { get; set; }
         public static ICommand ClearGraphCommand { get; set; }
         public static ICommand AddNewNodeCommand { get; set; }
+        public static ICommand AddNewEdgeCommand { get; set; }
 
-        public static void InitilizeCustomCommands(MainWindow frontGraph, IMovingActor actor)
+        public static void InitilizeCustomCommands(MainWindow window, IMovingActor actor)
         {
-            TakePathfindingStepCommand = new TakePathfindingStepCommand(frontGraph, actor, new CommandValidator());
-            StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(frontGraph, actor, new CommandValidator());
-            ClearGraphCommand = new ClearGraphCommand(frontGraph, actor);
-            AddNewNodeCommand = new AddNewNodeCommand(frontGraph);
+            TakePathfindingStepCommand = new TakePathfindingStepCommand(window, actor, new CommandValidator());
+            StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(window, actor, new CommandValidator());
+            ClearGraphCommand = new ClearGraphCommand(window, actor);
+            AddNewNodeCommand = new AddNewNodeCommand(window);
+            AddNewEdgeCommand = new AddNewEdgeCommand(window);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -59,7 +58,7 @@ namespace Magisterka.VisualEcosystem
             LogicCore = logicCore;
         }
 
-        public void InitializeEventHandlers()
+        public void InitializeGraphElementsEventHandlers()
         {
             GenerateGraphFinished += delegate
             {

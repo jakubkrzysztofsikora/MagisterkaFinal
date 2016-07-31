@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using GraphX.Controls;
+﻿using System.Windows;
 using Magisterka.Domain.Adapters;
 using Magisterka.VisualEcosystem.WindowCommands;
+using MahApps.Metro.Controls;
 
 namespace Magisterka.VisualEcosystem.EventHandlers
 {
@@ -28,7 +22,10 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
         public void ClickOnCreateAnEdgeTile(object sender, RoutedEventArgs e)
         {
-            
+            if (NodeEventHandler.NewEdgeAdapter == null)
+                NodeEventHandler.InitilizeNewEdgeProcess((Tile)sender, _mapAdapter);
+            else
+                NodeEventHandler.StopNewEdgeProcess();
         }
     }
 }

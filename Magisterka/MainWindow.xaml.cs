@@ -71,6 +71,7 @@ namespace Magisterka
             VisualMap.VertexMouseEnter += NodeEventHandler.OnNodeHoverIn;
             VisualMap.VertexMouseLeave += NodeEventHandler.OnNodeHoverOut;
             VisualMap.VertexRightClick += NodeEventHandler.OnNodeRightClick;
+            VisualMap.VertexMouseUp += NodeEventHandler.OnNodeMouseDown;
 
             VisualMap.EdgeMouseEnter += EdgeEventHandler.OnEdgeHoverIn;
             VisualMap.EdgeMouseLeave += EdgeEventHandler.OnEdgeHoverOut;
@@ -88,6 +89,7 @@ namespace Magisterka
             VisualMap.VertexMouseEnter -= NodeEventHandler.OnNodeHoverIn;
             VisualMap.VertexMouseLeave -= NodeEventHandler.OnNodeHoverOut;
             VisualMap.VertexRightClick -= NodeEventHandler.OnNodeRightClick;
+            VisualMap.VertexMouseUp -= NodeEventHandler.OnNodeMouseDown;
 
             VisualMap.EdgeMouseEnter -= EdgeEventHandler.OnEdgeHoverIn;
             VisualMap.EdgeMouseLeave -= EdgeEventHandler.OnEdgeHoverOut;
@@ -135,7 +137,7 @@ namespace Magisterka
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
             VisualMap.InitilizeVisuals();
             InitializeEventHandlers();
-            VisualMap.InitializeEventHandlers();
+            VisualMap.InitializeGraphElementsEventHandlers();
         }
 
         private void RemoveAnyExistingGraphElements()
@@ -224,7 +226,7 @@ namespace Magisterka
             VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
             VisualMap.InitilizeVisuals();
             InitializeEventHandlers();
-            VisualMap.InitializeEventHandlers();
+            VisualMap.InitializeGraphElementsEventHandlers();
         }
 
         private void SetBlockedNode(object sender, RoutedEventArgs e)
