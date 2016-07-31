@@ -113,7 +113,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                 {
                     nextNode = _previousNodes[targetNode];
                 }
-                catch (KeyNotFoundException exception)
+                catch (KeyNotFoundException)
                 {
                     throw new PathToTargetDoesntExistException();
                 }

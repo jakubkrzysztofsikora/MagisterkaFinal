@@ -85,7 +85,7 @@ namespace MagisterkaTests
                 {
                     currentPosition = pathfinder.GetNextStep(map, currentPosition);
                 }
-                catch (PathToTargetDoesntExistException exception)
+                catch (PathToTargetDoesntExistException)
                 {
                     blockedNodeOnTheWayAndCantPassIt = true;
                 }
