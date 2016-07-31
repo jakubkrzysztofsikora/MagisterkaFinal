@@ -144,6 +144,9 @@
     <Compile Include="VisualEcosystem\WindowCommands\ClearGraphCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\CommandValidator.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\CustomCommands.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ToggleEdgeLabelsCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ToggleNodeDraggingCommand.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\RelayoutGraphCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\StartPathfindingSimulationCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\TakePathfindingStepCommand.cs" />
     <Page Include="StaticResource.xaml">

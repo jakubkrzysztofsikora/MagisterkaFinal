@@ -126,8 +126,12 @@ namespace Magisterka.Domain.Adapters
 
         public void AddEdge(EdgeView edge)
         {
-            VisualMap.AddEdge(edge);
-            _logicMap.AddEdge(edge.LogicEdge);
+            if (!VisualMap.Edges.Contains(edge))
+                VisualMap.AddEdge(edge);
+
+            if (!_logicMap.GetAllEdges().Contains(edge.LogicEdge))
+                _logicMap.AddEdge(edge.LogicEdge);
+
             _graphChanged = true;
         }
 
@@ -191,8 +195,7 @@ namespace Magisterka.Domain.Adapters
                         new EdgeView(edgeAdapter.Edge, VisualMap.GetVertexByLogicNode(edgeAdapter.FromNode),
                             VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode))
                         {
-                            ID = edgeCounter++,
-                            SkipProcessing = ProcessingOptionEnum.Freeze
+                            ID = edgeCounter++
                         });
         }
 

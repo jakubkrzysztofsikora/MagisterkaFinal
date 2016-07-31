@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
-using Magisterka.Domain.ViewModels;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
@@ -103,7 +101,12 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         public IEnumerable<Edge> GetAllEdges()
         {
-            return _nodes.SelectMany(node => node.Neighbors.Values).Distinct();
+            List<Edge> edges = new List<Edge>();
+            foreach (var edge in _nodes.SelectMany(node => node.Neighbors.Values.Where(edge => DoesCollectionContainsEdgeBetweenTwoNodes(edges, edge.NodesConnected.Key, edge.NodesConnected.Value))))
+            {
+                edges.Add(edge);
+            }
+            return edges;
         }
 
         public void AddIfNotExists(Node item)
@@ -137,6 +140,18 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             AddNeighbor(edge.NodesConnected.Key, edge.NodesConnected.Value, edge);
             AddNeighbor(edge.NodesConnected.Value, edge.NodesConnected.Key, edge);
+        }
+
+        private bool DoesCollectionContainsEdgeBetweenTwoNodes(IEnumerable<Edge> edges, Node firstNode, Node secondNode)
+        {
+            var listOfEdges = edges.ToList();
+            return !listOfEdges.Any(
+                e =>
+                    e.NodesConnected.Key == firstNode &&
+                    e.NodesConnected.Value == secondNode) && !listOfEdges.Any(
+                        e =>
+                            e.NodesConnected.Value == firstNode &&
+                            e.NodesConnected.Key == secondNode);
         }
 
         private void AddNeighbor(Node node, Node neighbor, Edge edgeConnecting)

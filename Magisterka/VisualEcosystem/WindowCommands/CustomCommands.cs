@@ -16,6 +16,9 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public static ICommand ClearGraphCommand { get; set; }
         public static ICommand AddNewNodeCommand { get; set; }
         public static ICommand AddNewEdgeCommand { get; set; }
+        public static ICommand RelayoutGraphCommand { get; set; }
+        public static ICommand ToggleNodeDraggingCommand { get; set; }
+        public static ICommand ToggleEdgeLabelsCommand { get; set; }
 
         public static void InitilizeCustomCommands(MainWindow window, IMovingActor actor)
         {
@@ -24,6 +27,9 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             ClearGraphCommand = new ClearGraphCommand(window, actor);
             AddNewNodeCommand = new AddNewNodeCommand(window);
             AddNewEdgeCommand = new AddNewEdgeCommand(window);
+            RelayoutGraphCommand = new RelayoutGraphCommand(window);
+            ToggleNodeDraggingCommand = new ToggleNodeDraggingCommand(window);
+            ToggleEdgeLabelsCommand = new ToggleEdgeLabelsCommand(window);
         }
     }
 }

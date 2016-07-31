@@ -21,16 +21,20 @@ namespace Magisterka.VisualEcosystem
     {
         public event VertexSelectedEventHandler VertexRightClick;
         public event EdgeSelectedEventHandler EdgeRightClick;
+        public bool VerticlesDragging { get; set; }
+        public bool ShowVerticlesLabels { get; set; }
+        public bool ShowEdgeLabels { get; set; }
+        public bool ShowEdgeArrows { get; set; }
 
         public void InitilizeVisuals()
         {
             GenerateGraph();
             SetEdgesDashStyle(EdgeDashStyle.Dot);
             SetVerticesMathShape(VertexShape.Ellipse);
-            SetVerticesDrag(true, true);
-            ShowAllVerticesLabels(false);
-            ShowAllEdgesLabels(false);
-            ShowAllEdgesArrows(false);
+            SetVerticesDrag(VerticlesDragging, true);
+            ShowAllVerticesLabels(ShowVerticlesLabels);
+            ShowAllEdgesLabels(ShowEdgeLabels);
+            ShowAllEdgesArrows(ShowEdgeArrows);
             
             SetStateColors();
             MarkBlockedNodes();
@@ -49,8 +53,8 @@ namespace Magisterka.VisualEcosystem
                 AsyncAlgorithmCompute = true,
                 DefaultOverlapRemovalAlgorithmParams =
                 {
-                    HorizontalGap = 100,
-                    VerticalGap = 100
+                    HorizontalGap = 80,
+                    VerticalGap = 80
                 }
             };
 
@@ -72,6 +76,18 @@ namespace Magisterka.VisualEcosystem
                 (edgeControl, mouseArgs, modifierKey) =>
                     new EdgeSelectedEventArgs(edgeControl, mouseArgs, modifierKey));
             };
+        }
+
+        public void SetVerticesDrag(bool newValue)
+        {
+            SetVerticesDrag(newValue, false);
+            VerticlesDragging = newValue;
+        }
+
+        public new void ShowAllEdgesLabels(bool newValue)
+        {
+            ShowAllEdgesLabels(isEnabled: newValue);
+            ShowEdgeLabels = newValue;
         }
 
         public void RefreshGraph()

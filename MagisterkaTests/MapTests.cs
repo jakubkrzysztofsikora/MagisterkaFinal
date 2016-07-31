@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Castle.Core.Internal;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using NUnit.Framework;
@@ -118,6 +120,52 @@ namespace MagisterkaTests
             //Then
             Assert.True(defaultMap.All(node => node.IsOnTheGrid()));
             Assert.False(defaultMap.GroupBy(node => new { node.Coordinates.X, node.Coordinates.Y }).Any(group => group.Count() > 1));
+        }
+
+        [Test]
+        public void ShouldGiveOnlyOneEdgeBetweenNodes()
+        {
+            //Given
+            MapFactory factory = new MapFactory(new Random());
+
+            //When
+            Map map = factory.GenerateDefaultMap();
+
+            //Then
+            map.Select(node => node.Neighbors).ForEach(nodeNeighbors =>
+            {
+                Assert.IsTrue(
+                    nodeNeighbors.Count(
+                        neighbor =>
+                            nodeNeighbors.Count(
+                                n =>
+                                    (n.Value.NodesConnected.Key == neighbor.Value.NodesConnected.Key &&
+                                     n.Value.NodesConnected.Value == neighbor.Value.NodesConnected.Value) ||
+                                    (n.Value.NodesConnected.Value == neighbor.Value.NodesConnected.Key &&
+                                     n.Value.NodesConnected.Key == neighbor.Value.NodesConnected.Value)) > 1) == 0);
+            });
+        }
+
+        [Test]
+        public void ShouldNotReturnDuplicatedEdges()
+        {
+            //Given
+            MapFactory factory = new MapFactory(new Random());
+
+            //When
+            Map map = factory.GenerateDefaultMap();
+
+            //Then
+            List<Edge> edges = map.GetAllEdges().ToList();
+            Assert.IsFalse(
+                edges.Any(
+                    edge =>
+                        edges.Count(
+                            e =>
+                                (e.NodesConnected.Key == edge.NodesConnected.Key &&
+                                 e.NodesConnected.Value == edge.NodesConnected.Value) ||
+                                (e.NodesConnected.Value == edge.NodesConnected.Key &&
+                                 e.NodesConnected.Key == edge.NodesConnected.Value)) > 1));
         }
     }
 }

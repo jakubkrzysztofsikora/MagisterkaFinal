@@ -23,6 +23,9 @@
       <CommandBinding Command="Commands:CustomCommands.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.ClearGraphCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.AddNewNodeCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.RelayoutGraphCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.ToggleNodeDraggingCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="Commands:CustomCommands.ToggleEdgeLabelsCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="New" Executed="CreateNewGraph"></CommandBinding>
     </Window.CommandBindings>
     <Window.Resources>
@@ -92,6 +95,14 @@
                  Grid.Column="0"
                  HorizontalAlignment="Left"
                  VerticalAlignment="Top">
+        <Controls:Tile HorizontalAlignment="Left" Title="Relayout"
+                    x:Name="RelayoutTile"
+                    TiltFactor="2"
+                    Cursor="Hand"
+                    Command="Commands:CustomCommands.RelayoutGraphCommand"
+                    Width="100" Height="100" >
+          <fa:FontAwesome Icon="Refresh" FontSize="25" VerticalAlignment="Center" />
+        </Controls:Tile>
         <Controls:Tile HorizontalAlignment="Left" Title="New Node" 
                     x:Name="NewNodeTile"
                     TiltFactor="2"
@@ -104,6 +115,20 @@
                     Cursor="Hand"
                     Width="100" Height="100" >
         <fa:FontAwesome Icon="Minus" FontSize="25" VerticalAlignment="Center" />
+      </Controls:Tile>
+      <Controls:Tile x:Name="DraggingTile" HorizontalAlignment="Left" Title="Dragging" 
+                    TiltFactor="1"
+                    Cursor="Hand"
+                    Command="Commands:CustomCommands.ToggleNodeDraggingCommand"
+                    Width="100" Height="100" >
+        <fa:FontAwesome x:Name="DraggingTileIcon" Icon="Unlock" FontSize="25" VerticalAlignment="Center" />
+      </Controls:Tile>
+      <Controls:Tile x:Name="EdgeLablesTile" HorizontalAlignment="Left" Title="Edge Labels" 
+                    TiltFactor="1"
+                    Cursor="Hand"
+                    Command="Commands:CustomCommands.ToggleEdgeLabelsCommand"
+                    Width="100" Height="100" >
+        <fa:FontAwesome x:Name="EdgeLabelsTileIcon" Icon="EyeSlash" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       </WrapPanel>
       <Label x:Name="GraphPlaceholder" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource GraphPlaceholderText}"></Label>

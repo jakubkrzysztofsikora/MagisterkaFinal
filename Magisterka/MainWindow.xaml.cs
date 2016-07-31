@@ -5,6 +5,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using FontAwesome.WPF;
 using GraphX.Controls;
 using GraphX.PCL.Common.Enums;
 using Magisterka.Domain.Adapters;
@@ -60,6 +61,13 @@ namespace Magisterka
 
             CustomCommands.InitilizeCustomCommands(this, _actor);
             InitializeComponent();
+            NewNodeTile.IsEnabled = false;
+            NewEdgeTile.IsEnabled = false;
+            VisualMap.ShowEdgeArrows = false;
+            VisualMap.ShowEdgeLabels = false;
+            VisualMap.ShowVerticlesLabels = false;
+            VisualMap.VerticlesDragging = true;
+            DraggingTileIcon.Icon = VisualMap.VerticlesDragging ? FontAwesomeIcon.Unlock : FontAwesomeIcon.Lock;
         }
 
         private void InitializeEventHandlers()
@@ -97,6 +105,7 @@ namespace Magisterka
 
             if (_tileMenuEventHandler != null)
             {
+                NewNodeTile.IsEnabled = false;
                 NewNodeTile.Click -= _tileMenuEventHandler.ClickOnCreateANodeTile;
                 NewEdgeTile.Click -= _tileMenuEventHandler.ClickOnCreateAnEdgeTile;
             }
@@ -116,6 +125,8 @@ namespace Magisterka
             ProgressRing.Visibility = Visibility.Hidden;
             ProgressRing.IsActive = false;
             ZoomControl.ZoomToFill();
+            NewNodeTile.IsEnabled = true;
+            NewEdgeTile.IsEnabled = true;
         }
 
         private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory, bool shouldGraphBeEmpty = false)

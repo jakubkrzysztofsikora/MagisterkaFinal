@@ -16,7 +16,7 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 {
     public class VisualMapEventHandler
     {
-        private MapAdapter _mapAdapter;
+        private readonly MapAdapter _mapAdapter;
         private readonly IConfigurationValidator _validator;
         private readonly VisualMap _visualMap;
 
