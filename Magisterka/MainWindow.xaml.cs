@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
 using FontAwesome.WPF;
 using GraphX.Controls;
-using GraphX.PCL.Common.Enums;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.MovementSpace;
@@ -187,7 +183,6 @@ namespace Magisterka
         {
             if (Monitor?.PathDetails != null && Monitor.PerformanceResults != null)
             {
-                AlgorithmStats.Visibility = Visibility.Visible;
                 StepsTaken.Content = Monitor.PathDetails.StepsTaken;
             }
         }

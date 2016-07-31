@@ -101,77 +101,86 @@
                     x:Name="RelayoutTile"
                     Cursor="Hand"
                     Command="Commands:CustomCommands.RelayoutGraphCommand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
           <fa:FontAwesome Icon="Refresh" FontSize="25" VerticalAlignment="Center" />
         </Controls:Tile>
         <Controls:Tile HorizontalAlignment="Left" Title="{StaticResource NewNodeTile}" 
                     x:Name="NewNodeTile"
                     Cursor="Hand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
         <fa:FontAwesome Icon="Neuter" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       <Controls:Tile x:Name="NewEdgeTile" HorizontalAlignment="Left" Title="{StaticResource NewEdgeTile}" 
                     Cursor="Hand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
         <fa:FontAwesome Icon="ArrowsV" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       <Controls:Tile x:Name="DraggingTile" HorizontalAlignment="Left" Title="{StaticResource DraggingTile}" 
                     Cursor="Hand"
                     Command="Commands:CustomCommands.ToggleNodeDraggingCommand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
         <fa:FontAwesome x:Name="DraggingTileIcon" Icon="Unlock" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       <Controls:Tile x:Name="EdgeLablesTile" HorizontalAlignment="Left" Title="{StaticResource EdgeLablesTile}" 
                     Cursor="Hand"
                     Command="Commands:CustomCommands.ToggleEdgeLabelsCommand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
         <fa:FontAwesome x:Name="EdgeLabelsTileIcon" Icon="EyeSlash" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       <Controls:Tile x:Name="EdgeArrowsTile" HorizontalAlignment="Left" Title="{StaticResource EdgeArrowsTile}" 
                     Cursor="Hand"
                     Command="Commands:CustomCommands.ToggleEdgeArrowsCommand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
         <fa:FontAwesome x:Name="EdgeArrowsTileIcon" Icon="Minus" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       <Controls:Tile x:Name="GenerateExcelTile" HorizontalAlignment="Left" Title="{StaticResource GenerateExcelTile}" 
                     Cursor="Hand"
                     Command="Commands:CustomCommands.GenerateExcelRaportCommand"
-                    Width="100" Height="100" >
+                    Width="130" Height="130" >
         <fa:FontAwesome x:Name="GenerateExcelTileIcon" Icon="FileExcelOutline" FontSize="25" VerticalAlignment="Center" />
       </Controls:Tile>
       </WrapPanel>
-      <Label x:Name="GraphPlaceholder" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource GraphPlaceholderText}"></Label>
-      <Controls:ProgressRing Grid.Row="2" Grid.Column="0" x:Name="ProgressRing" IsActive="True" Visibility="Hidden"/>
-      <graphx:ZoomControl Grid.Row="2" Grid.Column="0" x:Name="ZoomControl" BorderBrush="{StaticResource WindowTitleColorBrush}" BorderThickness="1" Margin="5 5 5 5" Visibility="Hidden">
-            <VisualEcosystem:VisualMap x:Name="VisualMap" />
-       </graphx:ZoomControl>
-      <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
-        <GroupBox Header="{StaticResource PathfindingHeader}" HorizontalAlignment="Stretch" >
+      
+      <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top">
+        <GroupBox Header="{StaticResource PathfindingHeader}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5 0" >
           <StackPanel>
             <Label Content="{StaticResource SelectPathfindingAlgorithm}"></Label>
             <ComboBox
               x:Name="ChoosenAlgorithm"
-	            HorizontalAlignment="Stretch"
-	            VerticalAlignment="Top"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Style="{StaticResource ComboStyle}"
-	            ItemsSource="{Binding Source={StaticResource pathfindingAlgorithms}}" />
+              ItemsSource="{Binding Source={StaticResource pathfindingAlgorithms}}" />
 
             <Label Content="{StaticResource SelectAnimationSpeed}"></Label>
             <ComboBox
               x:Name="ChoosenAnimationSpeed"
-	            HorizontalAlignment="Stretch"
-	            VerticalAlignment="Top"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Top"
               Style="{StaticResource ComboStyle}"
-	            ItemsSource="{Binding Source={StaticResource animationSpeed}}" />
+              ItemsSource="{Binding Source={StaticResource animationSpeed}}" />
           </StackPanel>
-	      </GroupBox>
-        <GroupBox x:Name="AlgorithmStats" Header="{StaticResource StatsHeader}" HorizontalAlignment="Stretch" Visibility="Hidden">
+        </GroupBox>
+      </StackPanel>
+      
+      <Label x:Name="GraphPlaceholder" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource GraphPlaceholderText}"></Label>
+      <Controls:ProgressRing Grid.Row="2" Grid.Column="0" x:Name="ProgressRing" IsActive="True" Visibility="Hidden"/>
+      <graphx:ZoomControl Grid.Row="2" Grid.Column="0" x:Name="ZoomControl" Visibility="Hidden">
+            <VisualEcosystem:VisualMap x:Name="VisualMap" />
+       </graphx:ZoomControl>
+      <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" Margin="5 0">
+        <GroupBox x:Name="AlgorithmStatsPath" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
           <StackPanel>
             <Label Style="{StaticResource HeaderLabel}" Content="{StaticResource PathDetailsHeader}"></Label>
             <Label Content="{StaticResource StepsTaken}"></Label>
             <Label x:Name="StepsTaken"></Label>
           </StackPanel>
 	      </GroupBox>
+        <GroupBox x:Name="AlgorithmStatsPerformance" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
+          <StackPanel>
+            <Label Style="{StaticResource HeaderLabel}" Content="{StaticResource PerformanceDetailsHeader}"></Label>
+          </StackPanel>
+        </GroupBox>
       </StackPanel>
     </Grid>
 </Controls:MetroWindow>

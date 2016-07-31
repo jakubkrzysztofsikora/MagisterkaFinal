@@ -22,16 +22,17 @@
   <system:String x:Key="SelectPathfindingAlgorithm">Select Pathfinding Algorithm</system:String>
   <system:String x:Key="SelectAnimationSpeed">Select Animation Speed</system:String>
   <system:String x:Key="StepsTaken">Number of Steps Taken</system:String>
-  <system:String x:Key="PathDetailsHeader">Path Statistics</system:String>
+  <system:String x:Key="PathDetailsHeader">Quality Statistics</system:String>
+  <system:String x:Key="PerformanceDetailsHeader">Performance Statistics</system:String>
 
   <!-- Tiles Titles -->
   <system:String x:Key="NewNodeTile">New Node</system:String>
   <system:String x:Key="RelayoutTile">Relayout</system:String>
   <system:String x:Key="NewEdgeTile">New Edge</system:String>
-  <system:String x:Key="DraggingTile">Dragging</system:String>
-  <system:String x:Key="EdgeLablesTile">Edge Label</system:String>
-  <system:String x:Key="EdgeArrowsTile">Edge Arrow</system:String>
-  <system:String x:Key="GenerateExcelTile">Raport</system:String>
+  <system:String x:Key="DraggingTile">Node Dragging</system:String>
+  <system:String x:Key="EdgeLablesTile">Edge Labels</system:String>
+  <system:String x:Key="EdgeArrowsTile">Edge Arrows</system:String>
+  <system:String x:Key="GenerateExcelTile">Excel Raport</system:String>
 
   <!-- Raport strings-->
   <system:String x:Key="RaportHeaderTitle">Results</system:String>
@@ -55,7 +56,8 @@
   <system:String x:Key="ChangeEdgeCostContent">Edge Cost</system:String>
   
   <Color x:Key="LabelBackgroundColor">White</Color>
-  
+
+  <SolidColorBrush x:Key="MapBackground">#F0F0F0</SolidColorBrush>
   <Color x:Key="BlockedNodeColor">Firebrick</Color>
   <Color x:Key="OtherNodeColor">LightSkyBlue</Color>
   <Color x:Key="VisitedNodeColor">SteelBlue</Color>
