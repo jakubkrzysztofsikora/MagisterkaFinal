@@ -10,6 +10,7 @@ using Magisterka.Infrastructure.AppSettings;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.StaticResources;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
@@ -24,6 +25,7 @@ namespace Magisterka.DependencyInjection
             var builder = new ContainerBuilder();
 
             builder.RegisterType<MainWindow>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<MainWindowViewModel>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<AppSettings>().As<IAppSettings>().InstancePerLifetimeScope();
             builder.RegisterType<ErrorDisplayer>().As<IErrorDisplayer>().InstancePerLifetimeScope();
             builder.RegisterType<ConfigurationValidator>().As<IConfigurationValidator>().InstancePerLifetimeScope();

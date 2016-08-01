@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using Castle.Core.Internal;
 using GraphX.Controls;
@@ -45,6 +46,10 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         {
             var enumParams = parameter as object[];
             _validator.ValidateConfiguration(_mapAdapter, enumParams);
+            _applicationWindow.PathStatsPlaceholder.Visibility = Visibility.Collapsed;
+            _applicationWindow.PathStatsPanel.Visibility = Visibility.Visible;
+            _applicationWindow.PerformanceStatsPlaceholder.Visibility = Visibility.Collapsed;
+            _applicationWindow.PerformanceStatsPanel.Visibility = Visibility.Visible;
             
             var algorithm = (ePathfindingAlgorithms)enumParams[0];
             var animationSpeed = (eAnimationSpeed)enumParams[1];

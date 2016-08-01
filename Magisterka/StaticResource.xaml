@@ -24,6 +24,9 @@
   <system:String x:Key="StepsTaken">Number of Steps Taken</system:String>
   <system:String x:Key="PathDetailsHeader">Quality Statistics</system:String>
   <system:String x:Key="PerformanceDetailsHeader">Performance Statistics</system:String>
+  <system:String x:Key="PathStatsPlaceholderText">Path Details...</system:String>
+  <system:String x:Key="PerformanceStatsPlaceholderText">Performance Details...</system:String>
+
 
   <!-- Tiles Titles -->
   <system:String x:Key="NewNodeTile">New Node</system:String>

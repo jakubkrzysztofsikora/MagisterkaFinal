@@ -12,6 +12,7 @@ using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.ViewModels;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
@@ -29,8 +30,6 @@ namespace Magisterka
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        public IAlgorithmMonitor Monitor { get; private set; }
-
         private readonly IMovingActor _actor;
         private readonly Random _randomizer;
         private readonly IErrorDisplayer _errorDisplayer;
@@ -42,16 +41,17 @@ namespace Magisterka
         private TileMenuEventHandler _tileMenuEventHandler;
         private VisualMapEventHandler _visualMapEventHandler;
         private MapAdapter _mapAdapter;
+        private MainWindowViewModel _viewModel;
 
         public MainWindow(IErrorDisplayer errorDisplayer, 
                           IConfigurationValidator validator,
                           IMapFactory mapFactory,
                           IPathfinderFactory pathfinderFactory,
                           IMovingActor actor,
-                          IAlgorithmMonitor monitor,
                           IRaportGenerator raportGenerator,
                           IRaportStringContainerContract raportStringContent,
-                          Random randomizer)
+                          Random randomizer, 
+                          MainWindowViewModel viewModel)
         {
             _errorDisplayer = errorDisplayer;
             _validator = validator;
@@ -59,12 +59,15 @@ namespace Magisterka
             _pathfinderFactory = pathfinderFactory;
             _actor = actor;
             _randomizer = randomizer;
+            _viewModel = viewModel;
             _raportStringContent = raportStringContent;
             _raportGenerator = raportGenerator;
-            Monitor = monitor;
+            _viewModel = viewModel;
 
-            CustomCommands.InitilizeCustomCommands(this, _actor, Monitor, _raportGenerator, _raportStringContent);
+            CustomCommands.InitilizeCustomCommands(this, _actor, _viewModel.AlgorithmMonitor, _raportGenerator, _raportStringContent);
             InitializeComponent();
+
+            DataContext = _viewModel;
             NewNodeTile.IsEnabled = false;
             NewEdgeTile.IsEnabled = false;
             VisualMap.ShowEdgeArrows = false;
@@ -179,14 +182,6 @@ namespace Magisterka
             _visualMapEventHandler.DeleteNode(sender, e);
         }
 
-        private void DisplayAlgorithmMonitor()
-        {
-            if (Monitor?.PathDetails != null && Monitor.PerformanceResults != null)
-            {
-                StepsTaken.Content = Monitor.PathDetails.StepsTaken;
-            }
-        }
-
         private void ChangeCost(object sender, RoutedEventArgs e)
         {
             EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
@@ -226,10 +221,6 @@ namespace Magisterka
             catch (Exception exception)
             {
                 _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
-            }
-            finally
-            {
-                DisplayAlgorithmMonitor();
             }
         }
 

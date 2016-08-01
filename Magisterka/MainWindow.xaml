@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:graphx="http://schemas.panthernet.ru/graphx/"
+        xmlns:ViewModels="clr-namespace:Magisterka.ViewModels"
         xmlns:Commands="clr-namespace:Magisterka.VisualEcosystem.WindowCommands"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:VisualEcosystem="clr-namespace:Magisterka.VisualEcosystem"
@@ -17,7 +18,7 @@
         Icon="Images\graph.ico"
         ShowIconOnTitleBar="True"
         ShowTitleBar="True"
-        Title="Graph Pathfinder">
+        Title="Graph Pathfinder" d:DataContext="{d:DesignInstance ViewModels:MainWindowViewModel}">
     <Window.CommandBindings>
       <CommandBinding Command="Commands:CustomCommands.TakePathfindingStepCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="Commands:CustomCommands.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
@@ -171,14 +172,78 @@
       <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" Margin="5 0">
         <GroupBox x:Name="AlgorithmStatsPath" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
           <StackPanel>
-            <Label Style="{StaticResource HeaderLabel}" Content="{StaticResource PathDetailsHeader}"></Label>
-            <Label Content="{StaticResource StepsTaken}"></Label>
-            <Label x:Name="StepsTaken"></Label>
+            <Label x:Name="PathStatsPlaceholder" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PathStatsPlaceholderText}"></Label>
+            <StackPanel x:Name="PathStatsPanel" Visibility="Collapsed">
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportNumberOfSteps}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PathDetails.StepsTaken"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportLengthOfPath}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PathDetails.PathLengthInEdgeCost"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <DataGrid ItemsSource="{Binding AlgorithmMonitor.PathDetails.NumberOfVisitsPerNode}" AutoGenerateColumns="False" Style="{StaticResource AzureDataGrid}">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="{StaticResource RaportNodeName}" Binding="{Binding Key.Name}"></DataGridTextColumn>
+                  <DataGridTextColumn Header="{StaticResource RaportNodeVisits}" Binding="{Binding Value}"></DataGridTextColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </StackPanel>
           </StackPanel>
 	      </GroupBox>
         <GroupBox x:Name="AlgorithmStatsPerformance" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
           <StackPanel>
-            <Label Style="{StaticResource HeaderLabel}" Content="{StaticResource PerformanceDetailsHeader}"></Label>
+            <Label x:Name="PerformanceStatsPlaceholder" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PerformanceStatsPlaceholderText}"></Label>
+            <StackPanel x:Name="PerformanceStatsPanel" Visibility="Collapsed">
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportTimeOfComputing}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PerformanceResults.TimeOfComputing.TotalMilliseconds"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportPeakMemoryUsage}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PerformanceResults.PeakMemoryUsageInBytes"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportAverageMemoryUsage}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PerformanceResults.AverageMemoryUsageInBytes"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportPeakProcessorUsage}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PerformanceResults.PeakProcessorUsageInPercents"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+              <TextBlock>
+                <TextBlock.Text>
+                  <MultiBinding StringFormat=" {0}: {1} ">
+                    <Binding Source="{StaticResource RaportAverageProcessorUsage}"></Binding>
+                    <Binding Path="AlgorithmMonitor.PerformanceResults.AverageProcessorUsageInPercents"></Binding>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+            </StackPanel>
           </StackPanel>
         </GroupBox>
       </StackPanel>

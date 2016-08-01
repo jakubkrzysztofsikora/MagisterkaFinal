@@ -44,7 +44,10 @@ namespace Magisterka.Domain.Adapters
 
         public IEnumerable<NodeView> StartPathfindingAllRoute(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {
-            _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            if (_graphChanged)
+                _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+
+
             var logicPath = _pathfinder.GetOptimalPath(_logicMap, currentNode.LogicNode.Coordinates, _graphChanged);
             _graphChanged = false;
 
@@ -223,11 +226,13 @@ namespace Magisterka.Domain.Adapters
         public void SetAsBlockedNode(NodeView node)
         {
             node.LogicNode.IsBlocked = true;
+            _graphChanged = true;
         }
 
         public void SetAsUnblocked(NodeView node)
         {
             node.LogicNode.IsBlocked = false;
+            _graphChanged = true;
         }
     }
 }

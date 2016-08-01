@@ -1,10 +1,11 @@
-﻿using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+﻿using System.ComponentModel;
+using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
 
 namespace Magisterka.Domain.Monitoring
 {
-    public interface IAlgorithmMonitor
+    public interface IAlgorithmMonitor : INotifyPropertyChanged
     {
         PathDetails PathDetails { get; set; }
         PerformanceResults PerformanceResults { get; set; }

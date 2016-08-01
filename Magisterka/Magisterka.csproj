@@ -121,6 +121,7 @@
     </ApplicationDefinition>
     <Compile Include="DependencyInjection\DependencyProviderConfiguration.cs" />
     <Compile Include="StaticResources\RaportStringContainer.cs" />
+    <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\IAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\PathAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\eAnimationSpeed.cs" />
