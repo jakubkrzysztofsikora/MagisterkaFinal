@@ -16,4 +16,4 @@ The project is more about me to practice programming skills, framework/theoretic
 
 And of course I won't mind getting a master degree thanks to that.
 
-### Feel free to comment my work, any constructive comment is very valuable for me.
+### Feel free to comment my work, any constructive comment is very valuable to me.
