@@ -5,6 +5,7 @@ using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
+using Magisterka.Domain.Utilities;
 using NUnit.Framework;
 
 namespace MagisterkaTests
@@ -20,7 +21,7 @@ namespace MagisterkaTests
         [OneTimeSetUp]
         public void Init()
         {
-            _mapFactory = new MapFactory(new Random());
+            _mapFactory = new MapFactory(new DefaultRandomGenerator());
             _startingPosition = new Position(Guid.NewGuid());
             _endingPosition = new Position(Guid.NewGuid());
 

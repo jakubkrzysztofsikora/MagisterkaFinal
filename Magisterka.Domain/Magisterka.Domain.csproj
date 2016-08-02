@@ -111,6 +111,8 @@
     <Compile Include="Monitoring\Performance\PerformanceResults.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DefaultRandomGenerator.cs" />
+    <Compile Include="Utilities\IRandomGenerator.cs" />
     <Compile Include="ViewModels\EdgeView.cs" />
     <Compile Include="ViewModels\eVertexState.cs" />
     <Compile Include="ViewModels\MapView.cs" />

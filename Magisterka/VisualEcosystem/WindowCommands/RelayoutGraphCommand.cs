@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Windows.Input;
+using Magisterka.ViewModels;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class RelayoutGraphCommand : RoutedUICommand, ICommand
     {
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
-        public RelayoutGraphCommand(MainWindow window)
+        public RelayoutGraphCommand(MainWindowViewModel window)
         {
             _window = window;
         }

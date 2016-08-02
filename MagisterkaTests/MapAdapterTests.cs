@@ -9,6 +9,7 @@ using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
+using Magisterka.Domain.Utilities;
 using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace MagisterkaTests
         public void ShouldDeleteANodeOnBothMaps()
         {
             //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
             MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView nodeToDelete = mapAdapter.VisualMap.GetVertexByLogicNode(logicMap.First());
@@ -40,7 +41,7 @@ namespace MagisterkaTests
         public void ShouldDeleteAnEdgeOnBothMaps()
         {
             //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
             MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             EdgeView edgeToDelete = mapAdapter.VisualMap.GetAllEdges(mapAdapter.VisualMap.Vertices.First()).First();
@@ -58,7 +59,7 @@ namespace MagisterkaTests
         public void ShouldAddANodeToBothMaps()
         {
             //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
             MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView node = new NodeView
@@ -77,7 +78,7 @@ namespace MagisterkaTests
         public void ShouldAddAnEdgeToBothMaps()
         {
             //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
             MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView node1 = new NodeView

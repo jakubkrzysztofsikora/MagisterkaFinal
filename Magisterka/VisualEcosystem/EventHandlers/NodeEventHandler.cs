@@ -6,6 +6,7 @@ using GraphX.Controls.Models;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls;
@@ -14,6 +15,7 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 {
     public class NodeEventHandler
     {
+        public static MainWindowViewModel MainWindowViewModel { get; set; }
         public static string NameOfNodeContextMenu { get; set; }
         public static string NameOfSetAsBlocked { get; set; }
         public static string NameOfSetAsUnblocked { get; set; }
@@ -50,8 +52,8 @@ namespace Magisterka.VisualEcosystem.EventHandlers
                 {
                     NewEdgeAdapter.ToNode = e.VertexControl.GetNodeView().LogicNode;
 
-                    if (CustomCommands.AddNewEdgeCommand.CanExecute(NewEdgeAdapter))
-                        CustomCommands.AddNewEdgeCommand.Execute(NewEdgeAdapter);
+                    if (MainWindowViewModel.AddNewEdgeCommand.CanExecute(NewEdgeAdapter))
+                        MainWindowViewModel.AddNewEdgeCommand.Execute(NewEdgeAdapter);
                     StopNewEdgeProcess();
                 }
             }

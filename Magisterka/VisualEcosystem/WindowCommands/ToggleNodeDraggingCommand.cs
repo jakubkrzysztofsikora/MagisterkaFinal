@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using FontAwesome.WPF;
+using Magisterka.ViewModels;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class ToggleNodeDraggingCommand : RoutedUICommand, ICommand
     {
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
-        public ToggleNodeDraggingCommand(MainWindow window)
+        public ToggleNodeDraggingCommand(MainWindowViewModel window)
         {
             _window = window;
         }
@@ -25,7 +26,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public void Execute(object parameter)
         {
             _window.VisualMap.SetVerticesDrag(!_window.VisualMap.VerticlesDragging);
-            _window.DraggingTileIcon.Icon = _window.VisualMap.VerticlesDragging ? FontAwesomeIcon.Unlock : FontAwesomeIcon.Lock;
+            _window.SetDefaultIcons();
         }
     }
 }

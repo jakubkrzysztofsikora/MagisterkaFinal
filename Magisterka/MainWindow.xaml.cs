@@ -1,27 +1,18 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using FontAwesome.WPF;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
-using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
-using Magisterka.Domain.Monitoring;
+using Magisterka.Domain.Utilities;
 using Magisterka.Domain.ViewModels;
-using Magisterka.Infrastructure.RaportGenerating;
-using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.ViewModels;
-using Magisterka.VisualEcosystem.Animation;
-using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.InputModals;
 using Magisterka.VisualEcosystem.Validators;
-using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls;
-using FontAwesome = FontAwesome.WPF.FontAwesome;
 
 namespace Magisterka
 {
@@ -30,156 +21,92 @@ namespace Magisterka
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private readonly IMovingActor _actor;
-        private readonly Random _randomizer;
-        private readonly IErrorDisplayer _errorDisplayer;
+        private readonly IRandomGenerator _randomizer;
         private readonly IConfigurationValidator _validator;
         private readonly IMapFactory _mapFactory;
         private readonly IPathfinderFactory _pathfinderFactory;
-        private readonly IRaportGenerator _raportGenerator;
-        private readonly IRaportStringContainerContract _raportStringContent;
-        private TileMenuEventHandler _tileMenuEventHandler;
-        private VisualMapEventHandler _visualMapEventHandler;
-        private MapAdapter _mapAdapter;
-        private MainWindowViewModel _viewModel;
 
-        public MainWindow(IErrorDisplayer errorDisplayer, 
-                          IConfigurationValidator validator,
+        private readonly MainWindowViewModel _viewModel;
+
+        public MainWindow(IConfigurationValidator validator,
                           IMapFactory mapFactory,
                           IPathfinderFactory pathfinderFactory,
-                          IMovingActor actor,
-                          IRaportGenerator raportGenerator,
-                          IRaportStringContainerContract raportStringContent,
-                          Random randomizer, 
+                          IRandomGenerator randomizer,
                           MainWindowViewModel viewModel)
         {
-            _errorDisplayer = errorDisplayer;
             _validator = validator;
             _mapFactory = mapFactory;
             _pathfinderFactory = pathfinderFactory;
-            _actor = actor;
             _randomizer = randomizer;
             _viewModel = viewModel;
-            _raportStringContent = raportStringContent;
-            _raportGenerator = raportGenerator;
-            _viewModel = viewModel;
-
-            CustomCommands.InitilizeCustomCommands(this, _actor, _viewModel.AlgorithmMonitor, _raportGenerator, _raportStringContent);
+            
             InitializeComponent();
-
+            _viewModel.VisualMap = VisualMap;
+            _viewModel.ZoomControl = ZoomControl;
+            
             DataContext = _viewModel;
-            NewNodeTile.IsEnabled = false;
-            NewEdgeTile.IsEnabled = false;
-            VisualMap.ShowEdgeArrows = false;
-            VisualMap.ShowEdgeLabels = false;
-            VisualMap.ShowVerticlesLabels = false;
-            VisualMap.VerticlesDragging = true;
-            DraggingTileIcon.Icon = VisualMap.VerticlesDragging ? FontAwesomeIcon.Unlock : FontAwesomeIcon.Lock;
-            EdgeLabelsTileIcon.Icon = VisualMap.ShowEdgeLabels ? FontAwesomeIcon.Eye : FontAwesomeIcon.EyeSlash;
-            EdgeArrowsTileIcon.Icon = VisualMap.ShowEdgeArrows ? FontAwesomeIcon.Exchange : FontAwesomeIcon.Minus;
+            _viewModel.VisualMap.ShowEdgeArrows = false;
+            _viewModel.VisualMap.ShowEdgeLabels = false;
+            _viewModel.VisualMap.ShowVerticlesLabels = false;
+            _viewModel.VisualMap.VerticlesDragging = true;
+            _viewModel.SetDefaultIcons();
         }
 
         private void InitializeEventHandlers()
         {
-            NodeEventHandler.NameOfNodeContextMenu = "NodeContextMenu";
-            NodeEventHandler.NameOfSetAsBlocked = "SetAsBlocked";
-            NodeEventHandler.NameOfSetAsUnblocked = "SetAsUnblocked";
-
-            VisualMap.VertexMouseEnter += NodeEventHandler.OnNodeHoverIn;
-            VisualMap.VertexMouseLeave += NodeEventHandler.OnNodeHoverOut;
-            VisualMap.VertexRightClick += NodeEventHandler.OnNodeRightClick;
-            VisualMap.VertexMouseUp += NodeEventHandler.OnNodeMouseDown;
-
-            VisualMap.EdgeMouseEnter += EdgeEventHandler.OnEdgeHoverIn;
-            VisualMap.EdgeMouseLeave += EdgeEventHandler.OnEdgeHoverOut;
-            VisualMap.EdgeRightClick += EdgeEventHandler.OnEdgeRightClick;
-
-            VisualMap.GenerateGraphFinished += (eAnimationSpeed, args) => LoadingOff();
-
-            NewNodeTile.Click += _tileMenuEventHandler.ClickOnCreateANodeTile;
-            NewEdgeTile.Click += _tileMenuEventHandler.ClickOnCreateAnEdgeTile;
-            SizeChanged += (e,args) => ZoomControl.ZoomToFill();
+            _viewModel.InitializeEventHandlers();
+            NewNodeTile.Click += _viewModel.TileMenuEventHandler.ClickOnCreateANodeTile;
+            NewEdgeTile.Click += _viewModel.TileMenuEventHandler.ClickOnCreateAnEdgeTile;
+            SizeChanged += (e,args) => _viewModel.ZoomControl.ZoomToFill();
         }
 
         private void UnsuscribeFromEvents()
         {
-            VisualMap.VertexMouseEnter -= NodeEventHandler.OnNodeHoverIn;
-            VisualMap.VertexMouseLeave -= NodeEventHandler.OnNodeHoverOut;
-            VisualMap.VertexRightClick -= NodeEventHandler.OnNodeRightClick;
-            VisualMap.VertexMouseUp -= NodeEventHandler.OnNodeMouseDown;
-
-            VisualMap.EdgeMouseEnter -= EdgeEventHandler.OnEdgeHoverIn;
-            VisualMap.EdgeMouseLeave -= EdgeEventHandler.OnEdgeHoverOut;
-            VisualMap.EdgeRightClick -= EdgeEventHandler.OnEdgeRightClick;
-
-            if (_tileMenuEventHandler != null)
+            _viewModel.UnsuscribeFromEvents();
+            if (_viewModel.TileMenuEventHandler != null)
             {
-                NewNodeTile.IsEnabled = false;
-                NewNodeTile.Click -= _tileMenuEventHandler.ClickOnCreateANodeTile;
-                NewEdgeTile.Click -= _tileMenuEventHandler.ClickOnCreateAnEdgeTile;
+                NewNodeTile.Click -= _viewModel.TileMenuEventHandler.ClickOnCreateANodeTile;
+                NewEdgeTile.Click -= _viewModel.TileMenuEventHandler.ClickOnCreateAnEdgeTile;
             }
         }
 
-        private void LoadingOn()
-        {
-            ZoomControl.Visibility = Visibility.Hidden;
-            GraphPlaceholder.Visibility = Visibility.Hidden;
-            ProgressRing.Visibility = Visibility.Visible;
-            ProgressRing.IsActive = true;
-        }
-
-        private void LoadingOff()
-        {
-            ZoomControl.Visibility = Visibility.Visible;
-            ProgressRing.Visibility = Visibility.Hidden;
-            ProgressRing.IsActive = false;
-            ZoomControl.ZoomToFill();
-            NewNodeTile.IsEnabled = true;
-            NewEdgeTile.IsEnabled = true;
-        }
-
-        private void CreateAllLayersOfGraph(IMapFactory mapFactory, Random randomizer, IPathfinderFactory pathfinderFactory, bool shouldGraphBeEmpty = false)
+        private void CreateAllLayersOfGraph(IMapFactory mapFactory, IRandomGenerator randomizer, IPathfinderFactory pathfinderFactory, bool shouldGraphBeEmpty = false)
         {
             var map = (shouldGraphBeEmpty ? mapFactory.GenerateMap(0, 5) : mapFactory.GenerateDefaultMap())
                 .WithGridPositions()
                 .WithRandomBlockedNodes(randomizer);
-            _mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory, mapFactory);
-            _tileMenuEventHandler = new TileMenuEventHandler(_mapAdapter);
-            _visualMapEventHandler = new VisualMapEventHandler(_mapAdapter, _validator, VisualMap);
+            _viewModel.MapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(map, pathfinderFactory, mapFactory);
+            _viewModel.TileMenuEventHandler = new TileMenuEventHandler(_viewModel.MapAdapter)
+            {
+                MainWindowViewModel = _viewModel
+            };
+            _viewModel.VisualMapEventHandler = new VisualMapEventHandler(_viewModel.MapAdapter, _validator, _viewModel.VisualMap);
         }
 
         private void GenerateAGraph(object sender, RoutedEventArgs e)
         {
-            LoadingOn();
-            RemoveAnyExistingGraphElements();
+            _viewModel.LoadingOn();
+            _viewModel.RemoveAnyExistingGraphElements();
             UnsuscribeFromEvents();
             CreateAllLayersOfGraph(_mapFactory, _randomizer, _pathfinderFactory);
-            VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
-            VisualMap.InitilizeVisuals();
+            _viewModel.VisualMap.InitilizeLogicCore(_viewModel.MapAdapter.VisualMap);
+            _viewModel.VisualMap.InitilizeVisuals();
             InitializeEventHandlers();
-            VisualMap.InitializeGraphElementsEventHandlers();
-        }
-
-        private void RemoveAnyExistingGraphElements()
-        {
-            _mapAdapter?.DeleteGraphData();
-            VisualMap.RemoveAllVertices();
-            VisualMap.RemoveAllEdges();
         }
 
         private void SetStartingPoint(object sender, RoutedEventArgs e)
         {
-            _visualMapEventHandler.SetStartingPoint(sender, e);
+            _viewModel.VisualMapEventHandler.SetStartingPoint(sender, e);
         }
 
         private void SetTargetPoint(object sender, RoutedEventArgs e)
         {
-            _visualMapEventHandler.SetTargetPoint(sender, e);
+            _viewModel.VisualMapEventHandler.SetTargetPoint(sender, e);
         }
 
         private void DeleteNode(object sender, RoutedEventArgs e)
         {
-            _visualMapEventHandler.DeleteNode(sender, e);
+            _viewModel.VisualMapEventHandler.DeleteNode(sender, e);
         }
 
         private void ChangeCost(object sender, RoutedEventArgs e)
@@ -191,59 +118,43 @@ namespace Magisterka
             bool? answered = modal.ShowDialog();
 
             if (answered != null && answered.Value == true)
-                _mapAdapter.ChangeCost(edge, modal.Answer);
+                _viewModel.MapAdapter.ChangeCost(edge, modal.Answer);
         }
 
         private void DeleteEdge(object sender, RoutedEventArgs eventArgs)
         {
-            _visualMapEventHandler.DeleteEdge(sender, eventArgs);
-        }
-
-        private void CustomCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = e.Command.CanExecute(_mapAdapter);
-        }
-
-        private void CustomCommandExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            try
-            {
-                e.Command.Execute(new object[]
-                {
-                    (ePathfindingAlgorithms) ChoosenAlgorithm.SelectedValue,
-                    (eAnimationSpeed) ChoosenAnimationSpeed.SelectedValue
-                });
-            }
-            catch (DomainException exception)
-            {
-                _errorDisplayer.DisplayError(exception.ErrorType, exception.Message);
-            }
-            catch (Exception exception)
-            {
-                _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
-            }
+            _viewModel.VisualMapEventHandler.DeleteEdge(sender, eventArgs);
         }
 
         private void CreateNewGraph(object sender, ExecutedRoutedEventArgs e)
         {
-            LoadingOn();
-            RemoveAnyExistingGraphElements();
+            _viewModel.LoadingOn();
+            _viewModel.RemoveAnyExistingGraphElements();
             UnsuscribeFromEvents();
             CreateAllLayersOfGraph(_mapFactory, _randomizer, _pathfinderFactory, true);
-            VisualMap.InitilizeLogicCore(_mapAdapter.VisualMap);
-            VisualMap.InitilizeVisuals();
+            _viewModel.VisualMap.InitilizeLogicCore(_viewModel.MapAdapter.VisualMap);
+            _viewModel.VisualMap.InitilizeVisuals();
             InitializeEventHandlers();
-            VisualMap.InitializeGraphElementsEventHandlers();
         }
 
         private void SetBlockedNode(object sender, RoutedEventArgs e)
         {
-            _visualMapEventHandler.SetBlockedNode(sender, e);
+            _viewModel.VisualMapEventHandler.SetBlockedNode(sender, e);
         }
 
         private void SetUnBlockedNode(object sender, RoutedEventArgs e)
         {
-            _visualMapEventHandler.SetUnblockedNode(sender, e);
+            _viewModel.VisualMapEventHandler.SetUnblockedNode(sender, e);
+        }
+
+        private void CustomCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            _viewModel.CustomCommandCanExecute(sender, e);
+        }
+
+        private void CustomCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            _viewModel.CustomCommandExecuted(sender, e);
         }
     }
 }

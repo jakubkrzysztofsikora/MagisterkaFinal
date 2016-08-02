@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Utilities;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
@@ -15,9 +16,9 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
         private const string NodeNamePrefix = "Node";
 
-        private readonly Random _randomizer;
+        private readonly IRandomGenerator _randomizer;
 
-        public MapFactory(Random randomizer)
+        public MapFactory(IRandomGenerator randomizer)
         {
             _randomizer = randomizer;
         }
@@ -71,7 +72,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             foreach (var node in map)
             {
-                var numberOfNeighbors = _randomizer.Next(MinNeighborNumber, maxNumberOfNeighbors);
+                var numberOfNeighbors = _randomizer.GenerateNumberOfNeighbors(MinNeighborNumber, maxNumberOfNeighbors);
                 var newNeighbors =
                     map.Where(
                         otherNode =>
@@ -81,7 +82,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
 
                 node.Neighbors = newNeighbors.ToDictionary(x => x, x => new Edge
                 {
-                    Cost = _randomizer.Next(MinEdgeCost, MaxEdgeCost),
+                    Cost = _randomizer.GenerateEdgeCost(MinEdgeCost, MaxEdgeCost),
                     NodesConnected = new KeyValuePair<Node, Node>(node, x)
                 });
 

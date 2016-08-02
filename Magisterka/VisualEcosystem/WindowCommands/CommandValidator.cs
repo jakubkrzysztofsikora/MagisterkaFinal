@@ -5,7 +5,7 @@ using Magisterka.VisualEcosystem.Animation;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
-    public class CommandValidator
+    public class CommandValidator : ICommandValidator
     {
         public void ValidateConfiguration(MapAdapter mapAdapter, object[] enumParams)
         {

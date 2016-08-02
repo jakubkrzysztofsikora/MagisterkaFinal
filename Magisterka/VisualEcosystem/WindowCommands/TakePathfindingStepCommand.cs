@@ -1,9 +1,9 @@
 ﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
-using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.Extensions;
@@ -13,13 +13,13 @@ namespace Magisterka.VisualEcosystem.WindowCommands
     public class TakePathfindingStepCommand : RoutedUICommand,ICommand
     {
         private MapAdapter _mapAdapter;
-        private readonly MainWindow _applicationWindow;
+        private readonly MainWindowViewModel _applicationWindow;
         private readonly IMovingActor _animatingActor;
-        private readonly CommandValidator _validator;
+        private readonly ICommandValidator _validator;
 
-        public TakePathfindingStepCommand(MainWindow applicationWindow, 
+        public TakePathfindingStepCommand(MainWindowViewModel applicationWindow, 
             IMovingActor animatingActor, 
-            CommandValidator validator) 
+            ICommandValidator validator) 
             : base("Take pathfinding step", "TakePathfindingStep", typeof(TakePathfindingStepCommand), new InputGestureCollection
         {
             new KeyGesture(Key.F5, ModifierKeys.None)

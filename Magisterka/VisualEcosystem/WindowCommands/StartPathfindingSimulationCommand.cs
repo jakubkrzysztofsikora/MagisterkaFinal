@@ -10,6 +10,7 @@ using GraphX.Controls;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.Extensions;
@@ -19,13 +20,13 @@ namespace Magisterka.VisualEcosystem.WindowCommands
     public class StartPathfindingSimulationCommand : RoutedUICommand, ICommand
     {
         private MapAdapter _mapAdapter;
-        private readonly MainWindow _applicationWindow;
+        private readonly MainWindowViewModel _applicationWindow;
         private readonly IMovingActor _animatingActor;
-        private readonly CommandValidator _validator;
+        private readonly ICommandValidator _validator;
 
-        public StartPathfindingSimulationCommand(MainWindow applicationWindow,
+        public StartPathfindingSimulationCommand(MainWindowViewModel applicationWindow,
             IMovingActor animatingActor,
-            CommandValidator validator)
+            ICommandValidator validator)
             : base("Start pathfinding simulation", "StartPathfindingSimulation", typeof(TakePathfindingStepCommand), new InputGestureCollection
         {
             new KeyGesture(Key.F5, ModifierKeys.Control)
@@ -39,17 +40,14 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         {
             var adapter = mapAdapter as MapAdapter;
             _mapAdapter = adapter;
-            return CustomCommands.TakePathfindingStepCommand.CanExecute(mapAdapter);
+            return _applicationWindow.VisualMap != null && _applicationWindow.VisualMap.IsLoaded && _mapAdapter != null && _mapAdapter.CanStartPathfinding();
         }
 
         public void Execute(object parameter)
         {
             var enumParams = parameter as object[];
             _validator.ValidateConfiguration(_mapAdapter, enumParams);
-            _applicationWindow.PathStatsPlaceholder.Visibility = Visibility.Collapsed;
-            _applicationWindow.PathStatsPanel.Visibility = Visibility.Visible;
-            _applicationWindow.PerformanceStatsPlaceholder.Visibility = Visibility.Collapsed;
-            _applicationWindow.PerformanceStatsPanel.Visibility = Visibility.Visible;
+            _applicationWindow.DisplayAlgorithmMonitor();
             
             var algorithm = (ePathfindingAlgorithms)enumParams[0];
             var animationSpeed = (eAnimationSpeed)enumParams[1];

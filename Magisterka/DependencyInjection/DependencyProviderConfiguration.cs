@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection;
 using Autofac;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
@@ -6,6 +7,7 @@ using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
+using Magisterka.Domain.Utilities;
 using Magisterka.Infrastructure.AppSettings;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
@@ -15,6 +17,7 @@ using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Validators;
+using Magisterka.VisualEcosystem.WindowCommands;
 
 namespace Magisterka.DependencyInjection
 {
@@ -29,12 +32,14 @@ namespace Magisterka.DependencyInjection
             builder.RegisterType<AppSettings>().As<IAppSettings>().InstancePerLifetimeScope();
             builder.RegisterType<ErrorDisplayer>().As<IErrorDisplayer>().InstancePerLifetimeScope();
             builder.RegisterType<ConfigurationValidator>().As<IConfigurationValidator>().InstancePerLifetimeScope();
-            builder.RegisterType<Random>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultRandomGenerator>().As<IRandomGenerator>().InstancePerLifetimeScope();
             builder.RegisterType<MapFactory>().As<IMapFactory>().InstancePerLifetimeScope();
             builder.RegisterType<PathfinderFactory>().As<IPathfinderFactory>().InstancePerLifetimeScope();
             builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
             builder.RegisterType<AlgorithmMonitor>().As<IAlgorithmMonitor>().InstancePerLifetimeScope();
             builder.RegisterType<RaportGenerator>().As<IRaportGenerator>().InstancePerLifetimeScope();
+            builder.RegisterType<CommandValidator>().As<ICommandValidator>().InstancePerLifetimeScope();
+            builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
 
             builder.RegisterType<RaportStringContainer>()
                 .As<IRaportStringContainerContract>()

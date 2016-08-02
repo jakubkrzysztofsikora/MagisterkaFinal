@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using Magisterka.Domain.Adapters;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
@@ -7,10 +8,10 @@ namespace Magisterka.VisualEcosystem.WindowCommands
     public class ClearGraphCommand : RoutedUICommand, ICommand
     {
         private MapAdapter _mapAdapter;
-        private readonly MainWindow _applicationWindow;
+        private readonly MainWindowViewModel _applicationWindow;
         private readonly IMovingActor _actor;
 
-        public ClearGraphCommand(MainWindow applicationWindow, 
+        public ClearGraphCommand(MainWindowViewModel applicationWindow, 
             IMovingActor actor)
             : base("Clear the graph", "ClearGraph", typeof(ClearGraphCommand), new InputGestureCollection()
             {

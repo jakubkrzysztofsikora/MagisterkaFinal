@@ -4,6 +4,7 @@ using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.InputModals;
 
@@ -12,9 +13,9 @@ namespace Magisterka.VisualEcosystem.WindowCommands
     public class AddNewEdgeCommand : RoutedUICommand, ICommand
     {
         private EdgeAdapter _edgeAdapter;
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
-        public AddNewEdgeCommand(MainWindow window)
+        public AddNewEdgeCommand(MainWindowViewModel window)
         {
             _window = window;
         }
@@ -24,7 +25,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             var adapter = edgeAdapter as EdgeAdapter;
             _edgeAdapter = adapter;
 
-            return _edgeAdapter?.MapAdapter != null && _window.IsLoaded;
+            return _edgeAdapter?.MapAdapter != null && _window.VisualMap.IsLoaded;
         }
 
         public void Execute(object edgeAdapter)

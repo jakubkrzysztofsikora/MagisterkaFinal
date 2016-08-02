@@ -8,6 +8,7 @@ using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
+using Magisterka.ViewModels;
 using MahApps.Metro.Controls.Dialogs;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
@@ -17,12 +18,12 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         private readonly IAlgorithmMonitor _algorithmMonitor;
         private readonly IRaportGenerator _raportGenerator;
         private readonly IRaportStringContainerContract _raportStringContent;
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
         public GenerateExcelRaportCommand(IAlgorithmMonitor algorithmMonitor, 
             IRaportGenerator raportGenerator, 
-            IRaportStringContainerContract raportStringContent, 
-            MainWindow window)
+            IRaportStringContainerContract raportStringContent,
+            MainWindowViewModel window)
         {
             _algorithmMonitor = algorithmMonitor;
             _raportGenerator = raportGenerator;
@@ -45,7 +46,8 @@ namespace Magisterka.VisualEcosystem.WindowCommands
                 PathfindingAlgorithm = algorithm,
                 RaportStrings = _raportStringContent
             });
-            _window.ShowMessageAsync("Your generated report", $"Your report has been generated under {filePath}");
+            throw new NotImplementedException("Implement showing the message and opening excel file");
+            //_window.ShowMessageAsync("Your generated report", $"Your report has been generated under {filePath}");
         }
     }
 }
