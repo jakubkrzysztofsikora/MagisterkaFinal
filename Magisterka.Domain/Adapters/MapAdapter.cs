@@ -32,6 +32,11 @@ namespace Magisterka.Domain.Adapters
             return _logicMap.Any(node => node.IsStartingNode) && _logicMap.Any(node => node.IsTargetNode);
         }
 
+        public bool CanGraphBeCleared()
+        {
+            return _logicMap.Any(node => node.IsStartingNode) || _logicMap.Any(node => node.IsTargetNode);
+        }
+
         public NodeView StartPathfindingByStep(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {
             _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
@@ -211,6 +216,9 @@ namespace Magisterka.Domain.Adapters
         {
             Node startingNode = _logicMap.SingleOrDefault(node => node.IsStartingNode);
 
+            if (startingNode == null)
+                return;
+
             NodeView startingVisualNode = VisualMap.GetVertexByLogicNode(startingNode);
             startingVisualNode.Caption = string.Empty;
         }
@@ -218,6 +226,9 @@ namespace Magisterka.Domain.Adapters
         private void ClearVisualMapPredefinedTargetPosition()
         {
             Node targetNode = _logicMap.SingleOrDefault(node => node.IsTargetNode);
+
+            if (targetNode == null)
+                return;
 
             NodeView targetVisualNode = VisualMap.GetVertexByLogicNode(targetNode);
             targetVisualNode.Caption = string.Empty;

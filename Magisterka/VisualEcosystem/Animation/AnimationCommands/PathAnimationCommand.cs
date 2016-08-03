@@ -2,38 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using GraphX.Controls;
 using GraphX.Measure;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
 {
     public class PathAnimationCommand : IAnimationCommand
     {
+        public MainWindowViewModel _viewModel;
+        public VisualMap VisualMap { get; set; }
+        public VertexControl FromVertex { get; set; }
+        public VertexControl ToVertex { get; set; }
+        public event EventHandler AnimationEnded;
+
         private const int AnimationsNeededToComplete = 2;
         private readonly IMovingActor _actorToMove;
         private readonly int _defaultBaseFullAnimationLength;
 
         private int _animationsCompleted;
         private List<Point> _allRoutingPoints;
+        private bool _cancelAnimation;
 
+        private TranslateTransform _transformHandler;
         private EdgeView _throughEdge;
         private Point[] _throughEdgeRoutingPoints;
 
-        public PathAnimationCommand(IMovingActor actor, eAnimationSpeed animationSpeed)
+        public PathAnimationCommand(IMovingActor actor, eAnimationSpeed animationSpeed, MainWindowViewModel viewModel)
         {
             _actorToMove = actor;
             _defaultBaseFullAnimationLength = (int) animationSpeed;
+            _viewModel = viewModel;
+            _viewModel.ClearedGraph += OnGraphClearDuringAnimation;
         }
-
-        public VisualMap VisualMap { get; set; }
-        public VertexControl FromVertex { get; set; }
-        public VertexControl ToVertex { get; set; }
-        public event EventHandler AnimationEnded;
 
         public void BeginAnimation()
         {
@@ -55,6 +62,14 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             Animate();
         }
 
+        private void OnGraphClearDuringAnimation(object sender, EventArgs eventArgs)
+        {
+            _transformHandler.BeginAnimation(TranslateTransform.XProperty, null, HandoffBehavior.SnapshotAndReplace);
+            _transformHandler.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
+            _cancelAnimation = true;
+            _viewModel.ClearedGraph -= OnGraphClearDuringAnimation;
+        }
+
         private void PrepareAnimationComponents(NodeView currentNode, NodeView nextNode)
         {
             var vertexPositions = VisualMap.GetVertexPositions();
@@ -70,9 +85,12 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
 
         private void Animate(int iteration = 0)
         {
+            if (_cancelAnimation)
+                return;
+
             _animationsCompleted = 0;
-            TranslateTransform trans = new TranslateTransform();
-            _actorToMove.PresentActor().RenderTransform = trans;
+            _transformHandler = new TranslateTransform();
+            _actorToMove.PresentActor().RenderTransform = _transformHandler;
 
             Point currentActorPoint = iteration == 0
                 ? _allRoutingPoints.First()
@@ -87,8 +105,8 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             anim1.Completed += (sender, args) => FireCompletedEventIfPossible(iteration);
             anim2.Completed += (sender, args) => FireCompletedEventIfPossible(iteration);
 
-            trans.BeginAnimation(TranslateTransform.XProperty, anim1);
-            trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+            _transformHandler.BeginAnimation(TranslateTransform.XProperty, anim1, HandoffBehavior.Compose);
+            _transformHandler.BeginAnimation(TranslateTransform.YProperty, anim2, HandoffBehavior.Compose);
         }
 
         private void FireCompletedEventIfPossible(int iteration)
@@ -102,8 +120,9 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             {
                 EventHandler animationEnded = AnimationEnded?.Clone() as EventHandler;
                 animationEnded?.Invoke(new object(), EventArgs.Empty);
+                _viewModel.ClearedGraph -= OnGraphClearDuringAnimation;
             }
-            else if (animationToTransitionalPointEnded)
+            else if (animationToTransitionalPointEnded && !_cancelAnimation)
             {
                 ++iteration;
                 Animate(iteration);

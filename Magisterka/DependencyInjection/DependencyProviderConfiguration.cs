@@ -15,9 +15,9 @@ using Magisterka.StaticResources;
 using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
-using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Validators;
 using Magisterka.VisualEcosystem.WindowCommands;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Magisterka.DependencyInjection
 {
@@ -28,7 +28,7 @@ namespace Magisterka.DependencyInjection
             var builder = new ContainerBuilder();
 
             builder.RegisterType<MainWindow>().AsSelf().InstancePerLifetimeScope();
-            builder.RegisterType<MainWindowViewModel>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<MainWindowViewModel>().AsSelf().WithParameter("dialogCoordinator", DialogCoordinator.Instance).InstancePerLifetimeScope();
             builder.RegisterType<AppSettings>().As<IAppSettings>().InstancePerLifetimeScope();
             builder.RegisterType<ErrorDisplayer>().As<IErrorDisplayer>().InstancePerLifetimeScope();
             builder.RegisterType<ConfigurationValidator>().As<IConfigurationValidator>().InstancePerLifetimeScope();

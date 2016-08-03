@@ -12,9 +12,9 @@ namespace Magisterka.Domain.Monitoring.Performance
 
         private long _amountOfTicksOnStart;
         private PerformanceCounter _cpuCounter;
-        private List<long> _cpuUsageReads;
+        private Dictionary<TimeSpan, long> _cpuUsageReads;
         private long _memoryUsageOnStart;
-        private List<long> _memoryUsageReads;
+        private Dictionary<TimeSpan, long> _memoryUsageReads;
 
         private Task _monitoringOperation;
         private bool _stopMonitoring;
@@ -28,8 +28,8 @@ namespace Magisterka.Domain.Monitoring.Performance
             {
                 do
                 {
-                    _memoryUsageReads.Add(GC.GetTotalMemory(WipeGarbageCollectorBeforeMonitor));
-                    _cpuUsageReads.Add(Convert.ToInt64(_cpuCounter.NextValue()));
+                    AddToUsageRegistry(_memoryUsageReads, GC.GetTotalMemory(WipeGarbageCollectorBeforeMonitor));
+                    AddToUsageRegistry(_cpuUsageReads, Convert.ToInt64(_cpuCounter.NextValue()));
                 } while (!_stopMonitoring);
             });
         }
@@ -43,15 +43,26 @@ namespace Magisterka.Domain.Monitoring.Performance
             return performanceResults;
         }
 
+        private void AddToUsageRegistry(Dictionary<TimeSpan, long> registry, long usage)
+        {
+            var timeSpanKey = TimeSpan.FromTicks(DateTime.Now.Ticks - _amountOfTicksOnStart);
+            usage = usage < 0 ? 0 : usage;
+            if (!registry.ContainsKey(timeSpanKey))
+                registry.Add(TimeSpan.FromTicks(DateTime.Now.Ticks - _amountOfTicksOnStart), usage);
+        }
+
         private PerformanceResults GatherAllPerformanceMonitoringResults()
         {
+            long averageMemoryUsed = Math.Abs(Convert.ToInt64(_memoryUsageReads.Values.Average()) - _memoryUsageOnStart);
             return new PerformanceResults
             {
-                AverageMemoryUsageInBytes = Convert.ToInt64(_memoryUsageReads.Average()) - _memoryUsageOnStart,
-                PeakMemoryUsageInBytes = _memoryUsageReads.Max() - _memoryUsageOnStart,
-                AverageProcessorUsageInPercents = Convert.ToInt64(_cpuUsageReads.Average()),
-                PeakProcessorUsageInPercents = Convert.ToInt64(_cpuUsageReads.Max()),
-                TimeOfComputing = TimeSpan.FromTicks(DateTime.Now.Ticks - _amountOfTicksOnStart)
+                AverageMemoryUsageInBytes = averageMemoryUsed,
+                PeakMemoryUsageInBytes = _memoryUsageReads.Values.Max() - _memoryUsageOnStart,
+                AverageProcessorUsageInPercents = Convert.ToInt64(_cpuUsageReads.Values.Average()),
+                PeakProcessorUsageInPercents = Convert.ToInt64(_cpuUsageReads.Values.Max()),
+                TimeOfComputing = TimeSpan.FromTicks(DateTime.Now.Ticks - _amountOfTicksOnStart),
+                MemoryUsageDictionary = _memoryUsageReads,
+                ProcessorUsageDictionary = _cpuUsageReads
             };
         }
 
@@ -67,8 +78,8 @@ namespace Magisterka.Domain.Monitoring.Performance
         {
             _stopMonitoring = false;
             _cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
-            _memoryUsageReads = new List<long>();
-            _cpuUsageReads = new List<long>();
+            _memoryUsageReads = new Dictionary<TimeSpan, long>();
+            _cpuUsageReads = new Dictionary<TimeSpan, long>();
         }
 
         private void GatherBasePerformanceData()

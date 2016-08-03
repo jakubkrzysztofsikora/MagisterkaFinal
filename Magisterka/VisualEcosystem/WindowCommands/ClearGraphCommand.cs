@@ -26,7 +26,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         {
             var adapter = mapAdapter as MapAdapter;
             _mapAdapter = adapter;
-            return _mapAdapter != null && _applicationWindow.VisualMap.IsLoaded;
+            return _mapAdapter != null && _applicationWindow.VisualMap.IsLoaded && _mapAdapter.CanGraphBeCleared();
         }
 
         public void Execute(object parameter)
@@ -34,6 +34,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             _applicationWindow.VisualMap.ClearGraph();
             _mapAdapter.ClearGraph();
             _applicationWindow.VisualMap.Children.Remove(_actor.PresentActor());
+            _applicationWindow.GraphCleared();
         }
     }
 }

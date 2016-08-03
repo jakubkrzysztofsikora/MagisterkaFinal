@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
@@ -17,6 +20,7 @@ using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.WindowCommands;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Magisterka.ViewModels
 {
@@ -33,7 +37,10 @@ namespace Magisterka.ViewModels
         public static ICommand ToggleEdgeArrowsCommand { get; set; }
         public static ICommand GenerateExcelRaportCommand { get; set; }
 
+        public event EventHandler ClearedGraph;
+
         public IAlgorithmMonitor Monitor { get; set; }
+        public Dictionary<double, long> MemoryUsageViewModel { get; set; }
         public MapAdapter MapAdapter { get; set; }
         public VisualMap VisualMap { get; set; }
         public ZoomControl ZoomControl { get; set; }
@@ -57,6 +64,7 @@ namespace Magisterka.ViewModels
         public bool ProgressRingIsActive { get; set; }
         public bool NewNodeTileIsEnabled { get; set; }
         public bool NewEdgeTileIsEnabled { get; set; }
+        public int ChartMilisecondInterval { get; set; }
 
         private readonly IErrorDisplayer _errorDisplayer;
 
@@ -64,7 +72,8 @@ namespace Magisterka.ViewModels
             IMovingActor actor, 
             IRaportGenerator raportGenerator,
             IRaportStringContainerContract raportStringContent, 
-            IErrorDisplayer errorDisplayer)
+            IErrorDisplayer errorDisplayer,
+            IDialogCoordinator dialogCoordinator)
         {
             Monitor = algorithmMonitor;
             _errorDisplayer = errorDisplayer;
@@ -77,7 +86,7 @@ namespace Magisterka.ViewModels
             ToggleNodeDraggingCommand = new ToggleNodeDraggingCommand(this);
             ToggleEdgeLabelsCommand = new ToggleEdgeLabelsCommand(this);
             ToggleEdgeArrowsCommand = new ToggleEdgeArrowsCommand(this);
-            GenerateExcelRaportCommand = new GenerateExcelRaportCommand(algorithmMonitor, raportGenerator, raportStringContent, this);
+            GenerateExcelRaportCommand = new GenerateExcelRaportCommand(algorithmMonitor, raportGenerator, raportStringContent, dialogCoordinator, this);
 
             ChosenAlgorithm = ePathfindingAlgorithms.Djikstra;
             ChosenAnimationSpeed = eAnimationSpeed.Normal;
@@ -90,6 +99,7 @@ namespace Magisterka.ViewModels
             ProgressRingIsActive = true;
             NewEdgeTileIsEnabled = false;
             NewNodeTileIsEnabled = false;
+            ChartMilisecondInterval = 5;
         }
 
         public void SetDefaultIcons()
@@ -212,6 +222,11 @@ namespace Magisterka.ViewModels
             MapAdapter?.DeleteGraphData();
             VisualMap.RemoveAllVertices();
             VisualMap.RemoveAllEdges();
+        }
+
+        public void GraphCleared()
+        {
+            ClearedGraph?.Invoke(this, EventArgs.Empty);
         }
     }
 }

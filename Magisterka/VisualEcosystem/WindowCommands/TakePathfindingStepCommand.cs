@@ -50,7 +50,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 
             VertexControl nextVertexControl = _applicationWindow.VisualMap.GetVertexControlOfNode(nextNode);
 
-            var animation = new PathAnimationCommand(_animatingActor, animationSpeed)
+            var animation = new PathAnimationCommand(_animatingActor, animationSpeed, _applicationWindow)
             {
                 FromVertex = currentVertex,
                 ToVertex = nextVertexControl,
