@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Castle.Core.Internal;
 using FontAwesome.WPF;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
@@ -19,6 +20,7 @@ using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
+using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -40,7 +42,8 @@ namespace Magisterka.ViewModels
         public event EventHandler ClearedGraph;
 
         public IAlgorithmMonitor Monitor { get; set; }
-        public Dictionary<double, long> MemoryUsageViewModel { get; set; }
+        public Dictionary<double, double> MemoryUsageViewModel { get; set; }
+        public Dictionary<double, int> ProcessorUsageViewModel { get; set; }
         public MapAdapter MapAdapter { get; set; }
         public VisualMap VisualMap { get; set; }
         public ZoomControl ZoomControl { get; set; }
@@ -65,6 +68,7 @@ namespace Magisterka.ViewModels
         public bool NewNodeTileIsEnabled { get; set; }
         public bool NewEdgeTileIsEnabled { get; set; }
         public int ChartMilisecondInterval { get; set; }
+        public int PerformancePanelHeight { get; set; }
 
         private readonly IErrorDisplayer _errorDisplayer;
 
@@ -76,6 +80,7 @@ namespace Magisterka.ViewModels
             IDialogCoordinator dialogCoordinator)
         {
             Monitor = algorithmMonitor;
+            Monitor.PropertyChanged += OnMonitorChanged;
             _errorDisplayer = errorDisplayer;
             TakePathfindingStepCommand = new TakePathfindingStepCommand(this, actor, new CommandValidator());
             StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(this, actor, new CommandValidator());
@@ -99,7 +104,7 @@ namespace Magisterka.ViewModels
             ProgressRingIsActive = true;
             NewEdgeTileIsEnabled = false;
             NewNodeTileIsEnabled = false;
-            ChartMilisecondInterval = 5;
+            ChartMilisecondInterval = 1;
         }
 
         public void SetDefaultIcons()
@@ -150,6 +155,22 @@ namespace Magisterka.ViewModels
             {
                 _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
             }
+        }
+
+        public void OnMonitorChanged(object sender, PropertyChangedEventArgs eventArgs)
+        {
+            var performanceResultsAdapter = new PerformanceResultsAdapter(Monitor.PerformanceResults);
+            MemoryUsageViewModel = performanceResultsAdapter.GetMemoryUsageForChart(ChartMilisecondInterval);
+            ProcessorUsageViewModel = performanceResultsAdapter.GetProcessorUsageFotChart(ChartMilisecondInterval);
+
+            OnPropertyChanged(nameof(MemoryUsageViewModel));
+            OnPropertyChanged(nameof(ProcessorUsageViewModel));
+        }
+
+        public void OnWindowResize(object sender, SizeChangedEventArgs eventArgs)
+        {
+            PerformancePanelHeight = (int)eventArgs.NewSize.Height - 200;
+            OnPropertyChanged(nameof(PerformancePanelHeight));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

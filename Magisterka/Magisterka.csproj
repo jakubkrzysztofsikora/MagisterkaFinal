@@ -143,6 +143,7 @@
     <Compile Include="VisualEcosystem\Validators\ConfigurationValidator.cs" />
     <Compile Include="VisualEcosystem\ErrorHandling\ErrorDisplayer.cs" />
     <Compile Include="VisualEcosystem\Validators\IConfigurationValidator.cs" />
+    <Compile Include="VisualEcosystem\ValueConverters\BytesToMegabytesConverter.cs" />
     <Compile Include="VisualEcosystem\VisualMap.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\AddNewEdgeCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\AddNewNodeCommand.cs" />

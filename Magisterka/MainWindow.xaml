@@ -9,6 +9,7 @@
         xmlns:VisualEcosystem="clr-namespace:Magisterka.VisualEcosystem"
         xmlns:Animation="clr-namespace:Magisterka.VisualEcosystem.Animation"
         xmlns:PathfindingDomain="clr-namespace:Magisterka.Domain.Graph.Pathfinding;assembly=Magisterka.Domain"
+        xmlns:ValueConverters="clr-namespace:Magisterka.VisualEcosystem.ValueConverters"
         xmlns:fa="http://schemas.fontawesome.io/icons/"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:Dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
@@ -46,7 +47,7 @@
         <Separator/>
         <MenuItem Header="Delete Edge" Click="DeleteEdge" Tag="" />
       </ContextMenu>
-       <ObjectDataProvider x:Key="pathfindingAlgorithms" MethodName="GetValues"
+      <ObjectDataProvider x:Key="pathfindingAlgorithms" MethodName="GetValues"
                           ObjectType="{x:Type sys:Enum}">
           <ObjectDataProvider.MethodParameters>
               <x:Type TypeName="PathfindingDomain:ePathfindingAlgorithms"/>
@@ -73,9 +74,11 @@
         <Setter Property="Foreground" Value="DarkGray"></Setter>
       </Style>
       <Style x:Key="MinimalChartStyle" TargetType="metroChart:ChartBase">
-        <Setter Property="Width" Value="500"/>
-        <Setter Property="Height" Value="500"/>
+        <Setter Property="Width" Value="Auto"/>
+        <Setter Property="Height" Value="300"/>
+        <Setter Property="Background" Value="White"></Setter>
       </Style>
+      <ValueConverters:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"></ValueConverters:BytesToMegabytesConverter>
     </Window.Resources>
     <Grid>
       <Grid.RowDefinitions>
@@ -178,94 +181,110 @@
       <graphx:ZoomControl Grid.Row="2" Grid.Column="0" x:Name="ZoomControl" Visibility="Hidden">
             <VisualEcosystem:VisualMap x:Name="VisualMap" />
        </graphx:ZoomControl>
-      <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" Margin="5 0">
-        <GroupBox x:Name="AlgorithmStatsPath" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
-          <StackPanel>
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PathStatsPlaceholderText}" Visibility="{Binding PathStatsPlaceholderVisibility}"></Label>
-            <StackPanel Visibility="{Binding PathStatsPanelVisibility}">
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportNumberOfSteps}"></Binding>
-                    <Binding Path="Monitor.PathDetails.StepsTaken"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportLengthOfPath}"></Binding>
-                    <Binding Path="Monitor.PathDetails.PathLengthInEdgeCost"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <DataGrid ItemsSource="{Binding Monitor.PathDetails.NumberOfVisitsPerNode}" AutoGenerateColumns="False" Style="{StaticResource AzureDataGrid}">
-                <DataGrid.Columns>
-                  <DataGridTextColumn Header="{StaticResource RaportNodeName}" Binding="{Binding Key.Name}"></DataGridTextColumn>
-                  <DataGridTextColumn Header="{StaticResource RaportNodeVisits}" Binding="{Binding Value}"></DataGridTextColumn>
-                </DataGrid.Columns>
-              </DataGrid>
+      <ScrollViewer Grid.Row="2" Grid.Column="1" Height="{Binding PerformancePanelHeight}" VerticalScrollBarVisibility="Auto" VerticalAlignment="Top">
+        <StackPanel Orientation="Vertical" Margin="5 0" CanVerticallyScroll="True">
+          <GroupBox x:Name="AlgorithmStatsPath" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
+            <StackPanel>
+              <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PathStatsPlaceholderText}" Visibility="{Binding PathStatsPlaceholderVisibility}"></Label>
+              <StackPanel Visibility="{Binding PathStatsPanelVisibility}">
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportNumberOfSteps}"></Binding>
+                      <Binding Path="Monitor.PathDetails.StepsTaken"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportLengthOfPath}"></Binding>
+                      <Binding Path="Monitor.PathDetails.PathLengthInEdgeCost"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <DataGrid ItemsSource="{Binding Monitor.PathDetails.NumberOfVisitsPerNode}" AutoGenerateColumns="False" Style="{StaticResource AzureDataGrid}">
+                  <DataGrid.Columns>
+                    <DataGridTextColumn Header="{StaticResource RaportNodeName}" Binding="{Binding Key.Name}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="{StaticResource RaportNodeVisits}" Binding="{Binding Value}"></DataGridTextColumn>
+                  </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
             </StackPanel>
-          </StackPanel>
-	      </GroupBox>
-        <GroupBox x:Name="AlgorithmStatsPerformance" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
-          <StackPanel>
-            <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PerformanceStatsPlaceholderText}" Visibility="{Binding PerformanceStatsPlaceholderVisibility}"></Label>
-            <StackPanel Visibility="{Binding PerformanceStatsPanelVisibility}">
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportTimeOfComputing}"></Binding>
-                    <Binding Path="Monitor.PerformanceResults.TimeOfComputing.TotalMilliseconds"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportPeakMemoryUsage}"></Binding>
-                    <Binding Path="Monitor.PerformanceResults.PeakMemoryUsageInBytes"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportAverageMemoryUsage}"></Binding>
-                    <Binding Path="Monitor.PerformanceResults.AverageMemoryUsageInBytes"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportPeakProcessorUsage}"></Binding>
-                    <Binding Path="Monitor.PerformanceResults.PeakProcessorUsageInPercents"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <TextBlock>
-                <TextBlock.Text>
-                  <MultiBinding StringFormat=" {0}: {1} ">
-                    <Binding Source="{StaticResource RaportAverageProcessorUsage}"></Binding>
-                    <Binding Path="Monitor.PerformanceResults.AverageProcessorUsageInPercents"></Binding>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
-              <metroChart:ClusteredColumnChart
-        Style="{StaticResource MinimalChartStyle}"
-        ChartTitle="Performance Chart"
-        ChartSubTitle="Memory Usage" >
-                <metroChart:ClusteredColumnChart.Series>
-                  <metroChart:ChartSeries
-                      ItemsSource="{Binding Path=MemoryUsageViewModel}"
-                      DisplayMember="Value"
-                      ValueMember="Key" />
-                </metroChart:ClusteredColumnChart.Series>
-              </metroChart:ClusteredColumnChart>
+	        </GroupBox>
+        
+          <GroupBox x:Name="AlgorithmStatsPerformance" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
+            <StackPanel>
+              <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PerformanceStatsPlaceholderText}" Visibility="{Binding PerformanceStatsPlaceholderVisibility}"></Label>
+              <StackPanel Visibility="{Binding PerformanceStatsPanelVisibility}">
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportTimeOfComputing}"></Binding>
+                      <Binding Path="Monitor.PerformanceResults.TimeOfComputing.TotalMilliseconds"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportPeakMemoryUsage}"></Binding>
+                      <Binding Path="Monitor.PerformanceResults.PeakMemoryUsageInBytes" Converter="{StaticResource BytesToMegabytesConverter}"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportAverageMemoryUsage}"></Binding>
+                      <Binding Path="Monitor.PerformanceResults.AverageMemoryUsageInBytes" Converter="{StaticResource BytesToMegabytesConverter}"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportPeakProcessorUsage}"></Binding>
+                      <Binding Path="Monitor.PerformanceResults.PeakProcessorUsageInPercents"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <TextBlock>
+                  <TextBlock.Text>
+                    <MultiBinding StringFormat=" {0}: {1} ">
+                      <Binding Source="{StaticResource RaportAverageProcessorUsage}"></Binding>
+                      <Binding Path="Monitor.PerformanceResults.AverageProcessorUsageInPercents"></Binding>
+                    </MultiBinding>
+                  </TextBlock.Text>
+                </TextBlock>
+                <metroChart:ClusteredColumnChart
+          Style="{StaticResource MinimalChartStyle}"
+          ChartTitle="Memory Usage"
+          ChartSubTitle="Performance Chart" >
+                  <metroChart:ClusteredColumnChart.Series>
+                    <metroChart:ChartSeries
+                        ItemsSource="{Binding Path=MemoryUsageViewModel}"
+                        Caption="Memory usage (MB) in time (ms)"
+                        DisplayMember="Key"
+                        ValueMember="Value" />
+                  </metroChart:ClusteredColumnChart.Series>
+                </metroChart:ClusteredColumnChart>
+                <metroChart:ClusteredColumnChart
+          Style="{StaticResource MinimalChartStyle}"
+          ChartTitle="Processor Usage"
+          ChartSubTitle="Performance Chart" >
+                  <metroChart:ClusteredColumnChart.Series>
+                    <metroChart:ChartSeries
+                        ItemsSource="{Binding Path=ProcessorUsageViewModel}"
+                        Caption="% of processor time in time (ms)"
+                        DisplayMember="Key"
+                        ValueMember="Value" />
+                  </metroChart:ClusteredColumnChart.Series>
+                </metroChart:ClusteredColumnChart>
+              </StackPanel>
             </StackPanel>
-          </StackPanel>
-        </GroupBox>
-      </StackPanel>
+          </GroupBox>
+        </StackPanel>
+      </ScrollViewer>
     </Grid>
 </Controls:MetroWindow>

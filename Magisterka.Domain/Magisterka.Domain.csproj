@@ -70,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Adapters\EdgeAdapter.cs" />
     <Compile Include="Adapters\MapAdapter.cs" />
+    <Compile Include="Adapters\PerformanceResultsAdapter.cs" />
+    <Compile Include="Converters\ByteConverterExtensions.cs" />
     <Compile Include="Converters\EnumDescriptionTypeConverter.cs" />
     <Compile Include="ExceptionContracts\DomainException.cs" />
     <Compile Include="ExceptionContracts\eErrorTypes.cs" />

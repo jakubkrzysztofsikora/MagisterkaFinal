@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Magisterka.Domain.Annotations;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;

@@ -41,6 +41,7 @@ namespace Magisterka
             _viewModel = viewModel;
             
             InitializeComponent();
+            _viewModel.PerformancePanelHeight = (int) RenderSize.Height - 200;
             _viewModel.VisualMap = VisualMap;
             _viewModel.ZoomControl = ZoomControl;
             
@@ -58,6 +59,7 @@ namespace Magisterka
             NewNodeTile.Click += _viewModel.TileMenuEventHandler.ClickOnCreateANodeTile;
             NewEdgeTile.Click += _viewModel.TileMenuEventHandler.ClickOnCreateAnEdgeTile;
             SizeChanged += (e,args) => _viewModel.ZoomControl.ZoomToFill();
+            SizeChanged += _viewModel.OnWindowResize;
         }
 
         private void UnsuscribeFromEvents()
