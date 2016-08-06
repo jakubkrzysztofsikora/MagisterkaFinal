@@ -12,10 +12,10 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class TakePathfindingStepCommand : RoutedUICommand,ICommand
     {
-        private MapAdapter _mapAdapter;
-        private readonly MainWindowViewModel _applicationWindow;
         private readonly IMovingActor _animatingActor;
+        private readonly MainWindowViewModel _applicationWindow;
         private readonly ICommandValidator _validator;
+        private MapAdapter _mapAdapter;
 
         public TakePathfindingStepCommand(MainWindowViewModel applicationWindow, 
             IMovingActor animatingActor, 
@@ -43,6 +43,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             _validator.ValidateConfiguration(_mapAdapter, enumParams);
             var algorithm = (ePathfindingAlgorithms)enumParams[0];
             var animationSpeed = (eAnimationSpeed)enumParams[1];
+            _applicationWindow.DisplayAlgorithmMonitor();
 
             VertexControl currentVertex = _applicationWindow.VisualMap.GetCurrentVertex();
 

@@ -6,5 +6,6 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
     {
         event EventHandler AnimationEnded;
         void BeginAnimation();
+        void StopAnimation();
     }
 }

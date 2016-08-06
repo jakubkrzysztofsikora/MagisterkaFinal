@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
@@ -11,13 +10,12 @@ namespace Magisterka.Domain.Adapters
 {
     public class MapAdapter
     {
-        public MapView VisualMap { get; set; }
+        private readonly IMapFactory _mapFactory;
 
         private readonly IPathfinderFactory _pathfinderFactory;
-        private readonly IMapFactory _mapFactory;
+        private bool _graphChanged;
         private Map _logicMap;
         private Pathfinder _pathfinder;
-        private bool _graphChanged;
 
         private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory, IMapFactory mapFactory)
         {
@@ -26,6 +24,8 @@ namespace Magisterka.Domain.Adapters
             _mapFactory = mapFactory;
             _graphChanged = true;
         }
+
+        public MapView VisualMap { get; set; }
 
         public bool CanStartPathfinding()
         {
@@ -145,8 +145,8 @@ namespace Magisterka.Domain.Adapters
 
         public void ChangeCost(EdgeView edge, int answer)
         {
-            VisualMap.ChangeEdgeCost(edge, answer);
             edge.LogicEdge.Cost = answer;
+            VisualMap.ChangeEdgeCost(edge, answer);
             _graphChanged = true;
         }
 

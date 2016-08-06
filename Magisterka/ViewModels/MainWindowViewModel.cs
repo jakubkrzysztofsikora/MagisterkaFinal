@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using Castle.Core.Internal;
 using FontAwesome.WPF;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
@@ -20,7 +17,6 @@ using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
-using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -28,48 +24,6 @@ namespace Magisterka.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        public static ICommand TakePathfindingStepCommand { get; set; }
-        public static ICommand StartPathfindingSimulationCommand { get; set; }
-        public static ICommand ClearGraphCommand { get; set; }
-        public static ICommand AddNewNodeCommand { get; set; }
-        public static ICommand AddNewEdgeCommand { get; set; }
-        public static ICommand RelayoutGraphCommand { get; set; }
-        public static ICommand ToggleNodeDraggingCommand { get; set; }
-        public static ICommand ToggleEdgeLabelsCommand { get; set; }
-        public static ICommand ToggleEdgeArrowsCommand { get; set; }
-        public static ICommand GenerateExcelRaportCommand { get; set; }
-
-        public event EventHandler ClearedGraph;
-
-        public IAlgorithmMonitor Monitor { get; set; }
-        public Dictionary<double, double> MemoryUsageViewModel { get; set; }
-        public Dictionary<double, int> ProcessorUsageViewModel { get; set; }
-        public MapAdapter MapAdapter { get; set; }
-        public VisualMap VisualMap { get; set; }
-        public ZoomControl ZoomControl { get; set; }
-        public TileMenuEventHandler TileMenuEventHandler { get; set; }
-        public VisualMapEventHandler VisualMapEventHandler { get; set; }
-
-        public ePathfindingAlgorithms ChosenAlgorithm { get; set; }
-        public eAnimationSpeed ChosenAnimationSpeed { get; set; }
-
-        public FontAwesomeIcon DraggingIcon { get; set; }
-        public FontAwesomeIcon EdgeArrowsIcon { get; set; }
-        public FontAwesomeIcon EdgeLabelsIcon { get; set; }
-
-        public Visibility PathStatsPlaceholderVisibility { get; set; }
-        public Visibility PathStatsPanelVisibility { get; set; }
-        public Visibility PerformanceStatsPlaceholderVisibility { get; set; }
-        public Visibility PerformanceStatsPanelVisibility { get; set; }
-        public Visibility GraphPlaceholderVisibility { get; set; }
-        public Visibility ProgressRingVisibility { get; set; }
-
-        public bool ProgressRingIsActive { get; set; }
-        public bool NewNodeTileIsEnabled { get; set; }
-        public bool NewEdgeTileIsEnabled { get; set; }
-        public int ChartMilisecondInterval { get; set; }
-        public int PerformancePanelHeight { get; set; }
-
         private readonly IErrorDisplayer _errorDisplayer;
 
         public MainWindowViewModel(IAlgorithmMonitor algorithmMonitor, 
@@ -106,6 +60,50 @@ namespace Magisterka.ViewModels
             NewNodeTileIsEnabled = false;
             ChartMilisecondInterval = 1;
         }
+
+        public static ICommand TakePathfindingStepCommand { get; set; }
+        public static ICommand StartPathfindingSimulationCommand { get; set; }
+        public static ICommand ClearGraphCommand { get; set; }
+        public static ICommand AddNewNodeCommand { get; set; }
+        public static ICommand AddNewEdgeCommand { get; set; }
+        public static ICommand RelayoutGraphCommand { get; set; }
+        public static ICommand ToggleNodeDraggingCommand { get; set; }
+        public static ICommand ToggleEdgeLabelsCommand { get; set; }
+        public static ICommand ToggleEdgeArrowsCommand { get; set; }
+        public static ICommand GenerateExcelRaportCommand { get; set; }
+
+        public IAlgorithmMonitor Monitor { get; set; }
+        public Dictionary<double, double> MemoryUsageViewModel { get; set; }
+        public Dictionary<double, int> ProcessorUsageViewModel { get; set; }
+        public MapAdapter MapAdapter { get; set; }
+        public VisualMap VisualMap { get; set; }
+        public ZoomControl ZoomControl { get; set; }
+        public TileMenuEventHandler TileMenuEventHandler { get; set; }
+        public VisualMapEventHandler VisualMapEventHandler { get; set; }
+
+        public ePathfindingAlgorithms ChosenAlgorithm { get; set; }
+        public eAnimationSpeed ChosenAnimationSpeed { get; set; }
+
+        public FontAwesomeIcon DraggingIcon { get; set; }
+        public FontAwesomeIcon EdgeArrowsIcon { get; set; }
+        public FontAwesomeIcon EdgeLabelsIcon { get; set; }
+
+        public Visibility PathStatsPlaceholderVisibility { get; set; }
+        public Visibility PathStatsPanelVisibility { get; set; }
+        public Visibility PerformanceStatsPlaceholderVisibility { get; set; }
+        public Visibility PerformanceStatsPanelVisibility { get; set; }
+        public Visibility GraphPlaceholderVisibility { get; set; }
+        public Visibility ProgressRingVisibility { get; set; }
+
+        public bool ProgressRingIsActive { get; set; }
+        public bool NewNodeTileIsEnabled { get; set; }
+        public bool NewEdgeTileIsEnabled { get; set; }
+        public int ChartMilisecondInterval { get; set; }
+        public int PerformancePanelHeight { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event EventHandler ClearedGraph;
 
         public void SetDefaultIcons()
         {
@@ -172,8 +170,6 @@ namespace Magisterka.ViewModels
             PerformancePanelHeight = (int)eventArgs.NewSize.Height - 200;
             OnPropertyChanged(nameof(PerformancePanelHeight));
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

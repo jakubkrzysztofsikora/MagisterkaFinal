@@ -53,6 +53,6 @@ namespace Magisterka.Domain.Adapters
             return reads.Keys.Select(x => x.Milliseconds)
                 .Where(x => x%chartMilisecondInterval == 0)
                 .Distinct();
-        } 
+        }
     }
 }

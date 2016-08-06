@@ -21,7 +21,7 @@ namespace Magisterka.Domain.ViewModels
 
         public void SetStandardCaption()
         {
-            Caption = $"{Source.LogicNode.Name} => {Target.LogicNode.Name} - Cost: {LogicEdge.Cost}";
+            Caption = $"Cost: {LogicEdge.Cost}";
         }
 
         public override string ToString()

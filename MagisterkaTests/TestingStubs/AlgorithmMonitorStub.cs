@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using Magisterka.Domain.Annotations;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Monitoring;
@@ -18,6 +13,7 @@ namespace MagisterkaTests.TestingStubs
         public PathDetails PathDetails { get; set; }
         public PerformanceResults PerformanceResults { get; set; }
         public bool IsMonitoring { get; set; }
+
         public void StartMonitoring()
         {
             

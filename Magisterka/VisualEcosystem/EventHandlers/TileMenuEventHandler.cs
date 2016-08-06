@@ -7,14 +7,14 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 {
     public class TileMenuEventHandler
     {
-        public MainWindowViewModel MainWindowViewModel { get; set; }
-
         private readonly MapAdapter _mapAdapter;
 
         public TileMenuEventHandler(MapAdapter mapAdapter)
         {
             _mapAdapter = mapAdapter;
         }
+
+        public MainWindowViewModel MainWindowViewModel { get; set; }
 
         public void ClickOnCreateANodeTile(object sender, RoutedEventArgs e)
         {

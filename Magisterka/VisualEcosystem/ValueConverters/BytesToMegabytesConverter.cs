@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows.Data;
 using Magisterka.Domain.Converters;
-using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.ValueConverters
 {

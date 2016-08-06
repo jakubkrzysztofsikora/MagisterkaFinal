@@ -7,8 +7,8 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class AddNewNodeCommand : RoutedUICommand, ICommand
     {
-        private MapAdapter _mapAdapter;
         private readonly MainWindowViewModel _window;
+        private MapAdapter _mapAdapter;
 
         public AddNewNodeCommand(MainWindowViewModel window)
         {
@@ -26,7 +26,9 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public void Execute(object mapAdapter)
         {
             var node =_mapAdapter.AddNode();
-            _window.VisualMap.AddVertex(node, new VertexControl(node));
+            var newVertex = new VertexControl(node);
+            _window.VisualMap.AddVertex(node, newVertex);
+            newVertex.SetPosition(0,0);
             _window.VisualMap.RefreshGraph();
         }
     }

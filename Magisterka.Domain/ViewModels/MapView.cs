@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using QuickGraph;
 
@@ -23,6 +25,17 @@ namespace Magisterka.Domain.ViewModels
         {
             edge.Weight = newCost;
             edge.SetStandardCaption();
+            var oppositeDirectionEdge = Edges.Single(e => e.Source == edge.Target && e.Target == edge.Source);
+            ChangeEdgePairCost(new [] {edge, oppositeDirectionEdge}, newCost);
+        }
+
+        private void ChangeEdgePairCost(IEnumerable<EdgeView> edgePair, int newCost)
+        {
+            edgePair.ForEach(edge =>
+            {
+                edge.Weight = newCost;
+                edge.SetStandardCaption();
+            });
         }
     }
 }

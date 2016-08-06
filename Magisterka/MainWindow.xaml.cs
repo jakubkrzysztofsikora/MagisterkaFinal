@@ -6,11 +6,10 @@ using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Utilities;
-using Magisterka.Domain.ViewModels;
 using Magisterka.ViewModels;
+using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.EventHandlers;
 using Magisterka.VisualEcosystem.Extensions;
-using Magisterka.VisualEcosystem.InputModals;
 using Magisterka.VisualEcosystem.Validators;
 using MahApps.Metro.Controls;
 
@@ -21,10 +20,10 @@ namespace Magisterka
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private readonly IRandomGenerator _randomizer;
-        private readonly IConfigurationValidator _validator;
         private readonly IMapFactory _mapFactory;
         private readonly IPathfinderFactory _pathfinderFactory;
+        private readonly IRandomGenerator _randomizer;
+        private readonly IConfigurationValidator _validator;
 
         private readonly MainWindowViewModel _viewModel;
 
@@ -114,13 +113,9 @@ namespace Magisterka
         private void ChangeCost(object sender, RoutedEventArgs e)
         {
             EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
-            EdgeView edge = edgeControl.GetEdgeView();
 
-            ChangeEdgeCostModal modal = new ChangeEdgeCostModal($"{edge.Caption} {Application.Current.Resources["ChangeEdgeCost"]}", edge.LogicEdge.Cost);
-            bool? answered = modal.ShowDialog();
-
-            if (answered != null && answered.Value == true)
-                _viewModel.MapAdapter.ChangeCost(edge, modal.Answer);
+            var edgeCostProcessor = new EdgeCostChangeProcessor(edgeControl, _viewModel);
+            edgeCostProcessor.ChangeEdgeCost();
         }
 
         private void DeleteEdge(object sender, RoutedEventArgs eventArgs)

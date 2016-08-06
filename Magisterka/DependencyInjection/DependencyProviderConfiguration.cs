@@ -1,7 +1,4 @@
-﻿using System;
-using System.Reflection;
-using Autofac;
-using Magisterka.Domain.Adapters;
+﻿using Autofac;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;

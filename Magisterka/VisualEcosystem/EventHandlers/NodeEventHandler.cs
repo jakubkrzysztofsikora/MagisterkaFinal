@@ -1,27 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using GraphX.Controls;
 using GraphX.Controls.Models;
 using Magisterka.Domain.Adapters;
-using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.ViewModels;
 using Magisterka.ViewModels;
+using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.Extensions;
-using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls;
 
 namespace Magisterka.VisualEcosystem.EventHandlers
 {
     public class NodeEventHandler
     {
+        private static Tile _clickedTile;
+        private static NewEdgeMouseAnimationCommand _edgeAnimation;
         public static MainWindowViewModel MainWindowViewModel { get; set; }
         public static string NameOfNodeContextMenu { get; set; }
         public static string NameOfSetAsBlocked { get; set; }
         public static string NameOfSetAsUnblocked { get; set; }
-
         public static EdgeAdapter NewEdgeAdapter { get; set; }
-        private static Tile _clickedTile;
 
         public static void OnNodeHoverIn(object sender, VertexSelectedEventArgs e)
         {
@@ -44,18 +42,24 @@ namespace Magisterka.VisualEcosystem.EventHandlers
 
         public static void OnNodeMouseDown(object sender, VertexSelectedEventArgs e)
         {
-            if (NewEdgeAdapter != null)
-            {
-                if (NewEdgeAdapter.FromNode == null)
-                    NewEdgeAdapter.FromNode = e.VertexControl.GetNodeView().LogicNode;
-                else
-                {
-                    NewEdgeAdapter.ToNode = e.VertexControl.GetNodeView().LogicNode;
+            if (NewEdgeAdapter == null)
+                return;
 
-                    if (MainWindowViewModel.AddNewEdgeCommand.CanExecute(NewEdgeAdapter))
-                        MainWindowViewModel.AddNewEdgeCommand.Execute(NewEdgeAdapter);
-                    StopNewEdgeProcess();
-                }
+            if (_edgeAnimation == null)
+            {
+                _edgeAnimation = new NewEdgeMouseAnimationCommand(e.VertexControl, MainWindowViewModel, e.MouseArgs);
+                _edgeAnimation.BeginAnimation();
+            }
+
+            if (NewEdgeAdapter.FromNode == null)
+                NewEdgeAdapter.FromNode = e.VertexControl.GetNodeView().LogicNode;
+            else
+            {
+                NewEdgeAdapter.ToNode = e.VertexControl.GetNodeView().LogicNode;
+
+                if (MainWindowViewModel.AddNewEdgeCommand.CanExecute(NewEdgeAdapter))
+                    MainWindowViewModel.AddNewEdgeCommand.Execute(NewEdgeAdapter);
+                StopNewEdgeProcess();
             }
         }
 
@@ -78,12 +82,17 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             };
             clickedTile.Title = "Cancel";
             _clickedTile = clickedTile;
+            
+            MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
 
         public static void StopNewEdgeProcess()
         {
             NewEdgeAdapter = null;
             _clickedTile.Title = "New Edge";
+            _edgeAnimation.StopAnimation();
+            _edgeAnimation = null;
+            MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
 
         private static void SetMenuPositionDependantOnProperty(ContextMenu menu, bool booleanProperty, string nameOfMenuPosition)

@@ -110,20 +110,6 @@ namespace MagisterkaTests
         }
 
         [Test]
-        public void ShouldGiveUniquePositionsToEachNode()
-        {
-            //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
-            
-            //When
-            Map defaultMap = factory.GenerateDefaultMap().WithGridPositions();
-
-            //Then
-            Assert.True(defaultMap.All(node => node.IsOnTheGrid()));
-            Assert.False(defaultMap.GroupBy(node => new { node.Coordinates.X, node.Coordinates.Y }).Any(group => group.Count() > 1));
-        }
-
-        [Test]
         public void ShouldGiveOnlyOneEdgeBetweenNodes()
         {
             //Given
@@ -145,6 +131,20 @@ namespace MagisterkaTests
                                     (n.Value.NodesConnected.Value == neighbor.Value.NodesConnected.Key &&
                                      n.Value.NodesConnected.Key == neighbor.Value.NodesConnected.Value)) > 1) == 0);
             });
+        }
+
+        [Test]
+        public void ShouldGiveUniquePositionsToEachNode()
+        {
+            //Given
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            
+            //When
+            Map defaultMap = factory.GenerateDefaultMap().WithGridPositions();
+
+            //Then
+            Assert.True(defaultMap.All(node => node.IsOnTheGrid()));
+            Assert.False(defaultMap.GroupBy(node => new { node.Coordinates.X, node.Coordinates.Y }).Any(group => group.Count() > 1));
         }
 
         [Test]

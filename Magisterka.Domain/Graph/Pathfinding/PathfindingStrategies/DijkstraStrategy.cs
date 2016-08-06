@@ -13,8 +13,8 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
         private readonly Dictionary<Node, int> _nodeToCost = new Dictionary<Node, int>();
         private readonly Dictionary<Node, Node> _previousNodes = new Dictionary<Node, Node>();
-        private Map _unoptimizedGraph;
         private Node _startingNode;
+        private Map _unoptimizedGraph;
 
         public DijkstraStrategy(IAlgorithmMonitor monitor)
         {

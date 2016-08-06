@@ -1,5 +1,4 @@
 ﻿using System.Windows.Input;
-using FontAwesome.WPF;
 using Magisterka.ViewModels;
 
 namespace Magisterka.VisualEcosystem.WindowCommands

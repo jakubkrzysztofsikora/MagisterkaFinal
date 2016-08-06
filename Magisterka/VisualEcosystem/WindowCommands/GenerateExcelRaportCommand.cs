@@ -11,9 +11,9 @@ namespace Magisterka.VisualEcosystem.WindowCommands
     public class GenerateExcelRaportCommand : RoutedUICommand, ICommand
     {
         private readonly IAlgorithmMonitor _algorithmMonitor;
+        private readonly IDialogCoordinator _dialogCoordinator;
         private readonly IRaportGenerator _raportGenerator;
         private readonly IRaportStringContainerContract _raportStringContent;
-        private readonly IDialogCoordinator _dialogCoordinator;
         private readonly MainWindowViewModel _viewModel;
 
         public GenerateExcelRaportCommand(IAlgorithmMonitor algorithmMonitor, 

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Magisterka.Domain.Annotations;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
@@ -11,12 +10,6 @@ namespace Magisterka.Domain.Monitoring
 {
     public class AlgorithmMonitor : IAlgorithmMonitor
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public PathDetails PathDetails { get; set; }
-        public PerformanceResults PerformanceResults { get; set; }
-        public bool IsMonitoring { get; set; }
-
         private readonly IPartialMonitor<PerformanceResults> _performanceMonitor;
         private readonly IBehaviourRegistry<PathDetails> _qualityRegistry;
 
@@ -26,6 +19,12 @@ namespace Magisterka.Domain.Monitoring
             _performanceMonitor = performanceMonitor;
             _qualityRegistry = qualityMonitor;
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public PathDetails PathDetails { get; set; }
+        public PerformanceResults PerformanceResults { get; set; }
+        public bool IsMonitoring { get; set; }
 
         public void StartMonitoring()
         {

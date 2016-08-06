@@ -5,15 +5,15 @@ namespace Magisterka.Domain.Graph.MovementSpace.MapEcosystem
 {
     public class Edge
     {
-        public int Cost { get; set; }
-        public KeyValuePair<Node, Node> NodesConnected { get; set; }
-
         private readonly Guid _id;
 
         public Edge()
         {
             _id = Guid.NewGuid();
         }
+
+        public int Cost { get; set; }
+        public KeyValuePair<Node, Node> NodesConnected { get; set; }
 
         public override bool Equals(object anotherEdge)
         {

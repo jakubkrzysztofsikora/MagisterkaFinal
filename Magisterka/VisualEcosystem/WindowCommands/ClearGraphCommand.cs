@@ -7,13 +7,13 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class ClearGraphCommand : RoutedUICommand, ICommand
     {
-        private MapAdapter _mapAdapter;
-        private readonly MainWindowViewModel _applicationWindow;
         private readonly IMovingActor _actor;
+        private readonly MainWindowViewModel _applicationWindow;
+        private MapAdapter _mapAdapter;
 
         public ClearGraphCommand(MainWindowViewModel applicationWindow, 
             IMovingActor actor)
-            : base("Clear the graph", "ClearGraph", typeof(ClearGraphCommand), new InputGestureCollection()
+            : base("Clear the graph", "ClearGraph", typeof(ClearGraphCommand), new InputGestureCollection
             {
                 new KeyGesture(Key.Escape, ModifierKeys.None)
             })

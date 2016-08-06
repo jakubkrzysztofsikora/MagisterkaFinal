@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using Castle.Core.Internal;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.Graph.Pathfinding;
@@ -19,10 +15,11 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class StartPathfindingSimulationCommand : RoutedUICommand, ICommand
     {
-        private MapAdapter _mapAdapter;
-        private readonly MainWindowViewModel _applicationWindow;
         private readonly IMovingActor _animatingActor;
+        private readonly MainWindowViewModel _applicationWindow;
         private readonly ICommandValidator _validator;
+        private bool _commandStopped;
+        private MapAdapter _mapAdapter;
 
         public StartPathfindingSimulationCommand(MainWindowViewModel applicationWindow,
             IMovingActor animatingActor,
@@ -35,7 +32,10 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             _applicationWindow = applicationWindow;
             _animatingActor = animatingActor;
             _validator = validator;
+
+            _applicationWindow.ClearedGraph += OnClearedGraph;
         }
+
         public bool CanExecute(object mapAdapter)
         {
             var adapter = mapAdapter as MapAdapter;
@@ -45,6 +45,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 
         public void Execute(object parameter)
         {
+            _commandStopped = false;
             var enumParams = parameter as object[];
             _validator.ValidateConfiguration(_mapAdapter, enumParams);
             _applicationWindow.DisplayAlgorithmMonitor();
@@ -57,12 +58,17 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             AnimatePath(currentVertex, algorithm, animationSpeed);
         }
 
+        private void OnClearedGraph(object sender, EventArgs eventArgs)
+        {
+            _commandStopped = true;
+        }
+
         private void AnimatePath(VertexControl startingVertex, ePathfindingAlgorithms algorithm, eAnimationSpeed animationSpeed, int iteration = 0)
         {
             IEnumerable<NodeView> path = _mapAdapter.StartPathfindingAllRoute(startingVertex.GetNodeView(), algorithm);
             var enumeratedPath = path.ToList();
 
-            if (enumeratedPath.Count <= iteration)
+            if (enumeratedPath.Count <= iteration || _commandStopped)
                 return;
 
             VertexControl currentVertex = _applicationWindow.VisualMap.GetCurrentVertex();

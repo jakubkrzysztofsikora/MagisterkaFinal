@@ -1,12 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ViewModels;
 using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
-using Magisterka.VisualEcosystem.InputModals;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
@@ -30,12 +27,13 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 
         public void Execute(object edgeAdapter)
         {
-            ChangeEdgeCostModal modal = new ChangeEdgeCostModal($"{Application.Current.Resources["NewEdgeCostTitle"]}", _edgeAdapter.Edge.Cost);
-            bool? answered = modal.ShowDialog();
+            var edgeCostProcessor = new EdgeCostChangeProcessor(_edgeAdapter, _window);
+            bool changedCost = edgeCostProcessor.ChangeEdgeCost();
 
-            if (answered != null && answered.Value == true)
-                _edgeAdapter.Edge.Cost = modal.Answer;
+            if (!changedCost)
+                return;
 
+            _edgeAdapter.Edge.Cost = edgeCostProcessor.NewEdgeCost;
             EdgeAdapter mirroredEdgeAdapter = _edgeAdapter.GetEdgeAdapterWithMirroredEdges();
             AddEdge(_edgeAdapter);
             AddEdge(mirroredEdgeAdapter);
@@ -50,7 +48,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             edgeAdapter.MapAdapter.AddEdge(edgeView);
             VertexControl fromVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Source);
             VertexControl toVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Target);
-            _window.VisualMap.AddEdge(edgeView, new EdgeControl(fromVertexControl, toVertexControl, edgeView));
+            _window.VisualMap.AddEdge(edgeView, fromVertexControl, toVertexControl);
         }
     }
 }

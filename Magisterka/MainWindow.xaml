@@ -31,7 +31,7 @@
       <CommandBinding Command="ViewModels:MainWindowViewModel.ToggleEdgeArrowsCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="ViewModels:MainWindowViewModel.GenerateExcelRaportCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="ViewModels:MainWindowViewModel.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
-      <CommandBinding Command="New" Executed="CreateNewGraph"></CommandBinding>
+      <CommandBinding Command="New" Executed="CreateNewGraph" />
     </Window.CommandBindings>
     <Window.Resources>
       <ContextMenu x:Key="NodeContextMenu">
@@ -71,14 +71,14 @@
         <Setter Property="FontSize" Value="20" />
         <Setter Property="FontFamily" Value="Segoe UI" />
         <Setter Property="FontWeight" Value="Light" />
-        <Setter Property="Foreground" Value="DarkGray"></Setter>
+        <Setter Property="Foreground" Value="DarkGray" />
       </Style>
       <Style x:Key="MinimalChartStyle" TargetType="metroChart:ChartBase">
         <Setter Property="Width" Value="Auto"/>
         <Setter Property="Height" Value="300"/>
-        <Setter Property="Background" Value="White"></Setter>
+        <Setter Property="Background" Value="White" />
       </Style>
-      <ValueConverters:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"></ValueConverters:BytesToMegabytesConverter>
+      <ValueConverters:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter" />
     </Window.Resources>
     <Grid>
       <Grid.RowDefinitions>
@@ -155,8 +155,8 @@
       <StackPanel Grid.Row="1" Grid.Column="1" VerticalAlignment="Top">
         <GroupBox Header="{StaticResource PathfindingHeader}" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="5 0" >
           <StackPanel>
-            <Label Content="{StaticResource SelectPathfindingAlgorithm}"></Label>
-            <ComboBox
+            <Label Content="{StaticResource SelectPathfindingAlgorithm}" />
+	          <ComboBox
               x:Name="ChoosenAlgorithm"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Top"
@@ -164,8 +164,8 @@
               SelectedValue="{Binding ChosenAlgorithm}"
               ItemsSource="{Binding Source={StaticResource pathfindingAlgorithms}}" />
 
-            <Label Content="{StaticResource SelectAnimationSpeed}"></Label>
-            <ComboBox
+            <Label Content="{StaticResource SelectAnimationSpeed}" />
+	          <ComboBox
               x:Name="ChoosenAnimationSpeed"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Top"
@@ -176,8 +176,8 @@
         </GroupBox>
       </StackPanel>
       
-      <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource GraphPlaceholderText}" Visibility="{Binding GraphPlaceholderVisibility}"></Label>
-      <Controls:ProgressRing Grid.Row="2" Grid.Column="0" x:Name="ProgressRing" IsActive="{Binding ProgressRingIsActive}" Visibility="{Binding ProgressRingVisibility}"/>
+      <Label Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource GraphPlaceholderText}" Visibility="{Binding GraphPlaceholderVisibility}" />
+	    <Controls:ProgressRing Grid.Row="2" Grid.Column="0" x:Name="ProgressRing" IsActive="{Binding ProgressRingIsActive}" Visibility="{Binding ProgressRingVisibility}"/>
       <graphx:ZoomControl Grid.Row="2" Grid.Column="0" x:Name="ZoomControl" Visibility="Hidden">
             <VisualEcosystem:VisualMap x:Name="VisualMap" />
        </graphx:ZoomControl>
@@ -185,28 +185,28 @@
         <StackPanel Orientation="Vertical" Margin="5 0" CanVerticallyScroll="True">
           <GroupBox x:Name="AlgorithmStatsPath" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
             <StackPanel>
-              <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PathStatsPlaceholderText}" Visibility="{Binding PathStatsPlaceholderVisibility}"></Label>
-              <StackPanel Visibility="{Binding PathStatsPanelVisibility}">
+              <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PathStatsPlaceholderText}" Visibility="{Binding PathStatsPlaceholderVisibility}" />
+	            <StackPanel Visibility="{Binding PathStatsPanelVisibility}">
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportNumberOfSteps}"></Binding>
-                      <Binding Path="Monitor.PathDetails.StepsTaken"></Binding>
+                      <Binding Source="{StaticResource RaportNumberOfSteps}" />
+	                    <Binding Path="Monitor.PathDetails.StepsTaken" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportLengthOfPath}"></Binding>
-                      <Binding Path="Monitor.PathDetails.PathLengthInEdgeCost"></Binding>
+                      <Binding Source="{StaticResource RaportLengthOfPath}" />
+	                    <Binding Path="Monitor.PathDetails.PathLengthInEdgeCost" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
-                <DataGrid ItemsSource="{Binding Monitor.PathDetails.NumberOfVisitsPerNode}" AutoGenerateColumns="False" Style="{StaticResource AzureDataGrid}">
+                <DataGrid ItemsSource="{Binding Monitor.PathDetails.NumberOfVisitsPerNode}" AutoGenerateColumns="False" Style="{StaticResource AzureDataGrid}" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True">
                   <DataGrid.Columns>
-                    <DataGridTextColumn Header="{StaticResource RaportNodeName}" Binding="{Binding Key.Name}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="{StaticResource RaportNodeVisits}" Binding="{Binding Value}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="{StaticResource RaportNodeName}" Binding="{Binding Key.Name}" Width="1*" />
+	                  <DataGridTextColumn Header="{StaticResource RaportNodeVisits}" Binding="{Binding Value}" Width="1*" />
                   </DataGrid.Columns>
                 </DataGrid>
               </StackPanel>
@@ -215,45 +215,45 @@
         
           <GroupBox x:Name="AlgorithmStatsPerformance" Header="{StaticResource StatsHeader}" Margin="0 5" HorizontalAlignment="Stretch">
             <StackPanel>
-              <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PerformanceStatsPlaceholderText}" Visibility="{Binding PerformanceStatsPlaceholderVisibility}"></Label>
-              <StackPanel Visibility="{Binding PerformanceStatsPanelVisibility}">
+              <Label HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource PlaceholderLabel}" Content="{StaticResource PerformanceStatsPlaceholderText}" Visibility="{Binding PerformanceStatsPlaceholderVisibility}" />
+	            <StackPanel Visibility="{Binding PerformanceStatsPanelVisibility}">
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportTimeOfComputing}"></Binding>
-                      <Binding Path="Monitor.PerformanceResults.TimeOfComputing.TotalMilliseconds"></Binding>
+                      <Binding Source="{StaticResource RaportTimeOfComputing}" />
+	                    <Binding Path="Monitor.PerformanceResults.TimeOfComputing.TotalMilliseconds" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportPeakMemoryUsage}"></Binding>
-                      <Binding Path="Monitor.PerformanceResults.PeakMemoryUsageInBytes" Converter="{StaticResource BytesToMegabytesConverter}"></Binding>
+                      <Binding Source="{StaticResource RaportPeakMemoryUsage}" />
+	                    <Binding Path="Monitor.PerformanceResults.PeakMemoryUsageInBytes" Converter="{StaticResource BytesToMegabytesConverter}" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportAverageMemoryUsage}"></Binding>
-                      <Binding Path="Monitor.PerformanceResults.AverageMemoryUsageInBytes" Converter="{StaticResource BytesToMegabytesConverter}"></Binding>
+                      <Binding Source="{StaticResource RaportAverageMemoryUsage}" />
+	                    <Binding Path="Monitor.PerformanceResults.AverageMemoryUsageInBytes" Converter="{StaticResource BytesToMegabytesConverter}" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportPeakProcessorUsage}"></Binding>
-                      <Binding Path="Monitor.PerformanceResults.PeakProcessorUsageInPercents"></Binding>
+                      <Binding Source="{StaticResource RaportPeakProcessorUsage}" />
+	                    <Binding Path="Monitor.PerformanceResults.PeakProcessorUsageInPercents" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>
                 <TextBlock>
                   <TextBlock.Text>
                     <MultiBinding StringFormat=" {0}: {1} ">
-                      <Binding Source="{StaticResource RaportAverageProcessorUsage}"></Binding>
-                      <Binding Path="Monitor.PerformanceResults.AverageProcessorUsageInPercents"></Binding>
+                      <Binding Source="{StaticResource RaportAverageProcessorUsage}" />
+	                    <Binding Path="Monitor.PerformanceResults.AverageProcessorUsageInPercents" />
                     </MultiBinding>
                   </TextBlock.Text>
                 </TextBlock>

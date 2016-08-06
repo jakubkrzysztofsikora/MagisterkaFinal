@@ -5,6 +5,8 @@ namespace Magisterka.Domain.Adapters
 {
     public class EdgeAdapter
     {
+        private Edge _edge;
+
         public Edge Edge
         {
             get
@@ -24,8 +26,6 @@ namespace Magisterka.Domain.Adapters
         public Node FromNode { get; set; }
         public Node ToNode { get; set; }
         public MapAdapter MapAdapter { get; set; }
-
-        private Edge _edge;
 
         public EdgeAdapter GetEdgeAdapterWithMirroredEdges()
         {
