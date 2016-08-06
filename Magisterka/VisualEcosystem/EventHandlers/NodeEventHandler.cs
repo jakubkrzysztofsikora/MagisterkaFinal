@@ -83,7 +83,8 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             clickedTile.Title = "Cancel";
             _clickedTile = clickedTile;
             
-            MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
+            if (MainWindowViewModel.VisualMap.VerticlesDragging)
+                MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
 
         public static void StopNewEdgeProcess()
@@ -92,7 +93,9 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             _clickedTile.Title = "New Edge";
             _edgeAnimation?.StopAnimation();
             _edgeAnimation = null;
-            MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
+
+            if (!MainWindowViewModel.VisualMap.VerticlesDragging)
+                MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
 
         private static void SetMenuPositionDependantOnProperty(ContextMenu menu, bool booleanProperty, string nameOfMenuPosition)

@@ -34,7 +34,7 @@ namespace Magisterka.Infrastructure.RaportGenerating
                 worksheetPart1.Worksheet = BuildRaportWorksheet();
             }
 
-            return filePath;
+            return Path.GetFullPath(filePath);
         }
 
         private Worksheet BuildRaportWorksheet()
