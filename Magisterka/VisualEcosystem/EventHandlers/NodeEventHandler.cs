@@ -90,7 +90,7 @@ namespace Magisterka.VisualEcosystem.EventHandlers
         {
             NewEdgeAdapter = null;
             _clickedTile.Title = "New Edge";
-            _edgeAnimation.StopAnimation();
+            _edgeAnimation?.StopAnimation();
             _edgeAnimation = null;
             MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }

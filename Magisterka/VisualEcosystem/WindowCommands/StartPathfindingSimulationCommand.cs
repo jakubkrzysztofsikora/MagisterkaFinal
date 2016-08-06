@@ -4,11 +4,13 @@ using System.Linq;
 using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
+using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.ViewModels;
 using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
+using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
@@ -18,12 +20,14 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         private readonly IMovingActor _animatingActor;
         private readonly MainWindowViewModel _applicationWindow;
         private readonly ICommandValidator _validator;
+        private readonly IErrorDisplayer _errorDisplayer;
         private bool _commandStopped;
         private MapAdapter _mapAdapter;
 
         public StartPathfindingSimulationCommand(MainWindowViewModel applicationWindow,
             IMovingActor animatingActor,
-            ICommandValidator validator)
+            ICommandValidator validator,
+            IErrorDisplayer errorDisplayer)
             : base("Start pathfinding simulation", "StartPathfindingSimulation", typeof(TakePathfindingStepCommand), new InputGestureCollection
         {
             new KeyGesture(Key.F5, ModifierKeys.Control)
@@ -32,6 +36,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             _applicationWindow = applicationWindow;
             _animatingActor = animatingActor;
             _validator = validator;
+            _errorDisplayer = errorDisplayer;
 
             _applicationWindow.ClearedGraph += OnClearedGraph;
         }
@@ -66,6 +71,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         private void AnimatePath(VertexControl startingVertex, ePathfindingAlgorithms algorithm, eAnimationSpeed animationSpeed, int iteration = 0)
         {
             IEnumerable<NodeView> path = _mapAdapter.StartPathfindingAllRoute(startingVertex.GetNodeView(), algorithm);
+
             var enumeratedPath = path.ToList();
 
             if (enumeratedPath.Count <= iteration || _commandStopped)
@@ -82,9 +88,22 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             };
 
             _applicationWindow.VisualMap.GoToVertex(nextVertexControl, animation);
-            animation.AnimationEnded += delegate
+
+
+            animation.AnimationEnded += (sender, args) =>
             {
-                AnimatePath(startingVertex, algorithm, animationSpeed, iteration + 1);
+                try
+                {
+                    AnimatePath(startingVertex, algorithm, animationSpeed, iteration + 1);
+                }
+                catch (DomainException exception)
+                {
+                    _errorDisplayer.DisplayError(exception.ErrorType, exception.Message);
+                }
+                catch (Exception exception)
+                {
+                    _errorDisplayer.DisplayError(eErrorTypes.General, exception.Message);
+                }
             };
         }
     }

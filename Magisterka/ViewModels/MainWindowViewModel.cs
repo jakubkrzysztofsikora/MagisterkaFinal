@@ -37,7 +37,7 @@ namespace Magisterka.ViewModels
             Monitor.PropertyChanged += OnMonitorChanged;
             _errorDisplayer = errorDisplayer;
             TakePathfindingStepCommand = new TakePathfindingStepCommand(this, actor, new CommandValidator());
-            StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(this, actor, new CommandValidator());
+            StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(this, actor, new CommandValidator(), errorDisplayer);
             ClearGraphCommand = new ClearGraphCommand(this, actor);
             AddNewNodeCommand = new AddNewNodeCommand(this);
             AddNewEdgeCommand = new AddNewEdgeCommand(this);

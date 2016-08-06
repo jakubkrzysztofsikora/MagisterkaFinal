@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace;
