@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using GraphX.Controls;
 using GraphX.Measure;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
 
 namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
@@ -17,17 +17,21 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
         private const int AnimationsNeededToComplete = 2;
         private readonly IMovingActor _actorToMove;
         private readonly int _defaultBaseFullAnimationLength;
-
-        private int _animationsCompleted;
         private List<Point> _allRoutingPoints;
 
+        private int _animationsCompleted;
+        private bool _cancelAnimation;
         private EdgeView _throughEdge;
         private Point[] _throughEdgeRoutingPoints;
 
-        public PathAnimationCommand(IMovingActor actor, eAnimationSpeed animationSpeed)
+        private TranslateTransform _transformHandler;
+        public MainWindowViewModel _viewModel;
+
+        public PathAnimationCommand(IMovingActor actor, eAnimationSpeed animationSpeed, MainWindowViewModel viewModel)
         {
             _actorToMove = actor;
             _defaultBaseFullAnimationLength = (int) animationSpeed;
+            _viewModel = viewModel;
         }
 
         public VisualMap VisualMap { get; set; }
@@ -55,24 +59,32 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             Animate();
         }
 
+        public void StopAnimation()
+        {
+            _transformHandler.BeginAnimation(TranslateTransform.XProperty, null, HandoffBehavior.SnapshotAndReplace);
+            _transformHandler.BeginAnimation(TranslateTransform.YProperty, null, HandoffBehavior.SnapshotAndReplace);
+            _cancelAnimation = true;
+            AnimationEnded = null;
+        }
+
         private void PrepareAnimationComponents(NodeView currentNode, NodeView nextNode)
         {
             var vertexPositions = VisualMap.GetVertexPositions();
-            VisualMap.AddCustomChildIfNotExists(_actorToMove.PresentActor());
 
             _allRoutingPoints.Insert(0, vertexPositions.Single(nodePostion => nodePostion.Key.LogicNode == currentNode.LogicNode).Value);
             _allRoutingPoints.Add(vertexPositions.Single(nodePostion => nodePostion.Key.LogicNode == nextNode.LogicNode).Value);
-                
 
-            Canvas.SetLeft(_actorToMove.PresentActor(), _allRoutingPoints.First().X);
-            Canvas.SetTop(_actorToMove.PresentActor(), _allRoutingPoints.First().Y);
+            VisualMap.AddCustomChildIfNotExists(_actorToMove.PresentActor(), _allRoutingPoints.First());
         }
 
         private void Animate(int iteration = 0)
         {
+            if (_cancelAnimation)
+                return;
+
             _animationsCompleted = 0;
-            TranslateTransform trans = new TranslateTransform();
-            _actorToMove.PresentActor().RenderTransform = trans;
+            _transformHandler = new TranslateTransform();
+            _actorToMove.PresentActor().RenderTransform = _transformHandler;
 
             Point currentActorPoint = iteration == 0
                 ? _allRoutingPoints.First()
@@ -87,8 +99,8 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             anim1.Completed += (sender, args) => FireCompletedEventIfPossible(iteration);
             anim2.Completed += (sender, args) => FireCompletedEventIfPossible(iteration);
 
-            trans.BeginAnimation(TranslateTransform.XProperty, anim1);
-            trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+            _transformHandler.BeginAnimation(TranslateTransform.XProperty, anim1, HandoffBehavior.Compose);
+            _transformHandler.BeginAnimation(TranslateTransform.YProperty, anim2, HandoffBehavior.Compose);
         }
 
         private void FireCompletedEventIfPossible(int iteration)
@@ -101,9 +113,9 @@ namespace Magisterka.VisualEcosystem.Animation.AnimationCommands
             if (finalDestinationReached)
             {
                 EventHandler animationEnded = AnimationEnded?.Clone() as EventHandler;
-                animationEnded?.Invoke(new object(), EventArgs.Empty);
+                animationEnded?.Invoke(_actorToMove.PresentActor(), EventArgs.Empty);
             }
-            else if (animationToTransitionalPointEnded)
+            else if (animationToTransitionalPointEnded && !_cancelAnimation)
             {
                 ++iteration;
                 Animate(iteration);

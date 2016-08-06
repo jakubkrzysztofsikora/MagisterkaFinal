@@ -1,20 +1,18 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
 using Magisterka.Domain.ViewModels;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Extensions;
-using Magisterka.VisualEcosystem.InputModals;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class AddNewEdgeCommand : RoutedUICommand, ICommand
     {
         private EdgeAdapter _edgeAdapter;
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
-        public AddNewEdgeCommand(MainWindow window)
+        public AddNewEdgeCommand(MainWindowViewModel window)
         {
             _window = window;
         }
@@ -24,17 +22,18 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             var adapter = edgeAdapter as EdgeAdapter;
             _edgeAdapter = adapter;
 
-            return _edgeAdapter?.MapAdapter != null && _window.IsLoaded;
+            return _edgeAdapter?.MapAdapter != null && _window.VisualMap.IsLoaded;
         }
 
         public void Execute(object edgeAdapter)
         {
-            ChangeEdgeCostModal modal = new ChangeEdgeCostModal($"{Application.Current.Resources["NewEdgeCostTitle"]}", _edgeAdapter.Edge.Cost);
-            bool? answered = modal.ShowDialog();
+            var edgeCostProcessor = new EdgeCostChangeProcessor(_edgeAdapter, _window);
+            bool changedCost = edgeCostProcessor.ChangeEdgeCost();
 
-            if (answered != null && answered.Value == true)
-                _edgeAdapter.Edge.Cost = modal.Answer;
+            if (!changedCost)
+                return;
 
+            _edgeAdapter.Edge.Cost = edgeCostProcessor.NewEdgeCost;
             EdgeAdapter mirroredEdgeAdapter = _edgeAdapter.GetEdgeAdapterWithMirroredEdges();
             AddEdge(_edgeAdapter);
             AddEdge(mirroredEdgeAdapter);
@@ -49,7 +48,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             edgeAdapter.MapAdapter.AddEdge(edgeView);
             VertexControl fromVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Source);
             VertexControl toVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Target);
-            _window.VisualMap.AddEdge(edgeView, new EdgeControl(fromVertexControl, toVertexControl, edgeView));
+            _window.VisualMap.AddEdge(edgeView, fromVertexControl, toVertexControl);
         }
     }
 }

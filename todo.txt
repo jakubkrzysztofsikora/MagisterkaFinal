@@ -1,0 +1,4 @@
+- Move stuff from MainWindow to MainWindowViewModel (don't use the window object around + data binding + strictly ui logic in the view model) [x]
+- Improve edge adding (visually) and node adding (placing in the certain location), avoid refreshing the graph
+- Improve algorithm monitor by adding the dictionary <time,memory/processor usage> and implement charts from it[x]
+- esc should end the animation of pathfinding[x]

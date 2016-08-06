@@ -70,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Adapters\EdgeAdapter.cs" />
     <Compile Include="Adapters\MapAdapter.cs" />
+    <Compile Include="Adapters\PerformanceResultsAdapter.cs" />
+    <Compile Include="Converters\ByteConverterExtensions.cs" />
     <Compile Include="Converters\EnumDescriptionTypeConverter.cs" />
     <Compile Include="ExceptionContracts\DomainException.cs" />
     <Compile Include="ExceptionContracts\eErrorTypes.cs" />
@@ -109,7 +111,10 @@
     <Compile Include="Monitoring\Quality\PathDetails.cs" />
     <Compile Include="Monitoring\Performance\PerformanceMonitor.cs" />
     <Compile Include="Monitoring\Performance\PerformanceResults.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\DefaultRandomGenerator.cs" />
+    <Compile Include="Utilities\IRandomGenerator.cs" />
     <Compile Include="ViewModels\EdgeView.cs" />
     <Compile Include="ViewModels\eVertexState.cs" />
     <Compile Include="ViewModels\MapView.cs" />

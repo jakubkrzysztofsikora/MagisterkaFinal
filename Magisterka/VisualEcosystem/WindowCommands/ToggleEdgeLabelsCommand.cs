@@ -1,13 +1,13 @@
 ﻿using System.Windows.Input;
-using FontAwesome.WPF;
+using Magisterka.ViewModels;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class ToggleEdgeLabelsCommand : RoutedUICommand, ICommand
     {
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
-        public ToggleEdgeLabelsCommand(MainWindow window)
+        public ToggleEdgeLabelsCommand(MainWindowViewModel window)
         {
             _window = window;
         }
@@ -20,7 +20,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public void Execute(object parameter)
         {
             _window.VisualMap.ShowAllEdgesLabels(!_window.VisualMap.ShowEdgeLabels);
-            _window.EdgeLabelsTileIcon.Icon = _window.VisualMap.ShowEdgeLabels ? FontAwesomeIcon.Eye : FontAwesomeIcon.EyeSlash;
+            _window.SetDefaultIcons();
         }
     }
 }

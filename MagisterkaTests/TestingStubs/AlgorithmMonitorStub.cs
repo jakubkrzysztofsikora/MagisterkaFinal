@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using Magisterka.Domain.Annotations;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
@@ -15,6 +13,7 @@ namespace MagisterkaTests.TestingStubs
         public PathDetails PathDetails { get; set; }
         public PerformanceResults PerformanceResults { get; set; }
         public bool IsMonitoring { get; set; }
+
         public void StartMonitoring()
         {
             
@@ -43,6 +42,14 @@ namespace MagisterkaTests.TestingStubs
         public void MonitorPathFragment(Node fromNode, Node toNode)
         {
             
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

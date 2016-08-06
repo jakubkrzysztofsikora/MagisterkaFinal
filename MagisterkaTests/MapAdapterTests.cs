@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GraphX.PCL.Logic.Algorithms;
 using Magisterka.Domain.Adapters;
@@ -9,8 +8,8 @@ using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
+using Magisterka.Domain.Utilities;
 using Magisterka.Domain.ViewModels;
-using Magisterka.VisualEcosystem;
 using NUnit.Framework;
 
 namespace MagisterkaTests
@@ -19,65 +18,10 @@ namespace MagisterkaTests
     public class MapAdapterTests
     {
         [Test]
-        public void ShouldDeleteANodeOnBothMaps()
-        {
-            //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
-            Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
-            NodeView nodeToDelete = mapAdapter.VisualMap.GetVertexByLogicNode(logicMap.First());
-
-            //When
-            mapAdapter.DeleteNode(nodeToDelete);
-
-            //Then
-            bool nodeExistsOnVisualMap = mapAdapter.VisualMap.ContainsVertex(nodeToDelete);
-            bool nodeExistsOnLogicMap = logicMap.Contains(nodeToDelete.LogicNode);
-            Assert.IsTrue(!nodeExistsOnVisualMap && !nodeExistsOnLogicMap);
-        }
-
-        [Test]
-        public void ShouldDeleteAnEdgeOnBothMaps()
-        {
-            //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
-            Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
-            EdgeView edgeToDelete = mapAdapter.VisualMap.GetAllEdges(mapAdapter.VisualMap.Vertices.First()).First();
-
-            //When
-            mapAdapter.DeleteEdge(edgeToDelete);
-
-            //Then
-            bool edgeExistsOnVisualMap = mapAdapter.VisualMap.ContainsEdge(edgeToDelete);
-            bool edgexistsOnLogicMap = logicMap.GetAllEdges().Contains(edgeToDelete.LogicEdge);
-            Assert.IsTrue(!edgeExistsOnVisualMap && !edgexistsOnLogicMap);
-        }
-
-        [Test]
-        public void ShouldAddANodeToBothMaps()
-        {
-            //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
-            Map logicMap = logicMapFactory.GenerateDefaultMap();
-            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
-            NodeView node = new NodeView
-            {
-                LogicNode = new Node("test")
-            };
-
-            //When
-            mapAdapter.AddNode(node);
-
-            //Then
-            Assert.IsTrue(logicMap.Contains(node.LogicNode) && mapAdapter.VisualMap.ContainsVertex(node));
-        }
-
-        [Test]
         public void ShouldAddAnEdgeToBothMaps()
         {
             //Given
-            MapFactory logicMapFactory = new MapFactory(new Random());
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
             Map logicMap = logicMapFactory.GenerateDefaultMap();
             MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
             NodeView node1 = new NodeView
@@ -101,6 +45,61 @@ namespace MagisterkaTests
 
             //Then
             Assert.IsTrue(logicMap.GetAllEdges().Any(e => e == edge.LogicEdge) && mapAdapter.VisualMap.ContainsEdge(edge));
+        }
+
+        [Test]
+        public void ShouldAddANodeToBothMaps()
+        {
+            //Given
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
+            Map logicMap = logicMapFactory.GenerateDefaultMap();
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
+            NodeView node = new NodeView
+            {
+                LogicNode = new Node("test")
+            };
+
+            //When
+            mapAdapter.AddNode(node);
+
+            //Then
+            Assert.IsTrue(logicMap.Contains(node.LogicNode) && mapAdapter.VisualMap.ContainsVertex(node));
+        }
+
+        [Test]
+        public void ShouldDeleteAnEdgeOnBothMaps()
+        {
+            //Given
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
+            Map logicMap = logicMapFactory.GenerateDefaultMap();
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
+            EdgeView edgeToDelete = mapAdapter.VisualMap.GetAllEdges(mapAdapter.VisualMap.Vertices.First()).First();
+
+            //When
+            mapAdapter.DeleteEdge(edgeToDelete);
+
+            //Then
+            bool edgeExistsOnVisualMap = mapAdapter.VisualMap.ContainsEdge(edgeToDelete);
+            bool edgexistsOnLogicMap = logicMap.GetAllEdges().Contains(edgeToDelete.LogicEdge);
+            Assert.IsTrue(!edgeExistsOnVisualMap && !edgexistsOnLogicMap);
+        }
+
+        [Test]
+        public void ShouldDeleteANodeOnBothMaps()
+        {
+            //Given
+            MapFactory logicMapFactory = new MapFactory(new DefaultRandomGenerator());
+            Map logicMap = logicMapFactory.GenerateDefaultMap();
+            MapAdapter mapAdapter = MapAdapter.CreateMapAdapterFromLogicMap(logicMap, new PathfinderFactory(new AlgorithmMonitor(new PerformanceMonitor(), new AlgorithmQualityRegistry())), logicMapFactory);
+            NodeView nodeToDelete = mapAdapter.VisualMap.GetVertexByLogicNode(logicMap.First());
+
+            //When
+            mapAdapter.DeleteNode(nodeToDelete);
+
+            //Then
+            bool nodeExistsOnVisualMap = mapAdapter.VisualMap.ContainsVertex(nodeToDelete);
+            bool nodeExistsOnLogicMap = logicMap.Contains(nodeToDelete.LogicNode);
+            Assert.IsTrue(!nodeExistsOnVisualMap && !nodeExistsOnLogicMap);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using GraphX.PCL.Common.Enums;
 using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
@@ -11,13 +10,12 @@ namespace Magisterka.Domain.Adapters
 {
     public class MapAdapter
     {
-        public MapView VisualMap { get; set; }
+        private readonly IMapFactory _mapFactory;
 
         private readonly IPathfinderFactory _pathfinderFactory;
-        private readonly IMapFactory _mapFactory;
+        private bool _graphChanged;
         private Map _logicMap;
         private Pathfinder _pathfinder;
-        private bool _graphChanged;
 
         private MapAdapter(Map logicMap, IPathfinderFactory pathfinderFactory, IMapFactory mapFactory)
         {
@@ -27,9 +25,16 @@ namespace Magisterka.Domain.Adapters
             _graphChanged = true;
         }
 
+        public MapView VisualMap { get; set; }
+
         public bool CanStartPathfinding()
         {
             return _logicMap.Any(node => node.IsStartingNode) && _logicMap.Any(node => node.IsTargetNode);
+        }
+
+        public bool CanGraphBeCleared()
+        {
+            return _logicMap.Any(node => node.IsStartingNode) || _logicMap.Any(node => node.IsTargetNode);
         }
 
         public NodeView StartPathfindingByStep(NodeView currentNode, ePathfindingAlgorithms algorithm)
@@ -44,7 +49,10 @@ namespace Magisterka.Domain.Adapters
 
         public IEnumerable<NodeView> StartPathfindingAllRoute(NodeView currentNode, ePathfindingAlgorithms algorithm)
         {
-            _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+            if (_graphChanged)
+                _pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
+
+
             var logicPath = _pathfinder.GetOptimalPath(_logicMap, currentNode.LogicNode.Coordinates, _graphChanged);
             _graphChanged = false;
 
@@ -137,8 +145,8 @@ namespace Magisterka.Domain.Adapters
 
         public void ChangeCost(EdgeView edge, int answer)
         {
-            VisualMap.ChangeEdgeCost(edge, answer);
             edge.LogicEdge.Cost = answer;
+            VisualMap.ChangeEdgeCost(edge, answer);
             _graphChanged = true;
         }
 
@@ -208,6 +216,9 @@ namespace Magisterka.Domain.Adapters
         {
             Node startingNode = _logicMap.SingleOrDefault(node => node.IsStartingNode);
 
+            if (startingNode == null)
+                return;
+
             NodeView startingVisualNode = VisualMap.GetVertexByLogicNode(startingNode);
             startingVisualNode.Caption = string.Empty;
         }
@@ -216,6 +227,9 @@ namespace Magisterka.Domain.Adapters
         {
             Node targetNode = _logicMap.SingleOrDefault(node => node.IsTargetNode);
 
+            if (targetNode == null)
+                return;
+
             NodeView targetVisualNode = VisualMap.GetVertexByLogicNode(targetNode);
             targetVisualNode.Caption = string.Empty;
         }
@@ -223,11 +237,13 @@ namespace Magisterka.Domain.Adapters
         public void SetAsBlockedNode(NodeView node)
         {
             node.LogicNode.IsBlocked = true;
+            _graphChanged = true;
         }
 
         public void SetAsUnblocked(NodeView node)
         {
             node.LogicNode.IsBlocked = false;
+            _graphChanged = true;
         }
     }
 }

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
+using Magisterka.Domain.Utilities;
 
 namespace Magisterka.Domain.Graph.MovementSpace
 {
@@ -60,11 +60,11 @@ namespace Magisterka.Domain.Graph.MovementSpace
             return map;
         }
 
-        public static Map WithRandomBlockedNodes(this Map map, Random randomizer)
+        public static Map WithRandomBlockedNodes(this Map map, IRandomGenerator randomizer)
         {
             foreach (var node in map.Where(node => !node.IsStartingNode && !node.IsTargetNode))
             {
-                node.IsBlocked = ShouldNodeBeBlocked(node) && RandomizeBlockedStatus(randomizer);
+                node.IsBlocked = ShouldNodeBeBlocked(node) && randomizer.GenerateNodeBlockedStatus();
             }
 
             return map;
@@ -108,11 +108,6 @@ namespace Magisterka.Domain.Graph.MovementSpace
             {
                 GenerateNodesCoordinates(map, neighbor);
             }
-        }
-
-        private static bool RandomizeBlockedStatus(Random randomizer, int maxOfBlocked = 3)
-        {
-            return randomizer.Next(0, maxOfBlocked) == 0;
         }
     }
 }

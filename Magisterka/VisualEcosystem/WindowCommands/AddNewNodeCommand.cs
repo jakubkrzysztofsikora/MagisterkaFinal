@@ -1,15 +1,16 @@
 ﻿using System.Windows.Input;
 using GraphX.Controls;
 using Magisterka.Domain.Adapters;
+using Magisterka.ViewModels;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class AddNewNodeCommand : RoutedUICommand, ICommand
     {
+        private readonly MainWindowViewModel _window;
         private MapAdapter _mapAdapter;
-        private readonly MainWindow _window;
 
-        public AddNewNodeCommand(MainWindow window)
+        public AddNewNodeCommand(MainWindowViewModel window)
         {
             _window = window;
         }
@@ -19,13 +20,15 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             var adapter = mapAdapter as MapAdapter;
             _mapAdapter = adapter;
 
-            return _mapAdapter != null && _window.IsLoaded;
+            return _mapAdapter != null && _window.VisualMap.IsLoaded;
         }
 
         public void Execute(object mapAdapter)
         {
             var node =_mapAdapter.AddNode();
-            _window.VisualMap.AddVertex(node, new VertexControl(node));
+            var newVertex = new VertexControl(node);
+            _window.VisualMap.AddVertex(node, newVertex);
+            newVertex.SetPosition(0,0);
             _window.VisualMap.RefreshGraph();
         }
     }

@@ -14,17 +14,19 @@ using Magisterka.Domain.ViewModels;
 using Magisterka.VisualEcosystem.Animation.AnimationCommands;
 using Magisterka.VisualEcosystem.Extensions;
 using QuickGraph;
+using Point = GraphX.Measure.Point;
 
 namespace Magisterka.VisualEcosystem
 {
     public class VisualMap : GraphArea<NodeView, EdgeView, BidirectionalGraph<NodeView, EdgeView>>
     {
-        public event VertexSelectedEventHandler VertexRightClick;
-        public event EdgeSelectedEventHandler EdgeRightClick;
+        private IAnimationCommand _pathfindingAnimation;
         public bool VerticlesDragging { get; set; }
         public bool ShowVerticlesLabels { get; set; }
         public bool ShowEdgeLabels { get; set; }
         public bool ShowEdgeArrows { get; set; }
+        public event VertexSelectedEventHandler VertexRightClick;
+        public event EdgeSelectedEventHandler EdgeRightClick;
 
         public void InitilizeVisuals()
         {
@@ -79,6 +81,29 @@ namespace Magisterka.VisualEcosystem
             };
         }
 
+        public void AddVertex(NodeView vertex)
+        {
+            var newVertexControl = new VertexControl(vertex);
+            AddVertex(vertex, newVertexControl);
+            newVertexControl.SetPosition(0, 0);
+            newVertexControl.PreviewMouseRightButtonDown += (sender, args) => VertexRightClick?.Invoke(sender, new VertexSelectedEventArgs(newVertexControl, args, ModifierKeys.None));
+            RefreshGraph();
+        }
+
+        public void AddEdge(EdgeView edge, VertexControl fromVertexControl, VertexControl toVertexControl)
+        {
+            var newEdgeControl = new EdgeControl(fromVertexControl, toVertexControl, edge)
+            {
+                ShowArrows = ShowEdgeArrows,
+                ShowLabel = ShowEdgeLabels
+            };
+
+            newEdgeControl.PreviewMouseRightButtonDown +=
+                (sender, args) =>
+                    EdgeRightClick?.Invoke(sender, new EdgeSelectedEventArgs(newEdgeControl, args, ModifierKeys.None));
+            AddEdge(edge, newEdgeControl);
+        }
+
         public void SetVerticesDrag(bool newValue)
         {
             SetVerticesDrag(newValue, false);
@@ -99,15 +124,22 @@ namespace Magisterka.VisualEcosystem
 
         public void RefreshGraph()
         {
-            RelayoutGraph();
             Children.OfType<VertexControl>().Where(vertex => vertex.GetState() == eVertexState.Other).ForEach(vertex => vertex.SetState(eVertexState.Other));
             MarkBlockedNodes();
         }
 
-        public void AddCustomChildIfNotExists(UIElement element)
+        public void AddCustomChildIfNotExists(UIElement element, Point? location = null)
         {
             if (!Children.Contains(element))
+            {
                 AddCustomChildControl(element);
+
+                if (location == null)
+                    return;
+
+                SetLeft(element, location.Value.X);
+                SetTop(element, location.Value.Y);
+            }
         }
 
         public void SetCurrentNode(VertexControl vertex)
@@ -153,6 +185,7 @@ namespace Magisterka.VisualEcosystem
             RemoveStateFromPreviousNode(eVertexState.Target);
             RemoveStateFromPreviousNode(eVertexState.Current);
             RemoveStateFromPreviousNode(eVertexState.Visited);
+            _pathfindingAnimation.StopAnimation();
         }
 
         public VertexControl GetCurrentVertex()
@@ -178,6 +211,7 @@ namespace Magisterka.VisualEcosystem
 
         public void GoToVertex(VertexControl nextVertex, IAnimationCommand animation)
         {
+            _pathfindingAnimation = animation;
             animation.AnimationEnded += (o, args) => SetCurrentNode(nextVertex);
             animation.BeginAnimation();
         }

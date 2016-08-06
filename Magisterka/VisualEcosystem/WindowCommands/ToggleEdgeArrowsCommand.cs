@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using FontAwesome.WPF;
+﻿using System.Windows.Input;
+using Magisterka.ViewModels;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class ToggleEdgeArrowsCommand : RoutedUICommand, ICommand
     {
-        private readonly MainWindow _window;
+        private readonly MainWindowViewModel _window;
 
-        public ToggleEdgeArrowsCommand(MainWindow window)
+        public ToggleEdgeArrowsCommand(MainWindowViewModel window)
         {
             _window = window;
         }
@@ -25,9 +20,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         public void Execute(object parameter)
         {
             _window.VisualMap.ShowAllEdgesArrows(!_window.VisualMap.ShowEdgeArrows);
-            _window.EdgeArrowsTileIcon.Icon = _window.VisualMap.ShowEdgeArrows
-                ? FontAwesomeIcon.Exchange
-                : FontAwesomeIcon.Minus;
+            _window.SetDefaultIcons();
         }
     }
 }

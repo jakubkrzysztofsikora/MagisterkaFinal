@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Magisterka.Domain.Monitoring.Performance
 {
@@ -9,5 +10,8 @@ namespace Magisterka.Domain.Monitoring.Performance
         public long AverageMemoryUsageInBytes { get; set; }
         public long PeakProcessorUsageInPercents { get; set; }
         public long AverageProcessorUsageInPercents { get; set; }
+
+        public IDictionary<TimeSpan, long> MemoryUsageDictionary { get; set; }
+        public IDictionary<TimeSpan, long> ProcessorUsageDictionary { get; set; }
     }
 }

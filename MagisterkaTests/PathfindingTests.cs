@@ -5,11 +5,8 @@ using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Graph.Pathfinding.Exceptions;
-using Magisterka.Domain.Monitoring;
-using Magisterka.Domain.Monitoring.Performance;
-using Magisterka.Domain.Monitoring.Quality;
+using Magisterka.Domain.Utilities;
 using MagisterkaTests.TestingStubs;
-using Moq;
 using NUnit.Framework;
 
 namespace MagisterkaTests
@@ -27,7 +24,7 @@ namespace MagisterkaTests
         public void Init()
         {
             _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitorStub());
-            _mapFactory = new MapFactory(new Random());
+            _mapFactory = new MapFactory(new DefaultRandomGenerator());
             _startingPosition = new Position(Guid.NewGuid());
             _endingPosition = new Position(Guid.NewGuid());
 
@@ -73,7 +70,7 @@ namespace MagisterkaTests
         {
             //Given
             Pathfinder pathfinder = _pathfinderFactory.CreatePathfinderWithAlgorithm(algorithm);
-            Map map = _map.WithRandomBlockedNodes(new Random());
+            Map map = _map.WithRandomBlockedNodes(new DefaultRandomGenerator());
             bool blockedNodeOnTheWayAndCantPassIt = false;
 
             //When

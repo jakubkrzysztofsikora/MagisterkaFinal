@@ -1,18 +1,19 @@
 ﻿using System.Windows.Input;
 using Magisterka.Domain.Adapters;
+using Magisterka.ViewModels;
 using Magisterka.VisualEcosystem.Animation;
 
 namespace Magisterka.VisualEcosystem.WindowCommands
 {
     public class ClearGraphCommand : RoutedUICommand, ICommand
     {
-        private MapAdapter _mapAdapter;
-        private readonly MainWindow _applicationWindow;
         private readonly IMovingActor _actor;
+        private readonly MainWindowViewModel _applicationWindow;
+        private MapAdapter _mapAdapter;
 
-        public ClearGraphCommand(MainWindow applicationWindow, 
+        public ClearGraphCommand(MainWindowViewModel applicationWindow, 
             IMovingActor actor)
-            : base("Clear the graph", "ClearGraph", typeof(ClearGraphCommand), new InputGestureCollection()
+            : base("Clear the graph", "ClearGraph", typeof(ClearGraphCommand), new InputGestureCollection
             {
                 new KeyGesture(Key.Escape, ModifierKeys.None)
             })
@@ -25,7 +26,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         {
             var adapter = mapAdapter as MapAdapter;
             _mapAdapter = adapter;
-            return _mapAdapter != null && _applicationWindow.VisualMap.IsLoaded;
+            return _mapAdapter != null && _applicationWindow.VisualMap.IsLoaded && _mapAdapter.CanGraphBeCleared();
         }
 
         public void Execute(object parameter)
@@ -33,6 +34,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
             _applicationWindow.VisualMap.ClearGraph();
             _mapAdapter.ClearGraph();
             _applicationWindow.VisualMap.Children.Remove(_actor.PresentActor());
+            _applicationWindow.GraphCleared();
         }
     }
 }

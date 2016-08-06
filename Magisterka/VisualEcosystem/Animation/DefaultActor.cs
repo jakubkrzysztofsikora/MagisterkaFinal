@@ -16,8 +16,10 @@ namespace Magisterka.VisualEcosystem.Animation
                 Height = Height = 20
             };
             Color myColor = Color.FromArgb(255, 255, 0, 0);
-            SolidColorBrush myBrush = new SolidColorBrush();
-            myBrush.Color = myColor;
+            SolidColorBrush myBrush = new SolidColorBrush
+            {
+                Color = myColor
+            };
             _actor.Fill = myBrush;
         }
 
