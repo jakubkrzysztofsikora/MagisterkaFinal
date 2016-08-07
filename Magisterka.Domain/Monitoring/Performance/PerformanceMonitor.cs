@@ -48,7 +48,7 @@ namespace Magisterka.Domain.Monitoring.Performance
             var timeSpanKey = TimeSpan.FromTicks(DateTime.Now.Ticks - _amountOfTicksOnStart);
             usage = usage < 0 ? 0 : usage;
             if (!registry.ContainsKey(timeSpanKey))
-                registry.Add(TimeSpan.FromTicks(DateTime.Now.Ticks - _amountOfTicksOnStart), usage);
+                registry.Add(timeSpanKey, usage);
         }
 
         private PerformanceResults GatherAllPerformanceMonitoringResults()

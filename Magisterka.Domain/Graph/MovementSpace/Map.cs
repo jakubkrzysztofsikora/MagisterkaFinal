@@ -140,6 +140,7 @@ namespace Magisterka.Domain.Graph.MovementSpace
         {
             AddNeighbor(edge.NodesConnected.Key, edge.NodesConnected.Value, edge);
             AddNeighbor(edge.NodesConnected.Value, edge.NodesConnected.Key, edge);
+            this.WithGridPositions();
         }
 
         private bool DoesCollectionContainsEdgeBetweenTwoNodes(IEnumerable<Edge> edges, Node firstNode, Node secondNode)
