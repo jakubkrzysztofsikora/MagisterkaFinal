@@ -94,6 +94,8 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             _edgeAnimation?.StopAnimation();
             _edgeAnimation = null;
 
+            HackyRefreshEdgeArrows();
+
             if (!MainWindowViewModel.VisualMap.VerticlesDragging)
                 MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
@@ -112,6 +114,12 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             {
                 menuPosition.Tag = vertex;
             }
+        }
+
+        private static void HackyRefreshEdgeArrows()
+        {
+            MainWindowViewModel.VisualMap.ShowAllEdgesArrows(!MainWindowViewModel.VisualMap.ShowEdgeArrows);
+            MainWindowViewModel.VisualMap.ShowAllEdgesArrows(!MainWindowViewModel.VisualMap.ShowEdgeArrows);
         }
     }
 }

@@ -102,7 +102,6 @@ namespace Magisterka.VisualEcosystem
                 (sender, args) =>
                     EdgeRightClick?.Invoke(sender, new EdgeSelectedEventArgs(newEdgeControl, args, ModifierKeys.None));
             AddEdge(edge, newEdgeControl);
-            newEdgeControl.ShowArrows = false;
         }
 
         public void SetVerticesDrag(bool newValue)
