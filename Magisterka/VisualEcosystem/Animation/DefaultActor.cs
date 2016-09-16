@@ -6,6 +6,9 @@ namespace Magisterka.VisualEcosystem.Animation
 {
     public class DefaultActor : IMovingActor
     {
+        public double Width { get; }
+        public double Height { get; }
+
         private readonly Rectangle _actor;
 
         public DefaultActor()
@@ -22,9 +25,6 @@ namespace Magisterka.VisualEcosystem.Animation
             };
             _actor.Fill = myBrush;
         }
-
-        public double Width { get; }
-        public double Height { get; }
 
         public UIElement PresentActor()
         {
