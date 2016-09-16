@@ -48,6 +48,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                     _openSet.First(
                         node =>
                             heuristicCostFromStartToEndByNodeMap[node] == GetMinimalHeuristicScorePresentInOpenSet(heuristicCostFromStartToEndByNodeMap));
+                _monitor.RecordNodeProcessed(processedNode);
 
                 TransistEvaluatedNodeToClosedSet(processedNode);
 
@@ -60,12 +61,12 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                     var tentativeCostFromStartToNode = weightedCostFromStartToNodeMap[processedNode] +
                                                        (neighbor.IsBlocked ? Infinity : neighborDistance.Cost);
 
+                    _monitor.RecordNodeProcessed(neighbor);
                     bool addedNodeToOpenSet = DiscoverNewNodeToEvaluate(neighbor);
                     if (!addedNodeToOpenSet && tentativeCostFromStartToNode >= weightedCostFromStartToNodeMap[neighbor])
                         continue;
 
                     _previousNodes[neighbor] = processedNode;
-                    _monitor.RecordStep();
                     weightedCostFromStartToNodeMap[neighbor] = tentativeCostFromStartToNode;
                     heuristicCostFromStartToEndByNodeMap[neighbor] = weightedCostFromStartToNodeMap[neighbor] +
                                                                      map.GetHeuristicScoreBetweenNodes(neighbor,

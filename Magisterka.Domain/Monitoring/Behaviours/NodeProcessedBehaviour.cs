@@ -4,11 +4,11 @@ using Magisterka.Domain.Monitoring.Quality;
 
 namespace Magisterka.Domain.Monitoring.Behaviours
 {
-    public class NodeVisitedBehaviour : IAlgorithmBehaviour<PathDetails>
+    public class NodeProcessedBehaviour : IAlgorithmBehaviour<PathDetails>
     {
         private readonly Node _currentNode;
 
-        public NodeVisitedBehaviour(Node currentNode)
+        public NodeProcessedBehaviour(Node currentNode)
         {
             _currentNode = currentNode;
         }

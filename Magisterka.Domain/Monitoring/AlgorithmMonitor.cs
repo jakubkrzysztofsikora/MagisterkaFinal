@@ -1,5 +1,9 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using GraphX.PCL.Logic.Helpers;
 using Magisterka.Domain.Annotations;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Monitoring.Behaviours;
@@ -10,8 +14,14 @@ namespace Magisterka.Domain.Monitoring
 {
     public class AlgorithmMonitor : IAlgorithmMonitor
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public PathDetails PathDetails { get; set; }
+        public PerformanceResults PerformanceResults { get; set; }
+        public bool IsMonitoring { get; set; }
+
         private readonly IPartialMonitor<PerformanceResults> _performanceMonitor;
         private readonly IBehaviourRegistry<PathDetails> _qualityRegistry;
+        private const int MaximumNumberOfPerformanceReadsForCharts = 10;
 
         public AlgorithmMonitor(IPartialMonitor<PerformanceResults> performanceMonitor,
                                 IBehaviourRegistry<PathDetails> qualityMonitor)
@@ -19,12 +29,6 @@ namespace Magisterka.Domain.Monitoring
             _performanceMonitor = performanceMonitor;
             _qualityRegistry = qualityMonitor;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public PathDetails PathDetails { get; set; }
-        public PerformanceResults PerformanceResults { get; set; }
-        public bool IsMonitoring { get; set; }
 
         public void StartMonitoring()
         {
@@ -38,6 +42,12 @@ namespace Magisterka.Domain.Monitoring
             IsMonitoring = false;
             PerformanceResults = _performanceMonitor.Stop();
             PathDetails = _qualityRegistry.StopRegistration();
+            PerformanceResults.MemoryUsageDictionary =
+                SanatizePerformanceReadsForChartVisualization(PerformanceResults.MemoryUsageDictionary);
+            PerformanceResults.ProcessorUsageDictionary =
+                SanatizePerformanceReadsForChartVisualization(PerformanceResults.ProcessorUsageDictionary);
+
+
             OnPropertyChanged(nameof(PathDetails));
             OnPropertyChanged(nameof(PerformanceResults));
         }
@@ -48,10 +58,13 @@ namespace Magisterka.Domain.Monitoring
             _qualityRegistry.NoteBehaviour(behaviour);
         }
 
-        public void RecordVisit(Node currentNode)
+        public void RecordNodeProcessed(params Node[] processedNodes)
         {
-            NodeVisitedBehaviour behaviour = new NodeVisitedBehaviour(currentNode);
-            _qualityRegistry.NoteBehaviour(behaviour);
+            processedNodes.ForEach(node =>
+            {
+                NodeProcessedBehaviour behaviour = new NodeProcessedBehaviour(node);
+                _qualityRegistry.NoteBehaviour(behaviour);
+            });
         }
 
         public void RecordEdgeCost(Node fromNode, Node toNode)
@@ -65,7 +78,6 @@ namespace Magisterka.Domain.Monitoring
             if (IsMonitoring)
             {
                 RecordStep();
-                RecordVisit(fromNode);
                 RecordEdgeCost(fromNode, toNode);
             }
         }
@@ -74,6 +86,31 @@ namespace Magisterka.Domain.Monitoring
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private IDictionary<TimeSpan, long> SanatizePerformanceReadsForChartVisualization(IDictionary<TimeSpan, long> performanceReads)
+        {
+            int numberOfReads = performanceReads.Count;
+            int readInterval = numberOfReads / MaximumNumberOfPerformanceReadsForCharts;
+            int countOfReads = 0;
+
+            if (numberOfReads <= 10)
+                return performanceReads;
+
+            IDictionary<TimeSpan, long> sanatizedPerformanceReads = new Dictionary<TimeSpan, long>();
+
+            performanceReads.ForEach(read =>
+            {
+                bool isReadChosenForChart = countOfReads%readInterval == 0 || countOfReads == 0 ||
+                                            (performanceReads.Values.Max() == read.Value && !sanatizedPerformanceReads.Values.Contains(read.Value) );
+                if (isReadChosenForChart)
+                {
+                    sanatizedPerformanceReads.Add(read);
+                }
+                ++countOfReads;
+            });
+
+            return sanatizedPerformanceReads;
         }
     }
 }

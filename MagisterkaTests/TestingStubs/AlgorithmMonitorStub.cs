@@ -29,7 +29,7 @@ namespace MagisterkaTests.TestingStubs
             
         }
 
-        public void RecordVisit(Node currentNode)
+        public void RecordNodeProcessed(params Node[] processedNodes)
         {
             
         }

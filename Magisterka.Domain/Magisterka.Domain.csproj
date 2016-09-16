@@ -100,7 +100,7 @@
     <Compile Include="Graph\Pathfinding\PathfindingStrategies\JohnsonStrategy.cs" />
     <Compile Include="Monitoring\AlgorithmMonitor.cs" />
     <Compile Include="Monitoring\Behaviours\EdgeTraveledBehaviour.cs" />
-    <Compile Include="Monitoring\Behaviours\NodeVisitedBehaviour.cs" />
+    <Compile Include="Monitoring\Behaviours\NodeProcessedBehaviour.cs" />
     <Compile Include="Monitoring\IAlgorithmMonitor.cs" />
     <Compile Include="Monitoring\Quality\AlgorithmQualityRegistry.cs" />
     <Compile Include="Monitoring\Behaviours\IAlgorithmBehaviour.cs" />

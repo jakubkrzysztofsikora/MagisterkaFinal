@@ -52,6 +52,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                 {
                     var node1 = edge.NodesConnected.Key;
                     var node2 = edge.NodesConnected.Value;
+                    _monitor.RecordNodeProcessed(node1, node2);
 
                     RelaxEdge(node1, node2, edge.Cost);
                     RelaxEdge(node2, node1, edge.Cost);
