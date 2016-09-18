@@ -27,7 +27,7 @@ namespace Magisterka.VisualEcosystem.WindowCommands
         {
             var node =_mapAdapter.AddNode();
             var newVertex = new VertexControl(node);
-            _window.VisualMap.AddVertex(node, newVertex);
+            _window.VisualMap.AddVertex(node);
             newVertex.SetPosition(0,0);
             _window.VisualMap.RefreshGraph();
         }

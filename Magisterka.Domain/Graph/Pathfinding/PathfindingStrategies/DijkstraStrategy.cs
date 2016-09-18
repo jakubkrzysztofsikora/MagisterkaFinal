@@ -37,6 +37,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
             {
                 var nearestNode = GetNearestNodeInUnoptimizedGraph();
                 _unoptimizedGraph.Remove(nearestNode);
+                _monitor.RecordNodeProcessed(nearestNode);
 
                 if (nearestNode.IsTargetNode)
                 {

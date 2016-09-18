@@ -83,16 +83,21 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             clickedTile.Title = "Cancel";
             _clickedTile = clickedTile;
             
-            MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
+            if (MainWindowViewModel.VisualMap.VerticlesDragging)
+                MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
 
         public static void StopNewEdgeProcess()
         {
             NewEdgeAdapter = null;
             _clickedTile.Title = "New Edge";
-            _edgeAnimation.StopAnimation();
+            _edgeAnimation?.StopAnimation();
             _edgeAnimation = null;
-            MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
+
+            HackyRefreshEdgeArrows();
+
+            if (!MainWindowViewModel.VisualMap.VerticlesDragging)
+                MainWindowViewModel.ToggleNodeDraggingCommand.Execute(null);
         }
 
         private static void SetMenuPositionDependantOnProperty(ContextMenu menu, bool booleanProperty, string nameOfMenuPosition)
@@ -109,6 +114,12 @@ namespace Magisterka.VisualEcosystem.EventHandlers
             {
                 menuPosition.Tag = vertex;
             }
+        }
+
+        private static void HackyRefreshEdgeArrows()
+        {
+            MainWindowViewModel.VisualMap.ShowAllEdgesArrows(!MainWindowViewModel.VisualMap.ShowEdgeArrows);
+            MainWindowViewModel.VisualMap.ShowAllEdgesArrows(!MainWindowViewModel.VisualMap.ShowEdgeArrows);
         }
     }
 }

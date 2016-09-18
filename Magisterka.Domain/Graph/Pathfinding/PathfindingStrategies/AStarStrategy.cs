@@ -33,50 +33,73 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
 
             InitilizeSets(currentNode);
 
-            var weightedCostFromStartToNodeMap =
-                new Dictionary<Node, long>(map.ToDictionary(x => x, x => x.Coordinates == currentPosition ? 0 : Infinity));
-            var heuristicCostFromStartToEndByNodeMap =
-                new Dictionary<Node, long>(map.ToDictionary(x => x,
-                    x =>
-                        x.Coordinates == currentPosition
-                            ? map.GetHeuristicScoreBetweenNodes(currentNode, targetNode)
-                            : Infinity));
+            var weightedCostFromStartToNodeMap = InitilizeDictionaryNodeToWeightDistanceFromStart(map, currentPosition);
+            var heuristicCostFromNodeToTargetMap = InitilizeDictionaryNodeToHeuristicDistanceToTarget(map, currentNode,
+                targetNode);
 
             while (_openSet.Count != 0)
             {
-                var processedNode =
-                    _openSet.First(
-                        node =>
-                            heuristicCostFromStartToEndByNodeMap[node] == GetMinimalHeuristicScorePresentInOpenSet(heuristicCostFromStartToEndByNodeMap));
+                var processedNode = GetNodeFromOpenSetWithMinimalHeuristicScore(heuristicCostFromNodeToTargetMap);
 
                 TransistEvaluatedNodeToClosedSet(processedNode);
 
-                foreach (
-                    var nodeToCost in
-                        processedNode.Neighbors.Where(x => !_closedSet.Contains(x.Key)))
+                foreach (var nodeToCost in GetNeighborPairsNotIncludedInClosedSet(processedNode.Neighbors))
                 {
                     var neighbor = nodeToCost.Key;
                     var neighborDistance = nodeToCost.Value;
                     var tentativeCostFromStartToNode = weightedCostFromStartToNodeMap[processedNode] +
                                                        (neighbor.IsBlocked ? Infinity : neighborDistance.Cost);
 
+                    _monitor.RecordNodeProcessed(neighbor);
                     bool addedNodeToOpenSet = DiscoverNewNodeToEvaluate(neighbor);
                     if (!addedNodeToOpenSet && tentativeCostFromStartToNode >= weightedCostFromStartToNodeMap[neighbor])
                         continue;
 
                     _previousNodes[neighbor] = processedNode;
-                    _monitor.RecordStep();
                     weightedCostFromStartToNodeMap[neighbor] = tentativeCostFromStartToNode;
-                    heuristicCostFromStartToEndByNodeMap[neighbor] = weightedCostFromStartToNodeMap[neighbor] +
+                    heuristicCostFromNodeToTargetMap[neighbor] = weightedCostFromStartToNodeMap[neighbor] +
                                                                      map.GetHeuristicScoreBetweenNodes(neighbor,
                                                                          targetNode);
                 }
             }
             
-            List<Node> path = CreateOptimalPath(currentNode, targetNode).ToList();
-            CalculatedPath = path;
+            ConstructPath(currentNode, targetNode);
 
             _monitor.StopMonitoring();
+        }
+
+        private Dictionary<Node, Edge> GetNeighborPairsNotIncludedInClosedSet(IDictionary<Node, Edge> neighborCollection)
+        {
+            return neighborCollection.Where(x => !_closedSet.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value);
+        }
+
+        private Node GetNodeFromOpenSetWithMinimalHeuristicScore(Dictionary<Node, long> heuristicCostFromNodeToTargetMap)
+        {
+            return _openSet.First(
+                node =>
+                    heuristicCostFromNodeToTargetMap[node] ==
+                    GetMinimalHeuristicScorePresentInOpenSet(heuristicCostFromNodeToTargetMap));
+        }
+
+        private Dictionary<Node, long> InitilizeDictionaryNodeToHeuristicDistanceToTarget(Map graph, Node currentNode, Node targetNode)
+        {
+            return new Dictionary<Node, long>(graph.ToDictionary(x => x,
+                x =>
+                    x.Coordinates == currentNode.Coordinates
+                        ? graph.GetHeuristicScoreBetweenNodes(currentNode, targetNode)
+                        : Infinity));
+        }
+
+        private Dictionary<Node, long> InitilizeDictionaryNodeToWeightDistanceFromStart(Map graph, Position startPosition)
+        {
+            return
+                new Dictionary<Node, long>(graph.ToDictionary(x => x, x => x.Coordinates == startPosition ? 0 : Infinity));
+        }
+
+        private void ConstructPath(Node currentNode, Node targetNode)
+        {
+            List<Node> path = CreateOptimalPath(currentNode, targetNode).ToList();
+            CalculatedPath = path;
         }
 
         private bool DiscoverNewNodeToEvaluate(Node nodeToEvaluate)

@@ -36,7 +36,7 @@ namespace Magisterka.DependencyInjection
             builder.RegisterType<AlgorithmMonitor>().As<IAlgorithmMonitor>().InstancePerLifetimeScope();
             builder.RegisterType<RaportGenerator>().As<IRaportGenerator>().InstancePerLifetimeScope();
             builder.RegisterType<CommandValidator>().As<ICommandValidator>().InstancePerLifetimeScope();
-            builder.RegisterType<DefaultActor>().As<IMovingActor>().InstancePerLifetimeScope();
+            builder.RegisterType<UserIconActor>().As<IMovingActor>().InstancePerLifetimeScope();
 
             builder.RegisterType<RaportStringContainer>()
                 .As<IRaportStringContainerContract>()

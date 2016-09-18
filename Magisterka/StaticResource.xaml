@@ -43,9 +43,9 @@
   <system:String x:Key="RaportPathDetailsSectionTitle">Path Details</system:String>
   <system:String x:Key="RaportNumberOfSteps">Number of steps taken</system:String>
   <system:String x:Key="RaportLengthOfPath">Physical length of the path</system:String>
-  <system:String x:Key="RaportVisitsPerNodeSectionTitle">Visits per Node</system:String>
+  <system:String x:Key="RaportVisitsPerNodeSectionTitle">Number of processings per Node</system:String>
   <system:String x:Key="RaportNodeName">Node (Name)</system:String>
-  <system:String x:Key="RaportNodeVisits">Number of visits</system:String>
+  <system:String x:Key="RaportNodeVisits">Number of processings</system:String>
   <system:String x:Key="RaportPerformanceResultsSectionTitle">Performance Results</system:String>
   <system:String x:Key="RaportTimeOfComputing">Time of computing (ms)</system:String>
   <system:String x:Key="RaportPeakMemoryUsage">Peak memory usage (MB)</system:String>

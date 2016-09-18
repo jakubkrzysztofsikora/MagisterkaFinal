@@ -35,6 +35,7 @@ namespace Magisterka.Domain.Graph.Pathfinding.PathfindingStrategies
                                                                       IsPathThroughOtherNodeShorter(firstNode, finalNode, middleNode) &&
                                                                       !finalNode.IsBlocked))
                     {
+                        _monitor.RecordNodeProcessed(middleNode, firstNode, finalNode);
                         SetNewDistanceBetweenNodes(firstNode, middleNode, finalNode);
                         AddNewMiddleNodeBetweenFirstAndFinalToOptimalPath(firstNode, middleNode, finalNode);
                     }

@@ -14,7 +14,7 @@ namespace Magisterka.Domain.Monitoring
         void StartMonitoring();
         void StopMonitoring();
         void RecordStep();
-        void RecordVisit(Node currentNode);
+        void RecordNodeProcessed(params Node[] processedNodes);
         void RecordEdgeCost(Node fromNode, Node toNode);
         void MonitorPathFragment(Node fromNode, Node toNode);
     }

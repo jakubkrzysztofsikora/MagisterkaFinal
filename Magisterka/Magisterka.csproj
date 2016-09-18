@@ -129,6 +129,7 @@
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\IAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\NewEdgeMouseAnimationCommand.cs" />
     <Compile Include="VisualEcosystem\Animation\AnimationCommands\PathAnimationCommand.cs" />
+    <Compile Include="VisualEcosystem\Animation\UserIconActor.cs" />
     <Compile Include="VisualEcosystem\Animation\eAnimationSpeed.cs" />
     <Compile Include="VisualEcosystem\Animation\DefaultActor.cs" />
     <Compile Include="VisualEcosystem\Animation\IMovingActor.cs" />

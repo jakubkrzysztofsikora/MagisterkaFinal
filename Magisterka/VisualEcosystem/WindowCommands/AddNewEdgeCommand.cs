@@ -42,9 +42,10 @@ namespace Magisterka.VisualEcosystem.WindowCommands
 
         private void AddEdge(EdgeAdapter edgeAdapter)
         {
-            EdgeView edgeView = new EdgeView(edgeAdapter.Edge,
-                edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.FromNode),
-                edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode));
+            NodeView fromNodeView = edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.FromNode);
+            NodeView toNodeView = edgeAdapter.MapAdapter.VisualMap.GetVertexByLogicNode(edgeAdapter.ToNode);
+            EdgeView edgeView = new EdgeView(edgeAdapter.Edge, fromNodeView, toNodeView);
+
             edgeAdapter.MapAdapter.AddEdge(edgeView);
             VertexControl fromVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Source);
             VertexControl toVertexControl = _window.VisualMap.GetVertexControlOfNode(edgeView.Target);

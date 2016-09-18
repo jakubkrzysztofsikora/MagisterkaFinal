@@ -62,7 +62,11 @@ namespace Magisterka.VisualEcosystem.EventHandlers
         {
             EdgeControl edgeControl = ((ItemsControl)sender).GetEdgeControl();
             EdgeView edge = edgeControl.GetEdgeView();
-            EdgeView symetricEdge = _mapAdapter.VisualMap.Edges.Single(e => e != edge && e.Target.LogicNode == edge.Source.LogicNode && e.Source.LogicNode == edge.Target.LogicNode);
+            EdgeView symetricEdge =
+                _mapAdapter.VisualMap.Edges.First(
+                    e =>
+                        e != edge && e.Target.LogicNode == edge.Source.LogicNode &&
+                        e.Source.LogicNode == edge.Target.LogicNode && e.LogicEdge.Cost == edge.LogicEdge.Cost);
 
             _visualMap.RemoveEdge(edge);
             _visualMap.RemoveEdge(symetricEdge);
