@@ -31,6 +31,7 @@
       <CommandBinding Command="ViewModels:MainWindowViewModel.ToggleEdgeArrowsCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="ViewModels:MainWindowViewModel.GenerateExcelRaportCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="ViewModels:MainWindowViewModel.StartPathfindingSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
+      <CommandBinding Command="ViewModels:MainWindowViewModel.ResetSimulationCommand" CanExecute="CustomCommandCanExecute" Executed="CustomCommandExecuted" />
       <CommandBinding Command="New" Executed="CreateNewGraph" />
     </Window.CommandBindings>
     <Window.Resources>
@@ -97,6 +98,7 @@
         <MenuItem Header="{StaticResource ClearGraph}" Command="ViewModels:MainWindowViewModel.ClearGraphCommand" />
         </MenuItem>
         <MenuItem Header="{StaticResource StartPathfinding}" >
+          <MenuItem Header="{StaticResource ResetAnimation}" Command="ViewModels:MainWindowViewModel.ResetSimulationCommand" />
           <MenuItem Header="{StaticResource PathfindingStep}" Command="ViewModels:MainWindowViewModel.TakePathfindingStepCommand" />
           <MenuItem Header="{StaticResource PathfindingAll}" Command="ViewModels:MainWindowViewModel.StartPathfindingSimulationCommand" />
         </MenuItem>

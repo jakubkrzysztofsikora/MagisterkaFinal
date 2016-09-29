@@ -44,6 +44,10 @@ namespace MagisterkaTests.TestingStubs
             
         }
 
+        public void Clear()
+        {
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

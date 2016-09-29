@@ -17,5 +17,6 @@ namespace Magisterka.Domain.Monitoring
         void RecordNodeProcessed(params Node[] processedNodes);
         void RecordEdgeCost(Node fromNode, Node toNode);
         void MonitorPathFragment(Node fromNode, Node toNode);
+        void Clear();
     }
 }

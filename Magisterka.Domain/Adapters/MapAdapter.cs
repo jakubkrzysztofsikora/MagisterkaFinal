@@ -11,6 +11,8 @@ namespace Magisterka.Domain.Adapters
 {
     public class MapAdapter
     {
+        public MapView VisualMap { get; set; }
+
         private readonly IMapFactory _mapFactory;
 
         private readonly IPathfinderFactory _pathfinderFactory;
@@ -26,16 +28,24 @@ namespace Magisterka.Domain.Adapters
             _graphChanged = true;
         }
 
-        public MapView VisualMap { get; set; }
-
         public bool CanStartPathfinding()
         {
-            return _logicMap.Any(node => node.IsStartingNode) && _logicMap.Any(node => node.IsTargetNode);
+            return _logicMap.Any(node => node.IsStartingNode) && _logicMap.Any(node => node.IsTargetNode) && VisualMap.Vertices.Any(node => node.CurrentState == eVertexState.Target);
         }
 
         public bool CanGraphBeCleared()
         {
             return _logicMap.Any(node => node.IsStartingNode) || _logicMap.Any(node => node.IsTargetNode);
+        }
+
+        public NodeView GetStartNode()
+        {
+            return GetOneNodeWithGivenState(eVertexState.Start);
+        }
+
+        public NodeView GetTargetNode()
+        {
+            return GetOneNodeWithGivenState(eVertexState.Target) ?? VisualMap.Vertices.SingleOrDefault(node => node.LogicNode.IsTargetNode);
         }
 
         public NodeView StartPathfindingByStep(NodeView currentNode, ePathfindingAlgorithms algorithm)
@@ -194,6 +204,11 @@ namespace Magisterka.Domain.Adapters
             IEnumerable<EdgeView> visualEdges = ConstructListOfVisualEdges(bidirectionalEdgeAdapters);
 
             VisualMap.AddEdgeRange(visualEdges);
+        }
+
+        private NodeView GetOneNodeWithGivenState(eVertexState state)
+        {
+            return VisualMap.Vertices.FirstOrDefault(node => node.CurrentState == state);
         }
 
         private IEnumerable<EdgeView> ConstructListOfVisualEdges(IEnumerable<EdgeAdapter> edgeAdapters)

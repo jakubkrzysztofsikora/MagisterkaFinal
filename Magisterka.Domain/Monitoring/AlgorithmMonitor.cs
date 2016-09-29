@@ -82,6 +82,12 @@ namespace Magisterka.Domain.Monitoring
             }
         }
 
+        public void Clear()
+        {
+            PathDetails = new PathDetails();
+            PerformanceResults = new PerformanceResults();
+        }
+
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

@@ -11,12 +11,14 @@ using Magisterka.Domain.Annotations;
 using Magisterka.Domain.ExceptionContracts;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
+using Magisterka.Domain.ViewModels;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.VisualEcosystem;
 using Magisterka.VisualEcosystem.Animation;
 using Magisterka.VisualEcosystem.ErrorHandling;
 using Magisterka.VisualEcosystem.EventHandlers;
+using Magisterka.VisualEcosystem.Extensions;
 using Magisterka.VisualEcosystem.WindowCommands;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -24,43 +26,6 @@ namespace Magisterka.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
-        private readonly IErrorDisplayer _errorDisplayer;
-
-        public MainWindowViewModel(IAlgorithmMonitor algorithmMonitor, 
-            IMovingActor actor, 
-            IRaportGenerator raportGenerator,
-            IRaportStringContainerContract raportStringContent, 
-            IErrorDisplayer errorDisplayer,
-            IDialogCoordinator dialogCoordinator)
-        {
-            Monitor = algorithmMonitor;
-            Monitor.PropertyChanged += OnMonitorChanged;
-            _errorDisplayer = errorDisplayer;
-            TakePathfindingStepCommand = new TakePathfindingStepCommand(this, actor, new CommandValidator());
-            StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(this, actor, new CommandValidator(), errorDisplayer);
-            ClearGraphCommand = new ClearGraphCommand(this, actor);
-            AddNewNodeCommand = new AddNewNodeCommand(this);
-            AddNewEdgeCommand = new AddNewEdgeCommand(this);
-            RelayoutGraphCommand = new RelayoutGraphCommand(this);
-            ToggleNodeDraggingCommand = new ToggleNodeDraggingCommand(this);
-            ToggleEdgeLabelsCommand = new ToggleEdgeLabelsCommand(this);
-            ToggleEdgeArrowsCommand = new ToggleEdgeArrowsCommand(this);
-            GenerateExcelRaportCommand = new GenerateExcelRaportCommand(algorithmMonitor, raportGenerator, raportStringContent, dialogCoordinator, this);
-
-            ChosenAlgorithm = ePathfindingAlgorithms.Djikstra;
-            ChosenAnimationSpeed = eAnimationSpeed.Normal;
-            PathStatsPanelVisibility = Visibility.Collapsed;
-            PathStatsPlaceholderVisibility = Visibility.Visible;
-            PerformanceStatsPanelVisibility = Visibility.Collapsed;
-            PerformanceStatsPlaceholderVisibility = Visibility.Visible;
-            GraphPlaceholderVisibility = Visibility.Visible;
-            ProgressRingVisibility = Visibility.Hidden;
-            ProgressRingIsActive = true;
-            NewEdgeTileIsEnabled = false;
-            NewNodeTileIsEnabled = false;
-            ChartMilisecondInterval = 1;
-        }
-
         public static ICommand TakePathfindingStepCommand { get; set; }
         public static ICommand StartPathfindingSimulationCommand { get; set; }
         public static ICommand ClearGraphCommand { get; set; }
@@ -71,6 +36,7 @@ namespace Magisterka.ViewModels
         public static ICommand ToggleEdgeLabelsCommand { get; set; }
         public static ICommand ToggleEdgeArrowsCommand { get; set; }
         public static ICommand GenerateExcelRaportCommand { get; set; }
+        public static ICommand ResetSimulationCommand { get; set; }
 
         public IAlgorithmMonitor Monitor { get; set; }
         public Dictionary<double, double> MemoryUsageViewModel { get; set; }
@@ -105,6 +71,44 @@ namespace Magisterka.ViewModels
 
         public event EventHandler ClearedGraph;
 
+        private readonly IErrorDisplayer _errorDisplayer;
+
+        public MainWindowViewModel(IAlgorithmMonitor algorithmMonitor, 
+            IMovingActor actor, 
+            IRaportGenerator raportGenerator,
+            IRaportStringContainerContract raportStringContent, 
+            IErrorDisplayer errorDisplayer,
+            IDialogCoordinator dialogCoordinator)
+        {
+            Monitor = algorithmMonitor;
+            Monitor.PropertyChanged += OnMonitorChanged;
+            _errorDisplayer = errorDisplayer;
+            TakePathfindingStepCommand = new TakePathfindingStepCommand(this, actor, new CommandValidator());
+            StartPathfindingSimulationCommand = new StartPathfindingSimulationCommand(this, actor, new CommandValidator(), errorDisplayer);
+            ClearGraphCommand = new ClearGraphCommand(this, actor);
+            AddNewNodeCommand = new AddNewNodeCommand(this);
+            AddNewEdgeCommand = new AddNewEdgeCommand(this);
+            RelayoutGraphCommand = new RelayoutGraphCommand(this);
+            ToggleNodeDraggingCommand = new ToggleNodeDraggingCommand(this);
+            ToggleEdgeLabelsCommand = new ToggleEdgeLabelsCommand(this);
+            ToggleEdgeArrowsCommand = new ToggleEdgeArrowsCommand(this);
+            GenerateExcelRaportCommand = new GenerateExcelRaportCommand(algorithmMonitor, raportGenerator, raportStringContent, dialogCoordinator, this);
+            ResetSimulationCommand = new ResetSimulationCommand(this, ClearGraphCommand);
+
+            ChosenAlgorithm = ePathfindingAlgorithms.Djikstra;
+            ChosenAnimationSpeed = eAnimationSpeed.Normal;
+            PathStatsPanelVisibility = Visibility.Collapsed;
+            PathStatsPlaceholderVisibility = Visibility.Visible;
+            PerformanceStatsPanelVisibility = Visibility.Collapsed;
+            PerformanceStatsPlaceholderVisibility = Visibility.Visible;
+            GraphPlaceholderVisibility = Visibility.Visible;
+            ProgressRingVisibility = Visibility.Hidden;
+            ProgressRingIsActive = true;
+            NewEdgeTileIsEnabled = false;
+            NewNodeTileIsEnabled = false;
+            ChartMilisecondInterval = 1;
+        }
+
         public void SetDefaultIcons()
         {
             DraggingIcon = VisualMap.VerticlesDragging ? FontAwesomeIcon.Unlock : FontAwesomeIcon.Lock;
@@ -128,6 +132,31 @@ namespace Magisterka.ViewModels
             OnPropertyChanged(nameof(Monitor));
             OnPropertyChanged(nameof(Monitor.PathDetails));
             OnPropertyChanged(nameof(Monitor.PerformanceResults));
+        }
+
+        public void HideAlgorithmMonitor()
+        {
+            PathStatsPanelVisibility = Visibility.Collapsed;
+            PathStatsPlaceholderVisibility = Visibility.Visible;
+            PerformanceStatsPanelVisibility = Visibility.Collapsed;
+            PerformanceStatsPlaceholderVisibility = Visibility.Visible;
+            Monitor.Clear();
+            OnPropertyChanged(nameof(PathStatsPanelVisibility));
+            OnPropertyChanged(nameof(PathStatsPlaceholderVisibility));
+            OnPropertyChanged(nameof(PerformanceStatsPanelVisibility));
+            OnPropertyChanged(nameof(PerformanceStatsPlaceholderVisibility));
+            OnPropertyChanged(nameof(Monitor));
+            OnPropertyChanged(nameof(Monitor.PathDetails));
+            OnPropertyChanged(nameof(Monitor.PerformanceResults));
+        }
+
+        public void SetStartAndTargetNode(NodeView start, NodeView target)
+        {
+            MapAdapter.SetAsStartingPoint(start);
+            MapAdapter.SetAsTargetPoint(target);
+            VisualMap.SetStartingNode(VisualMap.GetVertexControlOfNode(start));
+            VisualMap.SetTargetNode(VisualMap.GetVertexControlOfNode(target));
+            VisualMap.RefreshGraph();
         }
 
         public void CustomCommandCanExecute(object sender, CanExecuteRoutedEventArgs e)
