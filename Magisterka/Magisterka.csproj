@@ -154,6 +154,7 @@
     <Compile Include="VisualEcosystem\WindowCommands\CommandValidator.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\GenerateExcelRaportCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\ICommandValidator.cs" />
+    <Compile Include="VisualEcosystem\WindowCommands\ResetSimulationCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\ToggleEdgeArrowsCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\ToggleEdgeLabelsCommand.cs" />
     <Compile Include="VisualEcosystem\WindowCommands\ToggleNodeDraggingCommand.cs" />

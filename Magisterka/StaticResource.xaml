@@ -26,6 +26,7 @@
   <system:String x:Key="PerformanceDetailsHeader">Performance Statistics</system:String>
   <system:String x:Key="PathStatsPlaceholderText">Path Details...</system:String>
   <system:String x:Key="PerformanceStatsPlaceholderText">Performance Details...</system:String>
+  <system:String x:Key="ResetAnimation">Reset Simulation</system:String>
 
 
   <!-- Tiles Titles -->
