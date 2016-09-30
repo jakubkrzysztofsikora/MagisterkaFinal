@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using Magisterka.Infrastructure.AppSettings;
+using Magisterka.Domain.AppSettings;
 
 namespace Magisterka.Infrastructure.RaportGenerating
 {

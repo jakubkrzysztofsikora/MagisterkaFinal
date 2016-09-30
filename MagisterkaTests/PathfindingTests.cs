@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Magisterka.Domain.AppSettings;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Graph.Pathfinding;
@@ -24,7 +25,7 @@ namespace MagisterkaTests
         public void Init()
         {
             _pathfinderFactory = new PathfinderFactory(new AlgorithmMonitorStub());
-            _mapFactory = new MapFactory(new DefaultRandomGenerator());
+            _mapFactory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             _startingPosition = new Position(Guid.NewGuid());
             _endingPosition = new Position(Guid.NewGuid());
 
