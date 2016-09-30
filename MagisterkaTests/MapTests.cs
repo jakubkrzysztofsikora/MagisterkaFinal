@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Castle.Core.Internal;
+using Magisterka.Domain.AppSettings;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Utilities;
@@ -16,7 +17,7 @@ namespace MagisterkaTests
         public void ShouldCalculateHeurisitcScoreBetweenNodes()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             Map map = factory.GenerateDefaultMap().WithGridPositions();
             int heuristicScore = 2;
             Node firstNode = map.First();
@@ -33,7 +34,7 @@ namespace MagisterkaTests
         public void ShouldClearAllDefinedPositions()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             Map map = factory.GenerateDefaultMap();
             Node startingNode = map.First();
             Node targetNode = map.ElementAt(new Random().Next(0, map.Count - 1));
@@ -52,7 +53,7 @@ namespace MagisterkaTests
         public void ShouldGenerateMapWithStartingPosition()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             Map map = factory.GenerateDefaultMap();
             Node startingNode = map.First();
 
@@ -67,7 +68,7 @@ namespace MagisterkaTests
         public void ShouldGenerateMapWithTargetPosition()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             Map map = factory.GenerateDefaultMap();
             Node targetNode = map.ElementAt(new Random().Next(0, map.Count - 1));
 
@@ -82,7 +83,7 @@ namespace MagisterkaTests
         public void ShouldGenerateNewProperMap()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
 
             //When
             Map result = factory.GenerateDefaultMap();
@@ -97,7 +98,7 @@ namespace MagisterkaTests
         public void ShouldGetNodeByItsPosition()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             Map map = factory.GenerateDefaultMap();
             Node expectedResult = map.First();
             Position positionOfTheNodeToFind = expectedResult.Coordinates;
@@ -113,7 +114,7 @@ namespace MagisterkaTests
         public void ShouldGiveOnlyOneEdgeBetweenNodes()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
 
             //When
             Map map = factory.GenerateDefaultMap();
@@ -137,7 +138,7 @@ namespace MagisterkaTests
         public void ShouldGiveUniquePositionsToEachNode()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
             
             //When
             Map defaultMap = factory.GenerateDefaultMap().WithGridPositions();
@@ -151,7 +152,7 @@ namespace MagisterkaTests
         public void ShouldNotReturnDuplicatedEdges()
         {
             //Given
-            MapFactory factory = new MapFactory(new DefaultRandomGenerator());
+            MapFactory factory = new MapFactory(new DefaultRandomGenerator(), new AppSettings());
 
             //When
             Map map = factory.GenerateDefaultMap();

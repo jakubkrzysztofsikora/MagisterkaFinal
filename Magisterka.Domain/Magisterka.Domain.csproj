@@ -59,6 +59,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -71,6 +72,8 @@
     <Compile Include="Adapters\EdgeAdapter.cs" />
     <Compile Include="Adapters\MapAdapter.cs" />
     <Compile Include="Adapters\PerformanceResultsAdapter.cs" />
+    <Compile Include="AppSettings\AppSettings.cs" />
+    <Compile Include="AppSettings\IAppSettings.cs" />
     <Compile Include="Converters\ByteConverterExtensions.cs" />
     <Compile Include="Converters\EnumDescriptionTypeConverter.cs" />
     <Compile Include="ExceptionContracts\DomainException.cs" />
