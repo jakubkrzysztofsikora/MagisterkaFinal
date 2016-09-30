@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Magisterka.Domain.AppSettings;
 using Magisterka.Domain.Graph.MovementSpace.MapEcosystem;
 using Magisterka.Domain.Utilities;
 
@@ -7,19 +8,24 @@ namespace Magisterka.Domain.Graph.MovementSpace
 {
     public class MapFactory : IMapFactory
     {
-        private const int DefaultNodeNumber = 20;
-        private const int DefaultMaxNeighborsForNode = 4;
-        private const int MinEdgeCost = 1;
-        private const int MaxEdgeCost = 10;
-        private const int MinNeighborNumber = 1;
+        private readonly int DefaultNodeNumber;
+        private readonly int DefaultMaxNeighborsForNode;
+        private readonly int MinEdgeCost;
+        private readonly int MaxEdgeCost;
+        private readonly int MinNeighborNumber;
 
         private const string NodeNamePrefix = "Node";
 
         private readonly IRandomGenerator _randomizer;
 
-        public MapFactory(IRandomGenerator randomizer)
+        public MapFactory(IRandomGenerator randomizer, IAppSettings appSettings)
         {
             _randomizer = randomizer;
+            DefaultNodeNumber = appSettings.RandomGraphDefaultNodeNumber;
+            DefaultMaxNeighborsForNode = appSettings.RandomGraphDefaultMaxNeighborsForNode;
+            MinEdgeCost = appSettings.RandomGraphMinEdgeCost;
+            MaxEdgeCost = appSettings.RandomGraphMaxEdgeCost;
+            MinNeighborNumber = appSettings.RandomGraphMinNeighborNumber;
         }
 
         public Map GenerateDefaultMap()

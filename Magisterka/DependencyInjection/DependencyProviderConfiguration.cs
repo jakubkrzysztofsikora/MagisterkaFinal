@@ -1,11 +1,11 @@
 ﻿using Autofac;
+using Magisterka.Domain.AppSettings;
 using Magisterka.Domain.Graph.MovementSpace;
 using Magisterka.Domain.Graph.Pathfinding;
 using Magisterka.Domain.Monitoring;
 using Magisterka.Domain.Monitoring.Performance;
 using Magisterka.Domain.Monitoring.Quality;
 using Magisterka.Domain.Utilities;
-using Magisterka.Infrastructure.AppSettings;
 using Magisterka.Infrastructure.RaportGenerating;
 using Magisterka.Infrastructure.RaportGenerating.RaportStaticResources;
 using Magisterka.StaticResources;
